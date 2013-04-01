@@ -173,7 +173,7 @@ c.NotebookApp.extra_static_paths = extra_static_paths
 # c.IPKernelApp.log_level = 30
 
 # lines of code to run at IPython startup.
-# c.IPKernelApp.exec_lines = []
+c.IPKernelApp.exec_lines = [latex_header('http://stats306b.stanford.edu/header.tex')]
 
 # The importstring for the OutStream factory
 # c.IPKernelApp.outstream_class = 'IPython.kernel.zmq.iostream.OutStream'
