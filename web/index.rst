@@ -34,17 +34,19 @@ The course has an email list that reaches all TAs as well as the professor: `sta
 Teaching assistants
 -------------------
 
-* TBA
+* Yunjin Choi
 
-  * Office: TBA
+  * Office: Sequoia Hall, #208
   * `Email <mailto:stats306b-spr1213-staff@lists.stanford.edu>`_
-  * Office hours: TBA
+  * Office hours: T 9:00-11:00
+
+* TBA 
 
 ********
 Textbook
 ********
 
-* `Generalized Linear Models <http://www-users.cs.umn.edu/~kumar/dmbook/index.php>`_, McCullagh & Nelder. *Though this is marked as required, I will not follow it too closely. It is a great reference.*
+* `Generalized Linear Models <http://www.amazon.com/Generalized-Edition-Monographs-Statistics-Probability/dp/0412317605/ref=sr_1_1?ie=UTF8&qid=1364853235&sr=8-1&keywords=mccullagh+nelder>`_, McCullagh & Nelder. *Though this is marked as required, I will not follow it too closely. It is a great reference.*
 
 
 *****
@@ -53,13 +55,13 @@ Notes
 
 I will be writing notes as we go, following in part, some of Brad Efron's notes. Notes will include computer examples, and be written in `ipython notebooks <http://ipython.org>`_. The examples will be both in `R` and `python`.
 
-* One parameter exponential families `notebook <restricted/notebooks/One parameter families.ipynb>`_, `pdf <restricted/notebooks/One parameter families.pdf>`_
+* One parameter exponential families `notebook <restricted/notebooks/one_parameter_partI.ipynb>`_, `pdf <restricted/notebooks/one_parameter_partI.pdf>`_
 
 *************
 Prerequisites
 *************
 
-Some familiarity with linear algebra and statistical methods.
+Some familiarity with linear algebra and statistical methods, preferably having taken some of STATS300 sequence.
 
 **************
 Topics covered
