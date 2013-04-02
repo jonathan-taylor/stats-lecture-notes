@@ -40,7 +40,11 @@ Teaching assistants
   * `Email <mailto:stats306b-spr1213-staff@lists.stanford.edu>`_
   * Office hours: T 9:00-11:00
 
-* TBA 
+* Alexandra Chouldechova
+
+  * Office: Sequoia Hall, #242
+  * `Email <mailto:stats306b-spr1213-staff@lists.stanford.edu>`_
+  * Office hours: W 11:00-1:00
 
 ********
 Textbook
@@ -56,6 +60,25 @@ Notes
 I will be writing notes as we go, following in part, some of Brad Efron's notes. Notes will include computer examples, and be written in `ipython notebooks <http://ipython.org>`_. The examples will be both in `R` and `python`.
 
 * One parameter exponential families `notebook <restricted/notebooks/one_parameter_partI.ipynb>`_, `pdf <restricted/notebooks/one_parameter_partI.pdf>`_
+
+Ipython profile
+---------------
+
+I've created an ipython profile for the course, that will load some libraries automatically, which 
+I will use in my examples. To use it, clone the git repo with
+
+.. code-block:: bash
+
+   cd $HOME/.ipython
+   git clone https://github.com/jonathan-taylor/profile_stats306b.git profile_stats306b
+
+Then, starting the notebook server with
+
+.. code-block:: bash
+
+   ipython notebook --profile=stats306b
+
+will give you access to the same profile used in executing the code.
 
 *************
 Prerequisites
