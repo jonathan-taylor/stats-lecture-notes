@@ -76,8 +76,8 @@ lines.linewidth   : 2.0     # line width in points
 # http://matplotlib.org/api/artist_api.html#module-matplotlib.patches
 # information on patch properties
 patch.linewidth        : 0.5     # edge width in points
-patch.facecolor        : 348ABD, A60628, 7A68A6, 467821, CF4457, 188487, E24A33
-patch.edgecolor        : eeeeee
+#patch.facecolor        : 348ABD, A60628, 7A68A6, 467821, CF4457, 188487, E24A33
+#patch.edgecolor        : eeeeee
 patch.antialiased      : True  
 
 ### FONT
@@ -215,8 +215,8 @@ text.hinting_factor : 8 # Specifies the amount of softness for hinting in the
 # default fontsizes for ticklabels, and so on.  See
 # http://matplotlib.org/api/axes_api.html#module-matplotlib.axes
 #axes.hold           : True    # whether to clear the axes by default on
-axes.facecolor      : eeeeee   # axes background color
-axes.edgecolor      : bcbcbc   # axes edge color
+#axes.facecolor      : eeeeee   # axes background color
+#axes.edgecolor      : bcbcbc   # axes edge color
 #axes.linewidth      : 1.0     # edge linewidth
 axes.grid           : True   # display grid or not
 axes.titlesize      : x-large   # fontsize of the axes title
@@ -299,7 +299,7 @@ legend.fancybox      : True  # if True, use a rounded box for the
 
 ### FIGURE
 # See http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
-figure.figsize   : 11, 8    # figure size in inches
+figure.figsize   : 10, 10    # figure size in inches
 #figure.dpi       : 80      # figure dots per inch
 #figure.facecolor : 0.75    # figure facecolor; 0.75 is scalar gray
 #figure.edgecolor : white   # figure edgecolor
