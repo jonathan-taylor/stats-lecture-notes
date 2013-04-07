@@ -59,7 +59,16 @@ Notes
 
 I will be writing notes as we go, following in part, some of Brad Efron's notes. Notes will include computer examples, and be written in `ipython notebooks <http://ipython.org>`_. The examples will be both in `R` and `python`.
 
-* One parameter exponential families `notebook <restricted/notebooks/one_parameter_partI.ipynb>`_, `pdf <restricted/notebooks/one_parameter_partI.pdf>`_
+* One parameter exponential families, part I `notebook <restricted/notebooks/one_parameter_partI.ipynb>`_, `pdf <restricted/notebooks/one_parameter_partI.pdf>`_
+
+* One parameter exponential families, part II `notebook <restricted/notebooks/one_parameter_partII.ipynb>`_, `pdf <restricted/notebooks/one_parameter_partII.pdf>`_
+
+***********
+Assignments
+***********
+
+* Assignment 1, due Wednesday April 17, 2013. From `partI <exercises/one_parameter_partI.pdf>`_, do exercises 1.0.2, 1.0.4, 1.0.8, 1.0.12, 1.0.13, 1.0.19, 1.0.21. From `partII <exercises/one_parameter_partII.pdf>`_, do exercises 1.0.2, 1.0.4, 1.0.7, 1.0.9, 1.0.11 (this last one is better viewed in the notebook).
+
 
 Ipython profile
 ---------------
