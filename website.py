@@ -28,7 +28,7 @@ def make_web(clean=True):
         os.system(r'cd exercises; pdflatex "\nonstopmode\input{tmp.tex}"; mv tmp.pdf "%s"' % (os.path.basename(texfile)[:-3] + 'pdf'))
 
     os.system('mkdir -p  www/restricted/notebooks ; mkdir www/exercises ; cp latex/header.tex www;')
-    os.system("cp exercises/*pdf www/exercises; notebooks/*ipynb notebooks/*pdf www/restricted/notebooks ; cd web; %s;  make html; cp -r _build/html/* ../www; ")
+    os.system("cp exercises/*pdf www/exercises; cp notebooks/*ipynb notebooks/*pdf www/restricted/notebooks ; cd web; %s;  make html; cp -r _build/html/* ../www; ")
 
 def deploy():
     os.system("rsync -avz www/* jtaylo@cardinal.stanford.edu:/afs/ir/class/stats306b/WWW")
