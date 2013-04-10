@@ -63,6 +63,8 @@ I will be writing notes as we go, following in part, some of Brad Efron's notes.
 
 * One parameter exponential families, part II `notebook <restricted/notebooks/one_parameter_partII.ipynb>`_, `pdf <restricted/notebooks/one_parameter_partII.pdf>`_
 
+* Multiparameter exponential families, part I `notebook <restricted/notebooks/multiparameter_partI.ipynb>`_, `pdf <restricted/notebooks/multiparameter_partI.pdf>`_
+
 ***********
 Assignments
 ***********
