@@ -22,7 +22,7 @@ Instructor
   * Office: Sequoia Hall #137
   * Phone: 723-9230, 
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Jonathan%20Taylor>`_
-  * Office hours: F 10:30-12:30
+  * Office hours: F 12:00-2:00
 
 Email list
 ----------
