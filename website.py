@@ -1,6 +1,8 @@
 import os, tempfile, glob, datetime, shutil
 
-from scripts.strip_exercises import extract_exercises
+import scripts.strip_exercises as SE
+reload(SE)
+extract_exercises = SE.extract_exercises
 from course_modules.nbconvert.convertR import batch
 from course_modules.nbconvert.convert_assignment import convert_assignment
 

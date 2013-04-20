@@ -38,7 +38,7 @@ Teaching assistants
 
   * Office: Sequoia Hall, #208
   * `Email <mailto:stats306b-spr1213-staff@lists.stanford.edu>`_
-  * Office hours: T 9:00-11:00
+  * Office hours: M 9:00-11:00
 
 * Alexandra Chouldechova
 
@@ -73,7 +73,9 @@ I will be writing notes as we go, following in part, some of Brad Efron's notes.
 Assignments
 ***********
 
-* Assignment 1, due Wednesday April 17, 2013. From `partI <exercises/one_parameter_partI.pdf>`_, do exercises 1.0.2, 1.0.4, 1.0.8, 1.0.12, 1.0.13, 1.0.19, 1.0.21. From `partII <exercises/one_parameter_partII.pdf>`_, do exercises 1.0.2, 1.0.4, 1.0.7, 1.0.9, 1.0.11.
+* Assignment 1, due Wednesday April 17, 2013. From `partI <exercises/one_parameter_partI.pdf>`_, do exercises 1.2, 1.4, 1.8, 1.12, 1.13, 1.19, 1.21. From `partII <exercises/one_parameter_partII.pdf>`_, do exercises 1.2, 1.4, 1.7, 1.9, 1.11.
+
+* Assignment 2, due Monday April 29, 2013. From `partI <exercises/multiparameter_partI.pdf>`_, do exercises 1.5, 1.6, 1.9, 1.10. From `partII <exercises/multiparameter_partII.pdf>`_, do exercises 1.2, 1.3, 1.5, 1.6.
 
 
 Ipython profile
