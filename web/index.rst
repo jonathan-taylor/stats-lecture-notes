@@ -77,6 +77,7 @@ Assignments
 
 * Assignment 2, due Monday April 29, 2013. From `partI <exercises/multiparameter_partI.pdf>`_, do exercises 1.5, 1.6, 1.9, 1.10. From `partII <exercises/multiparameter_partII.pdf>`_, do exercises 1.2, 1.3, 1.5, 1.6.
 
+.. for assignment 3 give the pseudoscore and gibbs sampler
 
 Ipython profile
 ---------------
