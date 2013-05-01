@@ -71,6 +71,8 @@ I will be writing notes as we go, following in part, some of Brad Efron's notes.
 
 * Multiparameter exponential families, part IV `notebook <restricted/notebooks/multiparameter_partIV.ipynb>`_, `pdf <restricted/notebooks/multiparameter_partIV.pdf>`_
 
+* Quasilikelihood `notebook <restricted/notebooks/quasilikelihood.ipynb>`_, `pdf <restricted/notebooks/quasilikelihood.pdf>`_
+
 ***********
 Assignments
 ***********
