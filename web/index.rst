@@ -38,7 +38,7 @@ Teaching assistants
 
   * Office: Sequoia Hall, #208
   * `Email <mailto:stats306b-spr1213-staff@lists.stanford.edu>`_
-  * Office hours: T 9:00-11:00
+  * Office hours: M 9:00-11:00
 
 * Alexandra Chouldechova
 
