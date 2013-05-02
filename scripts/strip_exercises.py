@@ -23,8 +23,29 @@ def clear_everything_but_exercises(nb):
         header.level = 1
         header.source = r'Exercises: %s' % nb['metadata']['name'].replace('_', ' ')
 
-        for cell in ws.cells:
+        counter = 0
+        exercise = copy(header)
+        exercise.cell_type = 'heading'
+        exercise.level = 2
+        exercise.source = r'Exercise'
+
+        for cc, cell in enumerate(ws.cells):
             if 'metadata' in cell and 'exercise' in cell['metadata']:
+
+                # does this start a new exercise?
+
+                if ('start' in cell['metadata']['exercise'] and 
+                    cell['metadata']['exercise']['start']):
+                    keep_cells.append(copy(exercise))
+
+                # delete the markdown label "### *Exercise ..."
+                if hasattr(cell, 'source'):
+                    source = cell.source.split('\n')
+                    for i, l in enumerate(source):
+                        if "###" in l and "xercise" in l:
+                            source[i] = ''
+                    cell.source = '\n'.join(source)
+
                 keep_cells.append(cell)
             else:
                 if hasattr(cell, 'source'):

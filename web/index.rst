@@ -67,14 +67,21 @@ I will be writing notes as we go, following in part, some of Brad Efron's notes.
 
 * Multiparameter exponential families, part II `notebook <restricted/notebooks/multiparameter_partII.ipynb>`_, `pdf <restricted/notebooks/multiparameter_partII.pdf>`_
 
-* Multiparameter exponential families, part III `notebook <restricted/notebooks/multiparameter_partII.ipynb>`_, `pdf <restricted/notebooks/multiparameter_partIII.pdf>`_
+* Multiparameter exponential families, part III `notebook <restricted/notebooks/multiparameter_partIII.ipynb>`_, `pdf <restricted/notebooks/multiparameter_partIII.pdf>`_
+
+* Multiparameter exponential families, part IV `notebook <restricted/notebooks/multiparameter_partIV.ipynb>`_, `pdf <restricted/notebooks/multiparameter_partIV.pdf>`_
+
+* Quasilikelihood `notebook <restricted/notebooks/quasilikelihood.ipynb>`_, `pdf <restricted/notebooks/quasilikelihood.pdf>`_
 
 ***********
 Assignments
 ***********
 
-* Assignment 1, due Wednesday April 17, 2013. From `partI <exercises/one_parameter_partI.pdf>`_, do exercises 1.0.2, 1.0.4, 1.0.8, 1.0.12, 1.0.13, 1.0.19, 1.0.21. From `partII <exercises/one_parameter_partII.pdf>`_, do exercises 1.0.2, 1.0.4, 1.0.7, 1.0.9, 1.0.11.
+* Assignment 1, due Wednesday April 17, 2013. From `partI <exercises/one_parameter_partI.pdf>`_, do exercises 1.2, 1.4, 1.8, 1.12, 1.13, 1.19, 1.21. From `partII <exercises/one_parameter_partII.pdf>`_, do exercises 1.2, 1.4, 1.7, 1.9, 1.11.
 
+* Assignment 2, due Monday April 29, 2013. From `partI <exercises/multiparameter_partI.pdf>`_, do exercises 1.5, 1.6, 1.9, 1.10. From `partII <exercises/multiparameter_partII.pdf>`_, do exercises 1.2, 1.3, 1.5, 1.6.
+
+.. for assignment 3 give the pseudoscore and gibbs sampler
 
 Ipython profile
 ---------------
