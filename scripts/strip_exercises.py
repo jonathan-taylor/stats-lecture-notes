@@ -30,7 +30,8 @@ def clear_everything_but_exercises(nb):
         exercise.source = r'Exercise'
 
         for cc, cell in enumerate(ws.cells):
-            if 'metadata' in cell and 'exercise' in cell['metadata']:
+            if ('metadata' in cell and 'exercise' in cell['metadata']
+                and any(cell['metadata']['exercise'])):
 
                 # does this start a new exercise?
 
