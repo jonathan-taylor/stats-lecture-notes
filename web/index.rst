@@ -75,6 +75,8 @@ I will be writing notes as we go, following in part, some of Brad Efron's notes.
 
 * Quasilikelihood `notebook <restricted/notebooks/quasilikelihood.ipynb>`_, `pdf <restricted/notebooks/quasilikelihood.pdf>`_
 
+* EM algorithm `notebook <restricted/notebooks/EM_algorithm.ipynb>`_, `pdf <restricted/notebooks/EM_algorithm.pdf>`_
+
 ***********
 Assignments
 ***********
