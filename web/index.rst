@@ -85,9 +85,9 @@ Assignments
 
 * Assignment 2, due Monday April 29, 2013. From `partI <exercises/multiparameter_partI.pdf>`_, do exercises 1.5, 1.6, 1.9, 1.10. From `partII <exercises/multiparameter_partII.pdf>`_, do exercises 1.2, 1.3, 1.5, 1.6.
 
-* Assignment 3, due Wednesday May 15, 2013. From `partIII <exercises/multiparameter_partIII.pdf>`_, do exercises 1.2, 1.4, 1.7. From `partIV <exercises/multiparameter_partIV.pdf>`_, do exercises 1.6, 1.8, 1.10, 1.14, 1.19. From `quasilikelihood <exercises/quasilikelihood.pdf>`_ do exercises 1.1, 1.3, 1.4. 
+* Assignment 3, due Wednesday May 15, 2013. From `partIII <exercises/multiparameter_partIII.pdf>`_, do exercises 1.2, 1.4, 1.7. From `partIV <exercises/multiparameter_partIV.pdf>`_, do exercises 1.6, 1.8, 1.10, 1.14, 1.19. 
 
-
+* Assignment 4, due Wednesday June 12, 2013. From `quasilikelihood <exercises/quasilikelihood.pdf>`_ do exercises 1.1, 1.3. From `processes <exercises/processes.pdf>`_ do exercises 1.6, 1.12, 1.17. From `EM algorithm <exercises/EM_algorithm.pdf>`_ do exercises 1.1, 1.3.
 
 Ipython profile
 ---------------
