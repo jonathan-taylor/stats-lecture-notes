@@ -1,0 +1,79 @@
+.pmode{
+    display:none; !important
+}
+
+.presentation_mode h1{
+        text-align: center;
+}
+
+.presentation_mode {
+}
+
+<style>
+    @font-face {
+        font-family: "Computer Modern";
+        src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunss.otf');
+    }
+    div.cell{
+        width:750px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+    h1 {
+        font-family: "Charis SIL", Palatino, serif;
+    }
+    h4{
+        margin-top:12px;
+        margin-bottom: 3px;
+       }
+    div.text_cell_render{
+        font-family: Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        line-height: 145%;
+        font-size: 120%;
+        width:750px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+    .CodeMirror{
+            font-family: "Source Code Pro", source-code-pro,Consolas, monospace;
+    }
+
+    .text_cell_render h5 {
+        font-weight: 300;
+        font-size: 16pt;
+        color: #4057A1;
+        font-style: italic;
+        margin-bottom: .5em;
+        margin-top: 0.5em;
+        display: block;
+    }
+    
+    .warning{
+        color: rgb( 240, 20, 20 )
+        }
+</style>
+
+<script type="text/javascript">
+console('nonte');
+alert('home');
+</script>
+
+<script>
+console('none');
+MathJax.Hub.Config({
+            displayAlign: 'right',
+                        TeX: {
+			   equationNumbers : { autoNumber: "AMS"},
+                           extensions: ["AMSmath.js", "AMSSymbols.js", "autobold.js"],
+                           },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                },
+                "HTML-CSS": {
+                    styles: {'.MathJax_Display': {"margin": 4}}
+                };
+});
+console.log('mathjaxconfig')
+</script>
+
