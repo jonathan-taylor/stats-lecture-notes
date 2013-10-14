@@ -28,14 +28,3 @@ $.get('/static/tex/header.tex', function(data) {
     });
 MathJax.Hub.Update();
 
-// console.log('loading header from web');
-// $.get('http://www.stanford.edu/class/stats306b/header.tex', function(data) {
-// 	console.log(data);
-// 	var newdiv = $('<div id="mathjaxheaderweb"/>');
-// 	console.log('loading header from web successful');
-// 	$('body').append(newdiv);
-// 	$('#mathjaxheaderweb').text("$$ " + data + " $$");
-// 	MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'mathjaxheaderweb']);
-//     });
-// MathJax.Hub.Update();
-
