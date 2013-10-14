@@ -1,0 +1,4 @@
+import numpy as np
+%pylab inline
+%load_ext rmagic
+%load_ext stats191.knitr_extension

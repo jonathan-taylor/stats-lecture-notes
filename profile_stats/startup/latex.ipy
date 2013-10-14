@@ -1,0 +1,5 @@
+from IPython.core.display import Latex
+import urllib
+
+def latex_header(url):
+    Latex(r'%s' % urllib.urlopen(url).read())
