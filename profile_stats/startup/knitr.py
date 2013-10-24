@@ -3,7 +3,7 @@ from shutil import rmtree
 from glob import glob
 
 from IPython.extensions import rmagic
-from IPython.core.magic register_cell_magic
+from IPython.core.magic import register_cell_magic
 from IPython.core.displaypub import publish_display_data
 
 Rcode = """

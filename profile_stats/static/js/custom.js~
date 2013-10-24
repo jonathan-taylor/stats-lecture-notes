@@ -1,5 +1,5 @@
-$.getScript('/static/js/slide_meta.js');
-$.getScript('/static/js/exercise.js');
+$.getScript('/static/custom/js/slide_meta.js');
+$.getScript('/static/custom/js/exercise.js');
 
 MathJax.Hub.Config({
                         TeX: {
@@ -19,7 +19,7 @@ MathJax.Hub.Config({
 
 
 console.log('loading header');
-$.get('/static/tex/header.tex', function(data) {
+$.get('/static/custom/header.tex', function(data) {
 	var newdiv = $('<div id="mathjaxheader"/>');
 	console.log('Mathjax header load was performed.');
 	$('body').append(newdiv);
