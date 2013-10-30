@@ -1,0 +1,805 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Bias-Variance tradeoff: penalized techniques (Ch. 10, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block} {Topics}
+     \begin{itemize}
+
+     \item Bias-Variance tradeoff.
+   \item Penalized regression.
+     \item Cross-validation.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   {Bias-variance tradeoff                     }
+       \begin{itemize}
+
+       \item Arguably, the goal of a regression analysis
+   is to ``build'' a model that predicts well.
+
+   \item What does ``predict well'' mean?
+   $$
+   \begin{aligned}
+   MSE_{pop}(\model) &= \Ee \left((Y_{new} - \widehat{Y}_{new,{\cal M}})^2\right) \\
+   &=
+   \V(Y_{\new}) + \V(\widehat{Y}_{new,{\cal M}}) +
+   \\
+   & \qquad \quad \text{Bias}(\widehat{Y}_{new,{\cal M}})^2.
+   \end{aligned}
+   $$
+       \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Bias-Variance Tradeoff}
+
+   \begin{block}
+   {Simulation}
+
+   \begin{enumerate}
+   \item Generate $Y_{10 \times 1} \sim N(\mu \pmb{1}, I_{10 \times 10}),
+   with $\mu=0.5$.
+   \item For $0 \leq \alpha \leq 1$, set
+   $$
+   \hat{Y}(\alpha) = \alpha \bar{Y}.
+   $$
+   \item Compute
+   $$
+   MSE(\hat{Y}(\alpha)) = \sum_{i=1}^{10} (\hat{Y}_{\alpha} - 0.5)^2
+   $$
+   \item Repeat 100 times, plot average of $MSE(\hat{Y}(\alpha))$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % nsample <- 10
+   % ntrial <- 100
+   % mu <- 0.5
+   % 
+   % MSE <- function(mu.hat, mu) {
+   %   return(sum((mu.hat - mu)^2))
+   % }
+   % 
+   % alpha <- seq(0.0,1,length=20)
+   % 
+   % mse <- numeric(length(alpha))
+   % 
+   % for (i in 1:ntrial) {
+   %   Z <- rnorm(nsample) + mu
+   %   for (j in 1:length(alpha)) {
+   %     mse[j] <- mse[j] + MSE(alpha[j] * mean(Z), mu) / ntrial
+   %   }
+   % }
+   % 
+   % plot(alpha, mse, type='l', lwd=2, col='red', ylim=c(0, max(mse)),
+   %      xlab='Shrinkage parameter, alpha', ylab='MSE(alpha)')
+
+
+   \begin{frame}
+   \frametitle{Bias-Variance Tradeoff}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/b48c9d4f9f.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/selection.html#bias-variance-tradeoff}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+     {Shrinkage \& Penalties}
+     \begin{itemize}
+     \item Shrinkage can be thought of as ``constrained'' minimization.
+
+     \item Minimize
+   $$
+   \sum_{i=1}^n (Y_i - \mu)^2 \quad \text{subject to $\mu^2 \leq C$} $$
+
+   \item Lagrange: equivalent to minimizing
+   $$
+   \sum_{i=1}^n (Y_i - \mu)^2 + \lambda \mu^2$$
+   for some $\lambda=\lambda_C$
+     \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+     {Shrinkage \& Penalties}
+     \begin{itemize}
+   \item Differentiating:
+   $$- 2 \sum_{i=1}^n (Y_i - \widehat{\mu}_{\lambda}) + 2 \lambda \widehat{\mu}_{\lambda} = 0$$
+
+   \item Solving
+   $$
+   \widehat{\mu}_{\lambda} = \frac{\sum_{i=1}^n Y_i}{n + \lambda} = \frac{n}{n+\lambda} \overline{Y}.$$
+     \item As
+   $\lambda \rightarrow 0$,
+   $$
+   \widehat{\mu}_{\lambda} \rightarrow \Ybar.$$
+
+   \item As $\lambda \rightarrow \infty$
+   $$
+   \widehat{\mu}_{\lambda} \rightarrow 0.$$
+
+     \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+     {Penalties \& Priors}
+     \begin{itemize}
+     \item Minimizing
+   $$
+   \sum_{i=1}^n (Y_i - \mu)^2 + \lambda \mu^2$$
+   is similar to computing ``MLE'' of $\mu$ if the likelihood
+   was proportional to
+   $$
+   \exp \left(-\frac{1}{2\sigma^2}\left( \sum_{i=1}^n (Y_i - \mu)^2 + \lambda \mu^2\right) \right).
+   $$
+
+
+   \item If $\lambda=m$, an integer, then $\widehat{\mu}_{\lambda}$ is the sample
+   mean of $(Y_1, \dots, Y_n,0 ,\dots, 0) \in \mathbb{R}^{n+m}$.
+   \item This is equivalent to adding some data with $Y=0$ \dots
+
+     \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   {Biased regression: penalties                     }
+       \begin{itemize}[<+->]
+
+       \item Not all biased models are better -- we need a way to find ``good'' biased models.
+
+       \item Inference ($F$, $\chi^2$ tests, etc) is not quite exact for  biased models.
+
+       \item Generalized one sample problem: penalize large values of $\B{}$.
+       This should lead to ``multivariate'' shrinkage of the vector  $\B{}$.
+       \item Heuristically, ``large $\B{}$'' is interpreted as ``complex model''. Goal is really to penalize ``complex'' models, i.e. Occam's razor.
+
+       \item If truth  really is complex, this may not work! (But, it will then be hard to build a good model anyways ... (statistical lore))
+
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+         {How much to shrink, choosing $\alpha$}
+         \begin{itemize}
+         \item In our one-sample example,
+
+   $$
+   \begin{aligned}
+   MSE_{pop}(\alpha) &= \V( \alpha \bar{Y}) + \text{Bias}(\alpha \bar{Y})^2 \\
+   &= \frac{\alpha^2 \sigma^2}{n} + \mu^2 (1 - \alpha)^2
+   \end{aligned}
+   $$
+
+   \item Differentiating and solving:
+   $$
+   \begin{aligned}
+   0 &= -2 \mu^2(1 - \lambda^*) + 2 \frac{\lambda^* \sigma^2}{n}  \\
+   \lambda^* & = \frac{\mu^2}{\mu^2+\sigma^2/n} \\
+   &= \frac{0.5^2}{0.5^2+1/10} = 0.71
+   \end{aligned}
+   $$
+         \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % nsample <- 10
+   % ntrial <- 100
+   % mu <- 0.5
+   % 
+   % 
+   % MSE <- function(mu.hat, mu) {
+   %   return(sum((mu.hat - mu)^2))
+   % }
+   % 
+   % alpha <- seq(0.0,1,length=20)
+   % 
+   % mse <- numeric(length(alpha))
+   % 
+   % for (i in 1:ntrial) {
+   %   Z <- rnorm(nsample) + mu
+   %   for (j in 1:length(alpha)) {
+   %     mse[j] <- mse[j] + MSE(alpha[j] * mean(Z), mu) / ntrial
+   %   }
+   % }
+   % 
+   % plot(alpha, mse, type='l', lwd=2, col='red', ylim=c(0, max(mse)),
+   %      xlab='Shrinkage parameter, alpha', ylab='MSE(alpha)')
+   % 
+   % abline(v=mu^2/(mu^2+1/nsample), col='blue', lty=2)
+
+
+   \begin{frame}
+   \frametitle{Bias-Variance Tradeoff}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/cfa9a2a964.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/selection.html#bias-variance-tradeoff}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   {Ridge regression}
+       \begin{itemize}
+
+       \item Assume that columns $(X_j)_{1 \leq j \leq p}$ have zero mean, and length 1 and $Y$ has zero mean.
+
+       \item This is called the {\em standardized model}.
+       \item Minimize
+   {\small
+   $$
+   SSE_{\lambda}(\B{}) = \sum_{i=1}^n \left(Y_i - \sum_{j=1}^{p} X_{ij} \B{j}\right)^2 + \lambda \sum_{j=1}^{p} \B{j}^2.$$}
+
+   \item Corresponds (through Lagrange multiplier) to a quadratic constraint on $\B{}$'s.
+
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+       {Solving the normal equations}
+       \begin{itemize}
+   \item Normal equations
+   $$
+   \frac{\partial}{\partial \B{l}} SSE_{\lambda}(\B{}) = -2  \langle Y - X\B{}, X_l \rangle + 2 \lambda \B{l}$$
+
+       \item $$
+   -2 \langle Y - X\Bh{\lambda}, X_l \rangle + 2 \lambda \Bh{l,\lambda} = 0, \qquad 1 \leq l \leq p$$
+
+   \item In matrix form
+   $$
+   -X^TY +  (X^TX + \lambda I) \Bh{\lambda} = 0$$
+
+   \item Or
+   $$
+   \Bh{\lambda} = (X^TX + \lambda I)^{-1} X^TY.$$
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % library(lars)
+   % data(diabetes)
+   % 
+   % library(MASS)
+   % 
+   % diabetes.ridge <- lm.ridge(diabetes$y ~ diabetes$x, lambda=seq(0,10,0.05))
+   % 
+   % plot(diabetes.ridge)
+
+
+   \begin{frame}
+   \frametitle{Ridge regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/410687e961.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/penalized.html#ridge-regression}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   {Choosing $\lambda$: cross-validation  }
+       \begin{itemize}
+
+       \item If we knew $MSE$ as a function of $\lambda$ then we would simply choose the $\lambda$ that minimizes $MSE$.
+
+       \item To do this, we need to estimate $MSE$.
+
+       \item A popular method is cross-validation as a function
+       of $\lambda$. Breaks the data up into smaller groups and uses part of the data to predict the rest.
+
+       \item We saw this in diagnostics (Cook's distance measured the fit with and without each point in the data set) and model selection.
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   {$K$-fold cross-validation                     }
+       \begin{itemize}
+
+       \item Fix a model (i.e. fix $\lambda$). Break data set into $K$ approximately equal sized groups $(G_1, \dots, G_K)$.
+
+       \item {\tt for (i in 1:K)} Use all groups except $G_i$ to fit model, predict  outcome in group $G_i$ based on this model $\widehat{Y}_{j(i),\lambda}, j \in G_i$.
+
+       \item Estimate
+   $$
+   CV(\lambda) = \frac{1}{n}\sum_{i=1}^K \sum_{j \in G_i} (Y_j - \widehat{Y}_{j(i),\lambda})^2.$$
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       %  ntrial = 500
+   %  mu = 0.08
+   %  nsample = 200
+   % 
+   %  MSE = function(mu.hat, mu) {
+   %      return(sum((mu.hat - mu)^2))
+   %  }
+   % 
+   % 
+   %  # K fold cross-validation
+   % 
+   %  K = 10
+   %  CV = function(Z, alpha) {
+   %      cve = numeric(K)
+   %      l = length(Z)
+   %      for (i in 1:K) {
+   %          g = c((i-1)*l/K+1,i*l/K)
+   %          mu.hat = mean(Z[-g]) * alpha
+   %          cve[i] = sum((Z[g]-mu.hat)^2)
+   %      }
+   %      return(c(mean(cve), sd(cve)))
+   %  }
+   % 
+   %  alpha = seq(0.0,1,length=20)
+   % 
+   %  mse = numeric(length(alpha))
+   %  cv = numeric(length(alpha))
+   %  cv.sd = numeric(length(alpha))
+   % 
+   %  for (i in 1:ntrial) {
+   %      Z = rnorm(nsample) + mu
+   %      for (j in 1:length(alpha)) {
+   %          mse[j] = mse[j] + MSE(alpha[j] * mean(Z), mu) / ntrial
+   %          d = CV(Z, alpha[j])
+   %          cv[j] = cv[j] + d[1] / ntrial
+   %          cv.sd[j] = cv.sd[j] + d[2] / ntrial
+   %      }
+   %  }
+   % 
+   %  plot(alpha, cv, type='l', lwd=2, col='green',
+   %     xlab='Shrinkage parameter, alpha', ylab='CV(alpha)')
+   %  abline(v=mu^2/(mu^2+1/nsample), col='blue', lty=2)
+   %  abline(v=min(alpha[cv == min(cv)]), col='red', lty=2)
+
+
+   \begin{frame}
+   \frametitle{Penalized regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/cfe8b24a70.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/selection.html#bias-variance-tradeoff}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   {$K$-fold cross-validation   (continued)                  }
+       \begin{itemize}
+
+       \item It is a general principle that can be used in other situations, not just for Ridge.
+
+
+       \item Pros (partial list): ``objective'' measure of a model.
+
+       \item Cons (partial list): inference is, strictly speaking, ``out the window'' (also true for other model selection procedures in theory).
+
+       \item If goal is not really inference about certain specific parameters, it is a reasonable way to compare models.
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+   { Generalized Cross Validation}
+       \begin{itemize}
+
+       \item A computational shortcut for $n$-fold cross-validation (also known as leave-one out cross-validation).
+
+       \item Let
+   $$
+   S_{\lambda} = (X^TX + \lambda I)^{-1} X^T$$
+   be the matrix in ridge regression.
+
+   \item Then
+   $$
+   GCV(\lambda) =  \frac{\|Y - S_{\lambda}Y\|^2}{n - \Tr(S_{\lambda})}.$$
+
+   \item The quantity $\Tr(S_{\lambda})$ is the {\em effective degrees of freedom}.
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % plot(diabetes.ridge$lambda, diabetes.ridge$GCV, xlab='Lambda', ylab='GCV', type='l', lwd=3, col='orange')
+   % 
+   % 
+   % select(diabetes.ridge)
+
+
+   \begin{frame}
+   \frametitle{Ridge regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6fbda6e3b3.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/penalized.html#ridge-regression}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+    {LASSO regression}
+        \begin{itemize}
+        \item Another popular penalized regression technique.
+
+        \item Use the standardized model.
+        \item Minimize
+    $$
+    SSE_{\lambda}(\B{}) = \sum_{i=1}^n \left(Y_i - \sum_{j=1}^{p} X_{ij} \B{j}\right)^2 + \lambda \sum_{j=1}^p |\B{j}|.$$
+
+    \item Corresponds (through Lagrange multiplier) to an $\ell^1$ constraint on $\B{}$'s. In theory, it works well when many $\B{j}$'s are 0 and gives ``sparse'' solutions unlike ridge.
+
+        \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+     \begin{figure}
+         \centering
+         \resizebox{3.5in}{!}{\includegraphics{figs/penalized/lasso_balls}}
+
+         Why do we get sparse solutions with the LASSO?
+
+        \end{figure}
+   \end{frame}
+
+   %CODE
+       % library(lars)
+   % data(diabetes)
+   % 
+   % diabetes.lasso = lars(diabetes$x, diabetes$y, type='lasso')
+   % plot(diabetes.lasso)
+
+
+   \begin{frame}
+   \frametitle{LASSO}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/5405c7af69.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/penalized.html#lasso}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+       {Solving the normal equations}
+       \begin{itemize}
+   \item Normal equations
+   $$
+   \frac{\partial}{\partial \B{l}} SSE_{\lambda}(\B{}) = -2  \langle Y - X\B{}, X_l \rangle +  \lambda \frac{\partial}{\partial\B{l}} \|\B{}\|_1$$
+
+       \item Problem: the $\ell_1$ norm is not differentiable.
+
+
+   \item Normal equations are replaced by KKT (Karush-Kuhn-Tucker) conditions.
+   $$
+   -X^TY +  (X^TX + \lambda I) \Bh{\lambda} = \lambda \cdot s(\Bh{\lambda}).$$
+   where $s(\Bh{\lambda})$ is a {\em subgradient} of the $\ell_1$ norm at
+   $\Bh{\lambda}$ \dots
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+    {LASSO regression}
+        \begin{itemize}
+        \item Equivalent to the dual problem:
+
+        \item Minimize
+    $$
+     \sum_{i=1}^n (Y_i - r_i)^2  \ \text{subject to} \ |X_j^Tr| \leq \lambda, 1 \leq j \leq p.$$
+
+     \item So, instead of finding closest point to a plane, it finds closest
+     (residual) point to a polygon...
+
+        \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+    {LASSO regression}
+        \begin{itemize}
+        \item Scales to huge data because for
+        large $\lambda$ solutions are {\em sparse}.
+
+        \item If there is a good model that is sparse, then LASSO can usually
+        find a good model.
+        \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % cv.lars(diabetes$x, diabetes$y, K=10, type='lasso')
+
+
+   \begin{frame}
+   \frametitle{LASSO: cross-validation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/28ed713a9a.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/penalized.html#lasso}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Penalized regression}
+
+   \begin{block}
+    {Elastic Net}
+        \begin{itemize}
+        \item Mix between LASSO and ridge regression.
+
+        \item Minimize
+    $$
+    SSE_{\lambda}(\B{}) = \sum_{i=1}^n \left(Y_i - \sum_{j=1}^{p-1} X_{ij} \B{j}\right)^2 + \lambda_1 \|\B\|_1 + \lambda_2 \|\B\|_2^2.$$
+
+        \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % library(lars)
+   % library(elasticnet)
+   % data(diabetes)
+   % 
+   % diabetes.enet = enet(diabetes$x, diabetes$y, 0.1)
+   % plot(diabetes.enet)
+
+
+   \begin{frame}
+   \frametitle{Elastic Net}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/ed9553f075.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/penalized.html#lasso}{R code}
+   \end{frame}
+
+   %CODE
+       % library(elasticnet)
+   % data(diabetes)
+   % 
+   % diabetes.enet = enet(diabetes$x, diabetes$y, 10)
+   % plot(diabetes.enet)
+
+
+   \begin{frame}
+   \frametitle{Elastic Net}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/371f9f664f.png}}    
+   \end{center}
+   \href{http://www.stanford.edu/class/stats191/penalized.html#lasso}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

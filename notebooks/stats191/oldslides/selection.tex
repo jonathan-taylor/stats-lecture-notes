@@ -1,0 +1,727 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Model Selection  (Ch. 11, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Topics}
+
+   \begin{block}
+   {Outline}
+   \begin{itemize}
+
+
+   \item Goals of model selection.
+
+   \item Criteria to compare models.
+   \item (Some) model selection.
+   \item Bias- variance trade-off.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Election data}
+
+   \begin{block}
+   {Description}
+
+   \begin{tabular}{c|l}
+   Variable & Description \\ \hline
+   $V$ & votes for a presidential candidate \\
+   $I$ & are they incumbent? \\
+   $D$ & Democrat or Republican incumbent? \\
+   $W$ & wartime election? \\
+   $G$ & GDP growth rate in election year \\
+   $P$ & (absolute) GDP deflator growth rate \\
+   $N$ & number of quarters in which GDP growth rate $> 3.2\%$
+   \end{tabular}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Problem \& Goals}
+   \begin{itemize}
+   \item When we have many predictors (with many possible interactions), it can be difficult to find a good model.
+   \item Which main effects do we include?
+   \item Which interactions do we include?
+
+   \item Model selection procedures try to {\em simplify / automate} this task.
+
+   \item Election data has  $2^6=64$ different models with just main effects!
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {General comments}
+   \begin{itemize}
+
+   \item This is an ``unsolved'' problem in statistics: there are no magic procedures to get you the ``best model.''
+   \item In some sense, model selection is ``data mining.''
+
+   \item Data miners / machine learners often work with very many predictors.
+
+   \item Our model selection problem is generally at a much smaller scale than ``data mining'' problems.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Hypothetical example}
+   \begin{itemize}
+   \item Suppose we fit a a model
+   $$
+   F: \quad Y_{n \times 1} = X_{n \times (p+1)} \beta_{(p+1) \times 1} + \varepsilon_{n \times 1}$$
+   with predictors ${\pmb X}_1, \dots, {\pmb X}_p$.
+
+   \item In reality, some of the $\beta$'s may be zero. Let's suppose that
+   $\beta_{j+1}= \dots= \beta_{p+1}=0$.
+
+   \item Then, any model that includes $\beta_0, \dots, \beta_j$ is {\em correct}: which model gives the  {\em best} estimates of $\beta_0, \dots, \beta_j$?
+
+   \item Principle of {\em parsimony} (i.e. Occam's razor) says that the model
+   with {\em only} $\pmb{X}_1, \dots, \pmb{X}_j$ is ``best''.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Hypothetical example: continued}
+   \begin{itemize}
+
+   \item For simplicity, let's assume that $j=1$ so there is only one coefficient to estimate.
+
+   \item Then, because each model gives an {\em unbiased} estimate
+   of $\beta_1$ we can compare models based on
+   $$
+   \text{Var}(\widehat{\beta}_1).$$
+
+   \item The best model, in terms of
+   this variance, is the one containing only ${\pmb X}_1$.
+
+   \item What if we didn't know that only $\beta_1$ was
+   non-zero (which we don't know in general)?
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Strategies}
+   \begin{itemize}
+
+   \item To ``implement'' a model selection procedure, we first need a criterion or benchmark to compare two models.
+   \item Given a criterion, we also need a search strategy.
+
+   \item With a limited number of predictors, it is possible to search all possible models ({\tt leaps} in {\tt R}).
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Possible criteria   }
+
+   \begin{itemize}[<+->]
+
+   \item $R^2$: not a good criterion. Always increase with model size $\implies$ ``optimum'' is to take the biggest model.
+
+   \item Adjusted $R^2$: better. It ``penalized'' bigger models.
+   Follows principle of parsimony / Occam's razor.
+
+   \item Mallow's $C_p$ -- attempts to estimate a model's predictive power, i.e. the power to predict a new observation.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/election.table'
+   % 
+   % election.table = read.table(url, header=T)
+   % 
+   % pairs(election.table[,2:ncol(election.table)], cex.labels=3, pch=23,
+   %       bg='orange', cex=2)
+   % 
+   % # Leaps takes a design matrix as argument: throw away the intercept
+   % # column or leaps will complain
+   % 
+   % election.lm = lm(V ~ I + D + W +G:I + P + N, election.table)
+   % X = model.matrix(election.lm)[,-1]
+   % 
+   % library(leaps)
+   % election.leaps = leaps(X, election.table$V, nbest=3, method='r2')
+   % plot(election.leaps$size, election.leaps$r2, pch=23, bg='orange', cex=2)
+   % best.model.r2 = election.leaps$which[which((election.leaps$r2 == max(election.leaps$r2))),]
+   % best.model.r2
+
+
+   \begin{frame}
+   \frametitle{Best subsets, $R^2$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/fc8b4ea825.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#election-example-best-subset}{R code}
+   \end{frame}
+
+   %CODE
+       % election.leaps = leaps(X, election.table$V, nbest=3, method='adjr2')
+   % plot(election.leaps$size, election.leaps$adjr2, pch=23, bg='orange', cex=2)
+   % best.model.adjr2 = election.leaps$which[which((election.leaps$adjr2 == max(election.leaps$adjr2))),]
+   % best.model.adjr2
+
+
+   \begin{frame}
+   \frametitle{Best subsets, adjusted $R^2$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/3cfd04f2cf.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#election-example-best-subset}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Mallow's $C_p$}
+   \begin{itemize}
+
+   \item $$
+   C_p({\cal M}) = \frac{SSE({\cal M})}{\widehat{\sigma}^2} + 2 \cdot p({\cal M}) - n.$$
+
+   \item  $\widehat{\sigma}^2=SSE(F)/df_F$ is the ``best'' estimate of $\sigma^2$ we have (use the fullest model), i.e. in the election data it uses all 6 main effects.
+   \item  $SSE({\cal M})$ is the $SSE$ of the model ${\cal M}$.
+
+   \item  $p({\cal M})$ is the number of predictors in ${\cal M}$.
+
+
+   \item This is an estimate of the expected mean-squared error of $\widehat{Y}({\cal M})$, it takes {\em bias} and {\em variance} into account.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % election.leaps = leaps(X, election.table$V, nbest=3, method='Cp')
+   % plot(election.leaps$size, election.leaps$Cp, pch=23, bg='orange', cex=2)
+   % best.model.Cp = election.leaps$which[which((election.leaps$Cp == min(election.leaps$Cp))),]
+   % best.model.Cp
+
+
+   \begin{frame}
+   \frametitle{Best subsets, Mallow's $C_p$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/b2d120be4a.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#election-example-best-subset}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Search strategies                     }
+
+
+   \begin{itemize}[<+->]
+
+
+   \item Given a criterion, we now have to decide how we are going
+   to search through all possible models.
+   \item ``Best subset'': search all possible models and take the one
+   with highest $R^2_a$ or lowest $C_p$ {\tt leaps}
+
+   \item Stepwise (forward, backward or both): useful when the number of predictors is large. Choose an initial model and be ``greedy''.
+
+   \item ``Greedy'' means always take the biggest jump (up or down) in your selected criterion.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Implementations in \RR}
+
+   \begin{itemize}
+
+   \item ``Best subset'': use the function {\tt leaps}. Works only for multiple linear regression models.
+
+   \item Stepwise: use the function {\tt step}. Works for any model with
+   Akaike Information Criterion (AIC). In multiple linear regression, AIC is (almost) a linear function of $C_p$.
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Akaike / Bayes Information Criterion}
+
+   \begin{itemize}
+
+   \item Akaike (AIC) defined as
+   $$
+   AIC({\cal M}) = - 2 \log L({\cal M}) + 2 p({\cal M})
+   $$
+   where $L({\cal M})$ is the maximized likelihood of the model.
+
+   \item Bayes (BIC) defined as
+   $$
+   BIC({\cal M}) = - 2 \log L({\cal M}) + \log n \cdot p({\cal M})
+   $$
+
+   \item Strategy can be used for whenever we have a likelihood, so
+   this generalizes to many statistical models.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Akaike / Bayes Information Criterion}
+
+   \begin{itemize}
+
+
+   \item In linear regression with unknown $\sigma^2$
+   $$
+   -2 \log L({\cal M}) = n \log(2\pi \widehat{\sigma}^2_{MLE}) + n
+   $$
+   where
+   $$
+   \widehat{\sigma}^2_{MLE} = \frac{1}{n} SSE(\widehat{\beta})
+   $$
+
+
+   \item In linear regression with known $\sigma^2$
+   $$
+   -2 \log L({\cal M}) = n \log(2\pi \sigma^2) + \frac{1}{\sigma^2} SSE(\widehat{\beta})
+   $$
+   so AIC is very much like Mallow's $C_p$.
+
+   \end{itemize}
+
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Akaike / Bayes Information Criterion}
+
+   \begin{itemize}[<+->]
+
+   \item BIC will always choose a model as small or smaller
+   than AIC.
+
+   \item As our sample size grows, we can show that
+   \begin{itemize}
+   \item AIC will (asymptotically) always choose a model that contains
+   the true model, i.e. it won't leave any variables out.
+   \item BIC will (asymptotically) choose exactly the right model.
+   \end{itemize}
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Cross-validation}
+
+   \begin{block}
+   {$K$-fold cross-validation                     }
+       \begin{itemize}
+
+       \item Fix a model ${\cal M}$.
+       Break data set into $K$ approximately equal sized groups $(G_1, \dots, G_K)$.
+
+       \item {\tt for (i in 1:K)} Use all groups
+       except $G_i$ to fit model, predict  outcome in group $G_i$ based on this model $\widehat{Y}_{j,{\cal M}, G_i}, j \in G_i$.
+
+       \item Estimate
+   $$
+   CV({\cal M}) = \frac{1}{n}\sum_{i=1}^K \sum_{j \in G_i} (Y_j - \widehat{Y}_{j,{\cal M},G_i})^2.$$
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Cross-validation}
+
+   \begin{block}
+   {Some facts about cross-validation.}
+       \begin{itemize}
+
+       \item It is a general principle that can be used in other situations to ``choose parameters.''
+
+       \item Pros (partial list): ``objective'' measure of a model.
+
+       \item Cons (partial list): inference is, strictly speaking, ``out the window'' (also true for other model selection procedures).
+
+       \item If goal is not really inference about certain specific parameters, it is a reasonable way to compare models.
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % library(boot)
+   % election.leaps = leaps(X, election.table$V, nbest=3, method='Cp')
+   % V = election.table$V
+   % election.leaps$cv = 0 * election.leaps$Cp
+   % for (i in 1:nrow(election.leaps$which)) {
+   %     subset = c(1:ncol(X))[election.leaps$which[i,]]
+   %     if (length(subset) > 1) {
+   %        Xw = X[,subset]
+   %        wlm = glm(V ~ Xw)
+   %        election.leaps$cv[i] = cv.glm(model.frame(wlm), wlm, K=5)$delta[1]
+   %     }
+   %     else {
+   %        Xw = X[,subset[1]]
+   %        wlm = glm(V ~ Xw)
+   %        election.leaps$cv[i] = cv.glm(model.frame(wlm), wlm, K=5)$delta[1]
+   %     }
+   % }
+   % plot(election.leaps$Cp, election.leaps$cv, pch=23, bg='orange', cex=2)
+   % X=3
+
+
+   \begin{frame}
+   \frametitle{$C_p$ versus 5-fold cross-validation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e38c266bdd.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#election-example-best-subset}{R code}
+   \end{frame}
+
+   %CODE
+       % plot(election.leaps$size, election.leaps$cv, pch=23, bg='orange', cex=2)
+
+
+   \begin{frame}
+   \frametitle{5-fold cross-validation for all $C_p$ models}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/dd6ac45a50.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#election-example-best-subset}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Caveats}
+
+   \begin{itemize}[<+->]
+
+   \item Many other ``criteria'' have been proposed.
+   \item Some work well for some types of data, others for different data.
+
+   \item Check diagnostics!
+
+   \item These criteria (except cross-validation) are not ``direct measures'' of predictive power, though Mallow's $C_p$ is a step in this direction.
+
+   \item $C_p$ measures the quality of a model based on both
+   {\em bias} and {\em variance} of the model. Why is this important?
+
+   \item {\em Bias-variance} tradeoff is ubiquitous in statistics.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Bias-variance tradeoff}
+
+   \begin{block}
+   {Comparing estimators}
+   \begin{itemize}
+
+   \item When an estimator $\widehat{\beta}_1$ of $\beta_1$ is unbiased:
+   $$
+   E((\widehat{\beta}_1 - \beta_1)^2) = \text{Var}(\widehat{\beta}_1)$$
+   so it makes sense to compare unbiased estimators in terms of variance.
+
+   \item Even for biased estimators, the LHS makes sense, called the
+   {\em mean squared error} of $\widehat{\beta}_1$
+   $$
+   \begin{aligned}
+   MSE(\widehat{\beta}_1) &= E((\widehat{\beta}_1 - \beta_1)^2) \\
+   &= \text{Var}(\widehat{\beta}_1) + \text{Bias}(\widehat{\beta}_1)^2
+   \end{aligned}
+   $$
+   \item Paradoxically, it is sometimes possible to reduce
+   $MSE$ by {\em biasing} the estimator.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Bias-variance tradeoff}
+
+   \begin{block}
+   {Shrinking toward zero}
+   \begin{itemize}
+   \item Suppose we observe $$Y_i \sim N(\mu_i, 1), 1 \leq i \leq n$$ and our goal is to estimate the entire vector $\mu$.
+
+   \item Minimum variance unbiased estimator is
+   $$
+   \widehat{\mu}_i = Y_i, \qquad 1 \leq i \leq n.$$
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Bias-variance tradeoff}
+
+   \begin{block}
+   {Shrinking toward zero}
+   \begin{itemize}
+
+   \item How good an estimator is $\widehat{\mu}$?
+   $$
+   MSE(\widehat{\mu}, \mu) = \frac{1}{n} E(\sum_{i=1}^n (\widehat{\mu}_i -\mu_i)^2)  = 1.$$
+   \item {\em However}, we can improve on the MSE very simply by {\em shrinking}
+   $\widehat{\mu}$  toward 0.
+
+   \item Define
+   $$
+   \widehat{\mu}^{\alpha}_i = \alpha \cdot Y_i, \qquad 1 \leq i \leq n, 0 \leq \alpha \leq 1.$$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % nsample = 100
+   % ntrial = 50
+   % mu = 5 * c(1:nsample) / nsample
+   % mu = mu - mean(mu)
+   % 
+   % get.sample = function() {
+   %   return(rnorm(nsample) + mu)
+   % }
+   % 
+   % MSE = function(mu.hat, mu) {
+   %   return(sum((mu.hat - mu)^2) / length(mu))
+   % }
+   % 
+   % alpha = seq(0.0,1,length=20)
+   % 
+   % mse = numeric(length(alpha))
+   % 
+   % for (i in 1:ntrial) {
+   %   Z = get.sample()
+   %   for (j in 1:length(alpha)) {
+   %     mse[j] = mse[j] + MSE(alpha[j] * Z, mu) / ntrial
+   %   }
+   % }
+   % 
+   % plot(alpha, mse, type='l', lwd=2, col='red', ylim=c(0, max(mse)),
+   %      xlab='Shrinkage parameter, alpha', ylab='MSE(alpha)')
+
+
+   \begin{frame}
+   \frametitle{Shrinking an estimator}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6f7df230c4.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#bias-variance-tradeoff}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

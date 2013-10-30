@@ -1,0 +1,758 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Weighted Least Squares, Transformations (Ch. 6 \& 7, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Outline}
+
+   \begin{block}{Today's class}
+
+   \begin{itemize}
+
+   \item Transformations to achieve linearity.
+
+   \item Transformations to stabilize variance.
+   \item Correcting for unequal variance: weighted least squares.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Transformations to achieve linearity                     }
+   \begin{itemize}
+
+
+   \item We have been working with {\em linear} regression models so far in the course.
+
+   \item Many models are nonlinear, but can be {\em transformed} to a linear model.
+
+
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % bacteria.table <- read.table('http://stats191.stanford.edu/data/bacteria.table', header=T)
+   % attach(bacteria.table)
+   % 
+   % plot(bacteria.table, pch=23, cex=2, bg='orange')
+
+
+   \begin{frame}
+   \frametitle{Bacteria death}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/19a2fee531.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#bacteria-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Exponential growth model}
+   \begin{itemize}
+   \item Suppose the expected
+   number of cells grows like
+   $$
+   E(n_t) = n_0 e^{\beta_1t}, \qquad t=1, 2, 3, \dots
+   $$
+
+   \item If we take logs of both sides
+   $$
+   \log E(n_t) = \log n_0 + \beta_1 t.$$
+
+   \item (Reasonable ?) model:
+   $$
+   \log n_t = \log n_0 + \beta_1 t + \varepsilon_t, \qquad \varepsilon_t \sim N(0,\sigma^2) \ \text{independent}$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}{Logarithmic transformation}
+   \begin{itemize}
+
+   \item This is slightly different than original model:
+   $$
+   E(\log n_t) \leq \log E(n_t)$$
+   but may be approximately true.
+
+   \item If $\varepsilon_t \sim N(0,\sigma^2)$ then
+   $$
+   n_t = n_0 \cdot \epsilon_t \cdot e^{\beta_1 t}.$$
+   \item $\epsilon_t=e^{\varepsilon_t}$ is called a log-normal random $(0,\sigma^2)$ random variable.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % bacteria.lm <- lm(N_t ~ t)
+   % bacteria.log.lm <- lm(log(N_t) ~ t)
+   % 
+   % par(mfrow=c(1,1))
+   % plot(bacteria.table, pch=23, cex=2, bg='orange')
+   % lines(t, fitted(bacteria.lm), lwd=2, col='red')
+   % lines(t, exp(fitted(bacteria.log.lm)), lwd=2, col='green')
+
+
+   \begin{frame}
+   \frametitle{Bacteria death, fitted values}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6e2b481af2.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#bacteria-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Linearizing regression function}
+
+   Some models that can be linearized:
+   \begin{itemize}
+
+   \item $y=\alpha x^{\beta}$, use $\tilde{y}=\log(y), \tilde{x}=\log(x)$;
+
+   \item $y=\alpha e^{\beta x}$, use $\tilde{y}=\log(y)$;
+
+   \item $y=x/(\alpha x - \beta)$, use $\tilde{y}=1/y, \tilde{x}=1/x$.
+   \item More in textbook.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Caveats}
+
+   \begin{itemize}
+
+   \item Just because expected value linearizes, doesn't
+   mean that the errors behave correctly.
+
+   \item In some cases, this can be corrected using
+   weighted least squares (more later).
+
+
+   \item Constant variance, normality assumptions should still be checked.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % bacteria.lm <- lm(N_t ~ t)
+   % par(mfrow=c(2,2))
+   % plot(bacteria.lm, cex=2, pch=23, bg='orange')
+
+
+   \begin{frame}
+   \frametitle{Bacteria death, untransformed}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/3afa8ee1c5.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#bacteria-example}{R code}
+   \end{frame}
+
+   %CODE
+       % bacteria.log.lm <- lm(log(N_t) ~ t)
+   % par(mfrow=c(2,2))
+   % plot(bacteria.log.lm, cex=2, pch=23, bg='orange')
+
+
+   \begin{frame}
+   \frametitle{Bacteria death, transformed}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/aa5be1ec90.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#bacteria-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Stabilizing variance                    }
+   \begin{itemize}
+
+   \item Sometimes, a transformation can turn non-constant variance errors
+   to ``close to'' constant variance.
+
+   \item Example: by the ``delta rule'' (see next slide), if
+   $$
+   Var(Y) = \sigma^2 E(Y)$$
+   then
+   $$
+   \text{Var}(\sqrt{Y}) \simeq \frac{\sigma^2}{4}.$$
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Delta rule}
+
+   \begin{itemize}
+
+
+   \item Very important tool in statistics.
+   \item Taylor series expansion:
+   $$
+   f(Y) = f(E(Y)) + \dot{f}(E(Y)) (Y - E(Y)) + \dots $$
+
+   \item
+   $$
+   \text{Var}(f(Y)) \simeq \dot{f}(E(Y))^2 \text{Var}(Y)$$
+
+   \item  Previous example:
+   $$\text{Var}(\sqrt{Y}) \simeq \frac{\text{Var}(Y)}{4E(Y)}
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Transformations}
+
+   \begin{block}
+   {Caveats                     }
+   \begin{itemize}
+
+   \item Just because a transformation makes variance
+   constant doesn't mean regression function is still linear (or even that it was linear)!
+
+   \item The models are approximations, and once a model is selected
+   our standard ``diagnostics'' should be used to assess adequacy of fit.
+
+   \item It is possible to have non-constant variance
+   but have the variance stabilizing transformation may destroy linearity of the regression function. {\em Solution:} try weighted least squares (WLS).
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Example: education expenditure in 1975                     }
+   \begin{itemize}
+
+   \item Variables:
+   \begin{enumerate}
+   \item $Y$ -- per capita education expenditure by state
+
+   \item $X_1$ -- per capita income in 1973 by state
+
+   \item $X_2$ -- proportion of population under 18
+
+   \item $X_3$ -- proportion in urban areas
+
+   \item ${\tt Region}$ -- which region of the country are the states located in ?
+   \end{enumerate}
+   \item Hypothesis: weights vary by Region: i.e. variability of expenditure
+   varies by rough geographic region.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % # education expenditure by state and region
+   % 
+   % education.table <- read.table('http://stats191.stanford.edu/data/education1975.table', header=T)
+   % education.table$Region <- factor(education.table$Region)
+   % attach(education.table)
+   % 
+   % education.lm <- lm(Y ~ X1 + X2 + X3, data=education.table)
+   % 
+   % # Standard plots
+   % 
+   % par(mfrow=c(2,2))
+   % plot(education.lm)
+
+
+   \begin{frame}
+
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e3ba575273.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % par(mfrow=c(1,1))
+   % boxplot(rstandard(education.lm) ~ Region, col=c('red', 'green',
+   %                                             'blue', 'yellow'))
+
+
+   \begin{frame}
+   \frametitle{Boxplot of residuals}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/690cdb2a3e.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#education-example}{R code}
+   \end{frame}
+
+   %CODE
+       % # Remove Alaska: 1975 was a big oil year
+   % 
+   % keep.subset <- (STATE != 'AK')
+   % 
+   % education.noAK.lm <- lm(Y ~ X1 + X2 + X3, subset=keep.subset, data=education.table)
+   % 
+   % summary(education.noAK.lm)
+   % 
+   % # Plot model again
+   % 
+   % par(mfrow=c(2,2))
+   % plot(education.noAK.lm)
+
+
+   \begin{frame}
+   \frametitle{Education expenditure, AK removed}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c641c3a06d.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#education-example}{R code}
+   \end{frame}
+
+   %CODE
+       % par(mfrow=c(1,1))
+   % boxplot(rstandard(education.noAK.lm) ~ Region[keep.subset], col=c('red', 'green',
+   %                                          'blue', 'yellow'))
+
+
+   \begin{frame}
+   \frametitle{Boxplot of residuals, AK removed}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/87ba1626cf.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#education-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}{Reweighting}
+   \begin{itemize}
+
+
+   \item If you have a reasonable guess of variance as a function
+   of the predictors, you can use this to ``reweight'' the data.
+
+   \item Hypothetical example
+   $$
+   Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, \qquad \varepsilon_i \sim N(0,\sigma^2 X_i^2).$$
+
+   \item Setting $\tilde{Y}_i = Y_i / X_i$, $\tilde{X}_i = 1 / X_i$, model becomes
+   $$
+   \tilde{Y}_i = \beta_0 \tilde{X}_i + \beta_1 + \epsilon_i, \epsilon_i \sim N(0,\sigma^2).$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Weighted Least Squares}
+
+   \begin{itemize}
+
+   \item Fitting this model is equivalent to minimizing
+   $$
+   \sum_{i=1}^n \frac{1}{X_i^2} \left(Y_i - \beta_0 - \beta_1 X_i\right)^2
+   $$
+   \item Weighted Least Squares
+   $$
+   SSE(\beta, w) = \sum_{i=1}^n w_i \left(Y_i - \beta_0 - \beta_1 X_i\right)^2, \qquad w_i = \frac{1}{X_i^2}.
+   $$
+
+   \item In general, weights should be
+     like:
+   $$
+   w_i = \frac{1}{\text{Var}(\varepsilon_i)}.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Common weighting ``schemes''}
+   \begin{itemize}
+
+   \item If you have a qualitative variable, then it is easy to
+   estimate weight within groups (our example today).
+
+   \item ``Often''
+   $$
+   \text{Var}(\varepsilon_i) = \text{Var}(Y_i) = V(E(Y_i))$$
+
+   \item Many non-Gaussian models behave like this: logistic, Poisson regression -- upcoming lectures.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Two stage procedure}
+
+   \begin{itemize}
+
+
+   \item Suppose we have a hypothesis about the weights, i.e.
+   they are constant within {\tt Region}, or they are something like
+   $$
+   w_i^{-1} = \text{Var}(\epsilon_i) =  \alpha_0 + \alpha_1 X_{i1}^2.$$
+
+   \item We pre-whiten:
+   \begin{enumerate}
+   \item Fit model using OLS (Ordinary Least Squares) to get initial estimate $\widehat{\beta}_{OLS}$
+
+   \item Use predicted values from this model to estimate $w_i$.
+   \item Refit model using WLS (Weighted Least Squares).
+
+   \item If needed, iterate previous two steps.
+   \end{enumerate}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % # Estimate weights by region
+   % 
+   % weights <- 0 * education.table$Y
+   % for (region in levels(Region)) {
+   %   subset.region <- (Region[keep.subset] == region)
+   %   weights[subset.region] <- 1.0 / (sum(resid(education.noAK.lm)[subset.region]^2) / sum(subset.region))
+   % }
+   % 
+   % education.noAK.weight.lm <- lm(Y ~ X1 + X2 + X3, weights=weights, subset=keep.subset, data=education.table)
+   % summary(education.noAK.weight.lm)
+   % 
+   % # Plot again
+   % 
+   % par(mfrow=c(2,2))
+   % plot(education.noAK.weight.lm)
+
+
+   \begin{frame}
+   \frametitle{Education expenditure -- weighted}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/b96a51b608.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#education-example}{R code}
+   \end{frame}
+
+   %CODE
+       % par(mfrow=c(1,1))
+   % boxplot(resid(education.noAK.weight.lm, type='pearson') ~ Region[keep.subset], col=c('red',
+   %                                                     'green',
+   %                                                     'blue', 'yellow'))
+
+
+   \begin{frame}
+   \frametitle{Boxplot of residuals -- weighted}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/1206bd472b.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#education-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Unequal variance: effects on inference}
+   \begin{itemize}
+   \item So far, we have just mentioned that things {\em may} have unequal variance, but not thought about how it affects inference.
+
+   \item In general, if we ignore unequal variance, our estimates of variance
+   are no longer unbiased. The covariance has the ``sandwich form''
+   $$
+   \text{Cov}(\widehat{\beta}_{OLS}) = (X'X)^{-1}(XW^{-1}X)(X'X)^{-1}.
+   $$
+   with $W=\text{diag}(1/\sigma^2_i)$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Efficiency}
+   \begin{itemize}
+   \item The efficiency of an unbiased estimator of $\beta$
+    is 1 / variance.
+
+   \item Estimators can be compared by their efficiency: the more efficient, the better.
+
+   \item The other reason to correct for unequal variance (besides so that we get valid inference) is for efficiency.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correcting for unequal variance}
+
+   \begin{block}
+   {Efficiency -- example}
+   \begin{itemize}
+   \item Suppose
+   $$
+   Z_i = \mu + \varepsilon_i, \qquad \varepsilon_i \sim N(0, i^2 \cdot \sigma^2), 1 \leq i \leq n.$$
+
+   \item Two unbiased estimators of $\mu$:
+   $$
+   \begin{aligned}
+   \widehat{\mu}_1 &= \frac{1}{n}\sum_{i=1}^n Z_i \\
+   \widehat{\mu}_2 &= \frac{1}{\sum_{i=1}^n i^{-2}}\sum_{i=1}^n i^{-2}Z_i \\
+   \end{aligned}
+   $$
+
+   \item The estimator $\widehat{\mu}_2$ will always have lower variance, hence tighter confidence intervals.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % ntrial <- 2000   # how many trials will we be doing?
+   % nsample <- 20   # how many points in each trial
+   % sd <- c(1:20)   # how does the variance change
+   % mu <- 2.0
+   % 
+   % get.sample <- function() {
+   %   return(rnorm(nsample)*sd + mu)
+   % }
+   % 
+   % unweighted.estimate <- function(cur.sample) {
+   %   return(mean(cur.sample))
+   % }
+   % 
+   % unweighted.estimate <- numeric(ntrial)
+   % weighted.estimate <- numeric(ntrial)
+   % wrongly.weighted.estimate <- numeric(ntrial)
+   % 
+   % for (i in 1:ntrial) {
+   %   cur.sample <- get.sample()
+   %   unweighted.estimate[i] <- mean(cur.sample)
+   %   weighted.estimate[i] <- sum(cur.sample/sd^2) / sum(1/sd^2)
+   %   wrongly.weighted.estimate[i] <- sum(cur.sample/sd) / sum(1/sd)
+   % }
+   % 
+   % data.frame(unweighted=c(mean(unweighted.estimate),
+   %                    sd(unweighted.estimate)),
+   %                  weighted=c(mean(weighted.estimate),
+   %                    sd(weighted.estimate)),
+   %                  wrongly.weighted=c(mean(wrongly.weighted.estimate),
+   %                    sd(wrongly.weighted.estimate))
+   %                  )
+   % 
+   % 
+   % Y <- c(density(unweighted.estimate)$y, density(weighted.estimate)$y, density(wrongly.weighted.estimate)$y)
+   % X <- c(density(unweighted.estimate)$x, density(weighted.estimate)$x, density(wrongly.weighted.estimate)$x)
+   % 
+   % 
+   % plot(X, Y, type='n', main='Comparison of densities of the estimators')
+   % lines(density(weighted.estimate), col='red', lwd=2)
+   % lines(density(unweighted.estimate), col='blue', lwd=2)
+   % lines(density(wrongly.weighted.estimate), col='purple', lwd=2)
+   % legend(6,0.3, c('optimal', 'mean', 'suboptimal'), col=c('red', 'blue', 'purple'), lwd=rep(2,3))
+
+
+   \begin{frame}
+   \frametitle{Efficiency of estimators}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/307efa66b3.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/transformations.html#efficiency}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

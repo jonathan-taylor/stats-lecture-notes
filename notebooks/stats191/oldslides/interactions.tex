@@ -1,0 +1,1174 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Qualitative Variables, Interactions \& ANOVA  (Ch. 5, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Qualitative variables + interactions}
+
+   \begin{block}
+   {Outline}
+   \begin{itemize}
+
+   \item Qualitative / categorical variables.
+
+   \item Regression equations differing by group.
+
+   \item Interactions.
+
+   \item Analysis of Variance Models
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Categorical variables}
+
+   \begin{block}
+   {Categorical variables}
+   \begin{itemize}
+
+   \item       Most variables we have looked at so far
+   were continuous: height, rating, etc.
+
+   \item In many situations, we record a categorical variable:
+   sex, state, country, etc.
+
+   \item How do we include this in our model?
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Categorical variables}
+
+   \begin{block}
+   {A simple example}
+   \begin{itemize}
+
+   \item       One example that we have looked at
+   {\em does} have categorical variables.
+
+   \item Two sample problem with equal variances:
+   suppose
+   $$
+   Y = (Z_1, \dots, Z_m, W_1, \dots, W_n)$$
+   with $Z_j \sim N(\mu_1, \sigma^2), 1 \leq j \leq m$ and $W_j \sim N(\mu_2, \sigma^2), 1 \leq j \leq n + m$.
+
+   \item For  $1 \leq i \leq n$, let
+   $$
+   X_i =
+   \begin{cases}
+   1 & 1 \leq i \leq m \\
+   0 & \text{otherwise.}
+   \end{cases}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Categorical variables}
+
+   \begin{block}
+   {A simple example}
+   \begin{itemize}
+
+   \item Design matrix
+   $$
+   X_{(n+m) \times 2} =
+   \begin{pmatrix}
+   1 & 1 \\
+   \vdots & \vdots \\
+   1 & 1 \\
+   1 & 0 \\
+   \vdots & \vdots \\
+   1 & 0
+   \end{pmatrix}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Example}
+
+   \begin{block}
+   {IT salary data}
+   \begin{itemize}
+
+   \item Outcome: S, salaries for IT staff in a corporation.
+
+   \item Predictors: X, experience (years);  E, education (3 levels): 1=Bachelor's, 2=Master's, 3=Ph.D; M, management (2 levels): 1=management, 0=not management.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/salary.table'
+   % 
+   % salary.table <- read.table(url, header=T)
+   % salary.table$E <- factor(salary.table$E)
+   % salary.table$M <- factor(salary.table$M)
+   % attach(salary.table)
+   % 
+   % plot(X,S, type='n', xlab='Experience', ylab='Salary')
+   % colors <- c('red', 'green', 'blue')
+   % symbols <- c(23,24)
+   % for (i in 1:3) {
+   %   for (j in 0:1) {
+   %     subset <- as.logical((E == i) * (M == j))
+   %     points(X[subset], S[subset], pch=symbols[j+1], bg=colors[i], cex=2)
+   %   }
+   % }
+
+
+   \begin{frame}
+   \frametitle{IT salary}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/f1602de9ec.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#salary-example}{R code}
+   \end{frame}
+
+   %CODE
+       % salary.lm <- lm(S ~ E + M + X)
+   % summary(salary.lm)
+   % 
+   % model.matrix(salary.lm)
+   % 
+   % model.frame(salary.lm)
+   % influence.measures(salary.lm)
+   % 
+   % outlier.test(salary.lm)
+   % 
+   % r = resid(salary.lm)
+   % 
+   % k = 1
+   % 
+   % # this type gives an empty plotting window 'n' for 'none'
+   % 
+   % plot(X, r, xlim=c(1,6), type='n', xlab='Group', ylab='Residuals')
+   % 
+   % for (i in 1:3) {
+   %   for (j in 0:1) {
+   %     subset <- as.logical((E == i) * (M == j))
+   %     points(rep(k, length(r[subset])), r[subset], pch=symbols[j+1], bg=colors[i], cex=2)
+   %     k = k+1
+   %   }
+   % }
+
+
+   \begin{frame}
+   \frametitle{IT salary}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e3a20f8449.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#salary-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Two solutions}
+
+   \begin{block}
+   {Solution \#1: stratification                     }
+   \begin{itemize}[<+->]
+
+   \item One solution is to ``stratify'' data set by this categorical variable.
+
+   \item We could break data set up into groups by education and management, and fit fit model
+   $$
+   S_i = \beta_0 + \beta_1 X_i + \varepsilon_i$$
+   in each group.
+   \item Problem: this results in smaller samples in each group: lose degrees of freedom for estimating $\sigma^2$ within each group.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Two solutions}
+
+   \begin{block}
+   {Solution \#2: qualitative predictors                     }
+   \begin{itemize}
+
+   \item IF it is reasonable to assume that $\sigma^2$ is constant
+   for each observation.
+
+   \item THEN, we can incorporate all observations into 1 model.
+
+   $$
+   S_i = \beta_0 + \beta_1 X_i + \beta_2 E_{i2} + \beta_3 E_{i3} + \beta_4 M_i + \varepsilon_i
+   $$
+   where
+   $$
+   E_{i2} = \begin{cases}
+   1 & \text{if  $E_i = 2$},\\
+   0 & \text{otherwise.}
+   \end{cases}, E_{i3} = \begin{cases}
+   1 & \text{if  $E_i = 3$},\\
+   0 & \text{otherwise,}
+   \end{cases},
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Categorical variables: details}
+
+   \begin{block}
+   {Things to notice }
+   \begin{itemize}
+
+   \item Although $E$ has 3 levels, we only added 2 variables to the model.
+   In a sense, this is because ``intercept'' absorbs one level.
+
+   \item If we added three variables then the columns of design matrix would be linearly dependent.
+
+
+   \item Assumes $\beta_1$ -- effect of experience is the same in all groups, unlike when we fit the model separately. This may or may not be reasonable.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interactions}
+
+   \begin{block}
+   {Effect of experience}
+   \begin{itemize}
+
+   \item Our model has enforced the constraint the $\beta_1$ is the same within each group.
+
+   \item Graphically, this seems OK, but how can we ``test'' this?
+
+   \item We could fit a model with different slopes in each group, but keeping as many d.f. as we can.
+
+   \item This model has ``interactions'' in it: the effect of experience depends on what level of education you have.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interactions}
+
+   \begin{block}
+   {Interaction between experience and education}
+   \begin{itemize}[<+->]
+
+   \item Model:
+   $$
+   \begin{aligned}
+   \lefteqn{S_i = \beta_0 + \beta_1 X_i + \beta_2 E_{i2} + \beta_3 E_{i3} + \beta_4 M_i} \\
+   & \qquad  + \beta_5 E_{i2} X_i + \beta_6 E_{i3} X_i + \varepsilon_i.
+   \end{aligned}
+   $$
+   \item Note that we took each column corresponding to education and multiplied it by the column for experience to get two new predictors.
+   \item To test whether the slope is the same in each group we would just test
+   $H_0:\beta_5 = \beta_6=0$.
+
+   \item Based on figure, we expect not to reject $H_0$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interactions}
+
+   \begin{block}
+   {Interaction between management and education}
+   \begin{itemize}[<+->]
+
+   \item Based on figure, we expect an interaction effect.
+
+   \item Fit model
+   $$
+   \begin{aligned}
+   \lefteqn{S_i = \beta_0 + \beta_1 X_i + \beta_2 E_{i2} + \beta_3 E_{i3} + \beta_4 M_i} \\
+   & \qquad  + \beta_5 E_{i2} M_i + \beta_6 E_{i3} M_i + \varepsilon_i.
+   \end{aligned}
+   $$
+
+   \item Again, testing for interaction is testing $H_0:\beta_5=\beta_6=0.$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % subs33 = c(1:length(S))[-33]
+   % 
+   % salary.lm33 = lm(S ~ E + X + M, subset=subs33)
+   % interactionX.lm33 = lm(S ~ E * X + M, subset=subs33)
+   % interactionM.lm33 = lm(S ~ X + E * M, subset=subs33)
+   % 
+   % summary(salary.lm33)
+   % summary(interactionX.lm33)
+   % summary(interactionM.lm33)
+   % 
+   % anova(salary.lm33,interactionX.lm33)
+   % anova(salary.lm33,interactionM.lm33)
+   % 
+   % 
+   % r = rstandard(interactionM.lm33)
+   % plot(X[subs33], r, type='n')
+   % for (i in 1:3) {
+   %   for (j in 0:1) {
+   %     subset <- as.logical((E == i) * (M == j))
+   %     points(X[subset], r[subset], pch=symbols[j+1], bg=colors[i], cex=2)
+   %   }
+   % }
+
+
+   \begin{frame}
+   \frametitle{IT salary, outlier removed}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/f6b8520b26.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#salary-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Example}
+
+   \begin{block}
+   { Minority employment data                   }
+   \begin{tabular}{cl}
+   $TEST$ & job aptitude test score \\
+   $ETHN$ & 1 if minority, 0 otherwise \\
+   $JPERF$ & job performance evaluation
+   \end{tabular}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/minority.table'
+   % 
+   % minority.table <- read.table(url, header=T)
+   % minority.table$ETHN <- factor(minority.table$ETHN)
+   % attach(minority.table)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+
+
+   \begin{frame}
+   \frametitle{Minority employment data}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/f89be49cde.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interactions}
+
+   \begin{block}
+   {General model}
+
+   \begin{itemize}
+
+   \item In theory, there may be a linear relationship
+   between $JPERF$ and $TEST$ but it could be different by group.
+
+   \item Model:
+   {\small
+   $$
+   JPERF_i = \beta_0 + \beta_1 TEST_i + \beta_2 ETHN_i + \beta_3 ETHN_i * TEST_i + \varepsilon_i.
+   $$
+   }
+   \item Regression functions:
+   {\small
+   $$
+   Y_i =
+   \begin{cases}
+   \beta_0 + \beta_1 TEST_i + \varepsilon_i & \text{if $ETHN_i$=0} \\
+   (\beta_0 + \beta_2) + (\beta_1 + \beta_3) TEST_i + \varepsilon_i & \text{if $ETHN_i=1$.} \\
+   \end{cases}
+   $$
+   }
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/minority.table'
+   % 
+   % minority.table <- read.table(url, header=T)
+   % minority.table$ETHN <- factor(minority.table$ETHN)
+   % attach(minority.table)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % 
+   % 
+   % 
+   % 
+   % minority.lm1 <- lm(JPERF ~ TEST)
+   % summary(minority.lm1)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % abline(minority.lm1$coef, lwd=3, col='blue')
+
+
+   \begin{frame}
+   \frametitle{No difference}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/37c064b804.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %CODE
+       % minority.lm2 = lm(JPERF ~ TEST + TEST:ETHN)
+   % summary(minority.lm2)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % 
+   % abline(minority.lm2$coef['(Intercept)'], minority.lm2$coef['TEST'], lwd=3, col='purple')
+   % abline(minority.lm2$coef['(Intercept)'], minority.lm2$coef['TEST'] + minority.lm2$coef['TEST:ETHN1'], lwd=3, col='green')
+
+
+   \begin{frame}
+   \frametitle{Different slopes, same intercept}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/628321a694.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %CODE
+       % minority.lm3 = lm(JPERF ~ TEST + ETHN)
+   % summary(minority.lm3)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % abline(minority.lm3$coef['(Intercept)'], minority.lm3$coef['TEST'], lwd=3, col='purple')
+   % abline(minority.lm3$coef['(Intercept)'] + minority.lm3$coef['ETHN1'], minority.lm3$coef['TEST'], lwd=3, col='green')
+
+
+   \begin{frame}
+   \frametitle{Different intercepts, same slope}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/78aad55d8a.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %CODE
+       % minority.lm4 = lm(JPERF ~ TEST * ETHN)
+   % summary(minority.lm4)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % abline(minority.lm4$coef['(Intercept)'], minority.lm4$coef['TEST'], lwd=3, col='purple')
+   % abline(minority.lm4$coef['(Intercept)'] + minority.lm4$coef['ETHN1'],
+   %        minority.lm4$coef['TEST'] + minority.lm4$coef['TEST:ETHN1'], lwd=3, col='green')
+
+
+   \begin{frame}
+   \frametitle{Different intercepts, different slopes}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/645008123b.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interactions}
+
+   \begin{block}
+   {Interpreting different models                     }
+   \begin{itemize}[<+->]
+
+   \item Both  $\beta_2, \beta_3 \neq 0$ -- main effect for $ETHN$ and interaction effect
+   between $TEST$ and $ETHN$.
+   \item $\beta_2 \neq 0, \beta_3 = 0$ -- main effect for $ETHN$, no interaction between $TEST$ and $ETHN$.
+   \item $\beta_2=0, \beta_3 \neq 0$ -- no main effect for $ETHN$,  interaction between $TEST$ and $ETHN$.
+
+
+   \item \href{http://stats191.stanford.edu/interactions.html#salary-example}{R code}
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {General definition of ANOVA model}
+   \begin{itemize}
+
+   \item Models with only qualitative variables.
+
+
+
+   \item Can be thought of as extensions of ``two-sample'' $t$-test to more than two groups at once, and more than one grouping variable.
+
+   \item Example: in a simple experiment studying blood pressure we might start by considering only the overall health (Poor, Moderate, Good).
+
+   \item Data would then have one categorical variable with three levels.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Example: rehab surgery}
+
+   \begin{itemize}[<+->]
+
+   \item How does prior fitness affect recovery from surgery? Observations: 24 subjects' recovery time.
+
+   \item Three fitness levels: below average, average, above average.
+
+   \item If you are in better shape before surgery, does it take less time to recover?
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {One-way ANOVA}
+   \begin{itemize}
+
+   \item First generalization of two sample $t$-test: more than one level.
+   \item One-way ANOVA model: observations: $Y_{ij}, 1 \leq i \leq r, 1 \leq j \leq n_i$: $r$ groups and $n_i$ samples in $i$-th group.
+   $$
+   Y_{ij} = \mu  + \alpha_i + \varepsilon_{ij}, \qquad \varepsilon_{ij} \sim N(0, \sigma^2).$$
+
+   \item Constraint: $\sum_{i=1}^r \alpha_i = 0$. This constraint is needed for ``identifiability''. This is ``equivalent'' to only adding $r-1$ columns to the design matrix for this qualitative variable.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {One-way ANOVA}
+   \begin{itemize}
+
+
+   \item Model is easy to fit:
+   $$
+   \widehat{Y}_{ij} = \frac{1}{n_i} \sum_{j=1}^{n_i} Y_{ij} = \overline{Y}_{i\cdot}.$$
+   If observation is in $i$-th group: predicted mean is just the sample mean of observations in $i$-th group.
+   \item Simplest question: is there any group (main) effect?
+   $$
+   H_0:\alpha_1 = \dots = \alpha_r= 0?$$
+
+   \item Test is based on $F$-test with full model vs. reduced model. Reduced model just has an intercept.
+
+   \item Other questions: is the effect the same in groups 1 and 2?
+   $$H_0:\alpha_1=\alpha_2?$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {ANOVA table: One-way}
+   \begin{itemize}[<+->]
+
+   \item
+   {\tiny
+   \begin{tabular}{l|ccc}
+   Source  & $SS$    & $df$ &  $E(MS)$ \\ \hline
+   Treatments &    $SSTR = \sum_{i=1}^r n_i \left(\overline{Y}_{i\cdot} - \overline{Y}_{\cdot\cdot}\right)^2$ &   $r-1$     & $\sigma^2 + \frac{\sum_{i=1}^r n_i \alpha_i^2}{r-1}$ \\
+   Error &  $SSE = \sum_{i=1}^r \sum_{j=1}^{n_i}(Y_{ij} - \overline{Y}_{i\cdot})^2$ & $\sum_{i=1}^r n_i - r$ & $\sigma^2$ \\
+   \end{tabular}}
+
+
+   \item Note that $MSTR$ measures ``variability'' of the ``cell'' means. If there is a group effect we expect this to be large relative to $MSE$.
+   \item We see that under $H_0:\alpha_1=\dots=\alpha_r=0$,
+   the expected value of $MSTR$ and $MSE$ is $\sigma^2$. This tells us how to
+   test $H_0$ using ratio of mean squares, i.e. an $F$ test.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Testing for any main effect}
+   \begin{itemize}
+
+   \item Rows in the ANOVA table are, in general, independent.
+
+   \item Therefore, under $H_0$
+   $$
+   F = \frac{MSTR}{MSE} = \frac{\frac{SSTR}{df_{TR}}}{\frac{SSE}{df_{E}}} \sim F_{df_{TR}, df_E}$$
+   the degrees of freedom come from the $df$ column in previous table.
+   \item Reject $H_0$ at level $\alpha$ if $F > F_{1-\alpha, df_{TR}, df_{E}}.$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Inference for linear combinations                     }
+   \begin{itemize}
+
+   \item Suppose we want to ``infer'' something about
+   $$
+   \sum_{i=1}^r a_i \mu_i$$
+   where $\mu_i = \mu+\alpha_i$ is the mean in the $i$-th group.
+   For example:
+   $$
+   H_0:\mu_1-\mu_2=0 \qquad \text{(same as $H_0:\alpha_1-\alpha_2=0$)}?$$
+   Is there a difference between below average and average groups in terms of rehab time?
+   \item $$
+   \text{Var}\left(\sum_{i=1}^r a_i \overline{Y}_{i\cdot} \right) = \sigma^2 \sum_{i=1}^r \frac{a_i^2}{n_i}.$$
+
+   \item Usual confidence intervals, $t$-tests.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Two categorical variables: kidney failure}
+
+   \begin{itemize}
+   \item Time of stay in hospital depends on weight gain between treatments and duration of treatment.
+
+   \item Two levels of duration, three levels of weight gain.
+
+   \item Is there an interaction? Main effects?
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Two-way ANOVA}
+
+   \begin{itemize}
+
+   \item Second generalization: more than one grouping variable.
+   \item Two-way ANOVA model: observations: $(Y_{ijk}), 1 \leq i \leq r, 1 \leq j \leq m, 1 \leq k \leq n_{ij}$: $r$ groups in first grouping variable, $m$ groups in second and $n_{ij}$ samples in $(i,j)$-``cell'':
+   $$
+   Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} +  \varepsilon_{ijk} , \qquad \varepsilon_{ijk} \sim N(0, \sigma^2).$$
+   \item In kidney example, $r=3$ (weight gain), $m=2$ (duration of treatment), $n_{ij}=10$ for all $(i,j)$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA model}
+
+   \begin{block}
+   {Two-way ANOVA: main questions of interest}
+   \begin{itemize}
+   \item Are there main effects for the grouping variables?
+   $$
+   H_0:\alpha_1 = \dots = \alpha_r = 0, \qquad H_0: \beta_1 = \dots = \beta_m = 0.$$
+   \item Are there interaction effects:
+   $$
+   H_0:(\alpha\beta)_{ij} = 0, 1 \leq i \leq r, 1 \leq j \leq m.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Constraints on the parameters}
+   \begin{itemize}
+
+   \item Many constraints are needed, again for identifiability.
+   Let's not worry about the details \dots
+
+   \item Constraints:
+   \begin{itemize}
+
+   \item $\sum_{i=1}^r \alpha_i = 0$
+
+   \item $\sum_{j=1}^m \beta_j = 0$
+
+   \item $\sum_{j=1}^m (\alpha\beta)_{ij} = 0, 1 \leq i \leq r$
+   \item $\sum_{i=1}^r (\alpha\beta)_{ij} = 0, 1 \leq j \leq m.$
+   \end{itemize}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {Fitting model}
+   \begin{itemize}
+
+   \item Easy to fit:
+   $$
+   \widehat{Y}_{ijk}= \overline{Y}_{ij\cdot} = \frac{1}{n_{ij}}\sum_{k=1}^{n_{ij}} Y_{ijk}.$$
+   \item Inference for combinations
+   $$\text{Var} \left(\sum_{i=1}^r \sum_{j=1}^m a_{ij} \overline{Y}_{ij\cdot}\right) = \sigma^2 \cdot \sum_{i=1}^r \sum_{j=1}^m \frac{a_{ij}^2}{n_{ij}}.$$
+
+   \item Usual $t$-tests, confidence intervals.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {ANOVA table: Two-way (assuming $n_{ij}=n$)}
+   {\small
+   \begin{tabular}{lc}
+   Term & $SS$     \\ \hline
+   $A$ &    $SSA = nm\sum_{i=1}^r  \left(\overline{Y}_{i\cdot\cdot} - \overline{Y}_{\cdot\cdot\cdot}\right)^2$ \\
+   $B$ &     $SSB = nr\sum_{j=1}^m  \left(\overline{Y}_{\cdot j\cdot} - \overline{Y}_{\cdot\cdot\cdot}\right)^2$ \\
+   $AB$ &    $SSAB = n\sum_{i=1}^r \sum_{j=1}^m  \left(\overline{Y}_{ij\cdot} - \overline{Y}_{i\cdot\cdot} - \overline{Y}_{\cdot j\cdot} + \overline{Y}_{\cdot\cdot\cdot}\right)^2$ \\
+   Error &  $SSE = \sum_{i=1}^r \sum_{j=1}^m \sum_{k=1}^{n}(Y_{ijk} - \overline{Y}_{ij\cdot})^2$  \\
+   \end{tabular}}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {ANOVA table: Two-way (assuming $n_{ij}=n$)}
+   \begin{itemize}
+   \item {\small
+   \begin{tabular}{lcc}
+   $SS$    & $df$ &  $E(MS)$ \\ \hline
+   $SSA$ &   $r-1$     & $\sigma^2 + nm\frac{\sum_{i=1}^r \alpha_i^2}{r-1}$ \\
+   $SSB$ &   $m-1$     & $\sigma^2 + nr\frac{\sum_{j=1}^m \beta_j^2}{m-1}$ \\
+   $SSAB$ &   $(m-1)(r-1)$     & $\sigma^2 + n\frac{\sum_{i=1}^r\sum_{j=1}^m (\alpha\beta)_{ij}^2}{(r-1)(m-1)}$ \\
+   $SSE$ & $(n-1)mr$ & $\sigma^2$ \\
+   \end{tabular}}
+   \item For instance, we see that under $H_0:(\alpha\beta)_{ij}=0, \forall i,j$
+   the expected value of $SSAB$ and $SSE$ is $\sigma^2$ -- use these for an $F$-test testing for an interaction.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Fixed and random effects}
+
+   \begin{block}
+   {Random effects}
+   \begin{itemize}
+
+   \item In kidney \& rehab examples, the categorical variables are well-defined categories: below average fitness, long duration, etc.
+
+   \item In some designs, the categorical variable is ``subject''.
+
+   \item Simplest example: repeated measures, where more than one (identical) measurement is taken on the same individual.
+
+   \item In this case, the ``group'' effect $\alpha_i$ is best thought of as random because we only sample a subset of the entire population.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Fixed and random effects}
+
+   \begin{block}
+   {When to use random effects?}
+   \begin{itemize}
+   \item A ``group'' effect is random if we can think of the levels we observe in that group to be samples from a larger population.
+
+   \item Example: if collecting data from different medical centers, ``center'' might be thought of as random.
+
+   \item Example: if surveying students on different campuses, ``campus'' may be a random effect.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Fixed and random effects}
+
+   \begin{block}
+   {Example: sodium content in beer}
+
+   \begin{itemize}[<+->]
+
+   \item How much sodium is there in North American beer? How much does this vary by brand?
+
+   \item Observations: for 6 brands of beer, we recorded the sodium content of 8 12 ounce bottles.
+
+   \item Questions of interest: what is the ``grand mean'' sodium content? How much variability is there from brand to brand?
+
+   \item ``Individuals'' in this case are brands, repeated measures are the 8 bottles.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {One-way random effects model}
+
+   \begin{itemize}
+
+   \item Assuming that cell-sizes are the same, i.e. equal observations for each ``subject'' (brand of beer).
+   \item Observations       $$
+   Y_{ij} \sim \mu_{\cdot} + \alpha_i + \varepsilon_{ij}, 1 \leq i \leq r, 1 \leq j \leq n$$
+
+   \item $\varepsilon_{ij} \sim N(0, \sigma^2), 1 \leq i \leq r, 1 \leq j \leq n$
+   \item $\alpha_i \sim N(0, \sigma^2_{\mu}), 1 \leq  i \leq r.$
+
+   \item Parameters:
+   \begin{itemize}
+   \item $\mu$ is the population mean;
+
+   \item $\sigma^2$ is the measurement variance (i.e. how variable are the readings from the machine that reads the sodium content?);
+   \item $\sigma^2_{\mu}$ is the population variance (i.e. how variable is the  sodium content of beer across brands).
+   \end{itemize}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {Implications for model}
+   \begin{itemize}
+
+   \item In random effects model, the observations are no longer independent (even if $\varepsilon$'s are independent
+   $$
+   {\rm Cov}(Y_{ij}, Y_{i'j'}) = \sigma^2_{\mu} \delta_{i,i'} + \sigma^2 \delta_{j,j'}.$$
+
+   \item In more complicated models, this makes ``maximum likelihood estimation'' more complicated: least squares is no longer the best solution.
+
+
+   \item Also changes the degrees of freedom for some $t$-statistics.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {Fitting the model}
+   \begin{itemize}
+   \item Only one parameter in the mean function $\mu_{\cdot}.$
+
+   \item When cell sizes are the same (balanced),
+   $$
+   \widehat{\mu}_{\cdot} = \overline{Y}_{\cdot \cdot} = \frac{1}{nr} \sum_{i,j} Y_{ij}.$$
+
+   \item Unbalanced models: slightly more tricky.
+
+   \item This also changes estimates of $\sigma^2$ -- see ANOVA table below. We might guess that $df=nr-1$ and
+   $$
+   \widehat{\sigma}^2 = \frac{1}{nr-1} \sum_{i,j} (Y_{ij} - \overline{Y}_{\cdot\cdot})^2.$$
+   This is {\em not} the case.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {ANOVA table}
+
+   {\tiny
+   \begin{tabular}{l|ccc}
+   Source  & $SS$    & $df$ &  $E(MS)$ \\ \hline
+   Treatments &    $SSTR = \sum_{i=1}^r n \left(\overline{Y}_{i\cdot} - \overline{Y}_{\cdot\cdot}\right)^2$ &   $r-1$     & $\sigma^2 + n \sigma^2_{\mu}$ \\
+   Error &  $SSE = \sum_{i=1}^r \sum_{j=1}^{n}(Y_{ij} - \overline{Y}_{i\cdot})^2$ & $(n-1)r$ & $\sigma^2$ \\
+   \end{tabular}}
+   \begin{itemize}
+
+   \item Only change here is the expectation of $SSTR$ which reflects randomness of $\alpha_i$'s.
+
+   \item ANOVA table is still useful to setup tests: the same $F$ statistics for fixed or random will work here.
+
+   \item Test for random effect: $H_0:\sigma^2_{\mu}=0$ based on
+   $$
+   F = \frac{MSTR}{MSE} \sim F_{r-1, (n-1)r} \qquad \text{under $H_0$}.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {Inference for population mean: $\mu_{\cdot}$}
+   \begin{itemize}
+
+   \item Easy to check that
+   $$
+   \begin{aligned}
+   E(\overline{Y}_{\cdot \cdot}) &= \mu_{\cdot}   \\
+   \text{Var}(\overline{Y}_{\cdot \cdot}) &= \frac{n\sigma^2_{\mu} + \sigma^2}{rn}.
+   \end{aligned}
+   $$
+
+   \item To come up with a $t$ statistic that we can use for test, CIs, we
+   need to find an estimate of $\text{Var}(\overline{Y}_{\cdot \cdot})$.
+   ANOVA table says $E(MSTR) = n\sigma^2_{\mu}+\sigma^2.$
+   \item Therefore,
+   $$
+   \frac{\overline{Y}_{\cdot \cdot} - \mu_{\cdot}}{\sqrt{\frac{SSTR}{(r-1)rn}}} \sim t_{r-1}$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {Inference for population mean: $\mu_{\cdot}$}
+   \begin{itemize}[<+->]
+
+   \item Why $r-1$ degrees of freedom?
+   Imagine we could record an infinite number of observations for each individual, so that $\overline{Y}_{i\cdot} \rightarrow \mu_i$, or that $\sigma^2_{\mu}=0$.
+
+   \item To learn anything about $\mu_{\cdot}$ we still only have $r$ observations
+   $(\mu_1, \dots, \mu_r)$.
+
+   \item Sampling more within an individual cannot narrow the CI for $\mu_{\cdot}$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{One-way ANOVA (random)}
+
+   \begin{block}
+   {Estimating $\sigma^2_{\mu}$}
+   \begin{itemize}
+
+   \item From the ANOVA table
+   $$
+   \sigma^2_{\mu} = \frac{E(SSTR / (r-1)) - E(SSE / ((n-1)r))}{n}.$$
+
+   \item Natural estimate:
+   $$
+   S^2_{\mu} = \frac{SSTR / (r-1) - SSE / ((n-1)r)}{n}
+   $$
+   \item Problem: this estimate can be negative! One of the difficulties
+   in random effects model.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
