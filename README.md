@@ -14,4 +14,3 @@ knitr magic
 Besides a custom .css, this profile provides a new cell_magic `%%knitr`
 which produces `R` output as if run through `knitr`.
 
-
