@@ -1,0 +1,1006 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Simple linear regression (Ch. 2, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Outline}
+
+   \begin{block}
+   {Simple Linear Regression}
+   \begin{itemize}
+   \item Some definitions for regression models.
+   \item Specifying the model.
+   \item Fitting the model: least squares.
+   \item Inference.
+
+   \item What is a $T$-statistic?
+
+   \item ``Inference'' for $\beta_1$.
+
+   \item Linear combinations of $\beta_0, \beta_1$.
+
+   \end{itemize}
+   \end{block}
+   \vfill
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % 
+
+
+   \begin{frame}
+   \frametitle{Height data}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/a84b90b10a.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % x = 66
+   % xf, yf = pylab.poly_between([x-.5,x+.5], [50,50], [75, 75])
+   % g = (M < x+.5) * (M >= x-.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.2, hatch='/', label='_nolegend_')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % s = pylab.scatter([x],D[g].mean(), s=130, c='yellow', marker='^')
+   % s.set_label('Average at %d' % int(x))
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='D on M', color='black')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9ba9fbc6ac.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % x = 64
+   % xf, yf = pylab.poly_between([x-.5,x+.5], [50,50], [75, 75])
+   % g = (M < x+.5) * (M >= x-.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.2, hatch='/', label='_nolegend_')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % s = pylab.scatter([x],D[g].mean(), s=130, c='yellow', marker='^')
+   % s.set_label('Average at %d' % int(x))
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='D on M', color='black')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/b611c13e4e.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % x = 62
+   % xf, yf = pylab.poly_between([x-.5,x+.5], [50,50], [75, 75])
+   % g = (M < x+.5) * (M >= x-.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.2, hatch='/', label='_nolegend_')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % s = pylab.scatter([x],D[g].mean(), s=130, c='yellow', marker='^')
+   % s.set_label('Average at %d' % int(x))
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='D on M', color='black')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/276a37f541.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression model}
+
+   \begin{block}
+   {What is a ``regression'' model? }
+   A regression model is a model of the relationships between some {\em covariates (predictors)} and an {\em outcome}.
+   Specifically, regression is a model of the {\em average} outcome {\em given}
+   the covariates.
+   \end{block}
+   \begin{block}
+   {Mathematical formulation}
+   For height of couples data:
+   a mathematical  model:
+   $$
+   {\tt Daughter} = f({\tt Mother}) + \varepsilon$$
+   where $f$ gives the average height of the daughter of a mother of height {\tt Mother} and
+   $\varepsilon$ is the random error.
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression models}
+
+   \begin{block}
+   {Linear regression models}
+   \begin{itemize}
+   \item A {\em linear} regression model says that
+   the function $f$ is a sum (linear combination) of functions of ${\tt Mother}$.
+
+   \item Simple linear regression model:
+   $$f({\tt Mother}) = \beta_0 + \beta_1 \cdot {\tt Mother}$$
+   for some unknown parameter vector $(\beta_0, \beta_1)$.
+   \item Could also be a sum (linear combination) of {\em known} functions of ${\tt Mother}$:
+   $$f({\tt Mother}) = \beta_0 + \beta_1 \cdot {\tt Mother} + \beta_2 \cdot {\tt Mother}^2
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression model}
+
+   \begin{block}
+   {Specifying the (statistical) model}
+   \begin{itemize}
+   \item
+   {\em Simple linear} regression is the case when there is only one predictor:
+   $$
+   f({\tt Mother}) = \beta_0 + \beta_1  \cdot {\tt Mother}.$$
+
+   \item Let $Y_i$ be the height of the $i$-th daughter in the sample, $X_i$ be the height of the $i$-th mother.
+
+
+   \item Model:
+   $$
+   Y_i = \underbrace{\beta_0 + \beta_1 X_i}_{\text{{\small regression equation}}} + \underbrace{\varepsilon_i}_{\text{{\small error}}}$$
+   where $\varepsilon_i \sim N(0, \sigma^2)$ are independent.
+
+   \item This specifies a {\em distribution} for the $Y$'s given the $X$'s, i.e.
+   it is a statistical model.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Fitting the model}
+
+   \begin{block}
+   {Least squares}
+   \begin{itemize}
+   \item We will be using ``least squares'' regression. This measures
+   the goodness of fit of a line by the sum of squared errors, $SSE$.
+   \item Least squares regression chooses the line that minimizes
+   $$
+   SSE(\beta_0, \beta_1) = \sum_{i=1}^n (Y_i - \beta_0 - \beta_1 \cdot X_i)^2.$$
+
+   \item In principle, we might measure ``goodness of fit'' differently:
+   $$
+   SAD(\beta_0, \beta_1) = \sum_{i=1}^n |Y_i - \beta_0 - \beta_1 \cdot X_i|.$$
+
+   \item Why do we use least squares?
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Least Squares}
+
+   \begin{block}
+   {Why Least Squares?}
+   \begin{itemize}[<+->]
+   \item With least squares, the minimizers have explicit formulae -- not so important with today's computer power -- especially when $L$ is convex.
+   \item Resulting formulae are {\em linear} in the outcome $Y$. This is important
+   for inferential reasons. For only predictive power, this is also not so important.
+   \item If assumptions are correct, then this is ``maximum likelihood'' estimation.
+
+   \item Statistical theory tells us the ``maximum likelihood'' estimators are generally good estimators.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Least squares}
+
+   \begin{block}
+   {Alternative definition of (sample / population) mean}
+   The mean of a sample $(Y_1, \dots, Y_n)$ (or population $Y$ ) is the number that minimizes
+   $$
+   SSE(\mu) = \sum_{i=1}^n (Y_i - \mu)^2 \qquad \left(\text{population: \ } = \Ee((Y-\mu)^2) \right).$$
+   \end{block}
+   \begin{block}
+   {Alternative definition of (sample / population) median}
+   The median of a sample $(Y_1, \dots, Y_n)$ (or population $Y$ ) is any number that minimizes
+   $$
+   SAD(\mu) = \sum_{i=1}^n |Y_i - \mu| \qquad \left(\text{population: \ } = \Ee(|Y-\mu|) \right).$$
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % set.seed(100)
+   % X = rnorm(50)
+   % Y = 2 + 1.5 * rnorm(50)
+   % plot(X, Y, pch=23, bg='orange')
+
+
+   \begin{frame}
+   \frametitle{Least squares}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/0b585690e1.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % set.seed(100)
+   % X = rnorm(50)
+   % Y = 2 + 1.5 * rnorm(50)
+   % #library(alr3)
+   % #data(heights)
+   % #Y = heights$Dheight
+   % #X = heights$Mheight
+   % 
+   % # Squared error loss: 'least squares'
+   % 
+   % squared.error = function(b0, b1) {
+   % return(sqrt(sum((Y - b0 - b1*X)^2)))
+   % }
+   % 
+   % # Absolute value loss: 'absolute deviation'
+   % 
+   % absolute.loss = function(b0, b1) {
+   % return(sum(abs(Y - b0 - b1*X)))
+   % }
+   % 
+   % # Plot the loss over a grid of values
+   % 
+   % plot.loss = function(loss, b0, b1) {
+   %    l = matrix(0, length(b0), length(b1))
+   %    for (i in 1:length(b0)) {
+   %       for (j in 1:length(b1)) {
+   %           l[i,j] = loss(b0[i], b1[j])
+   %       }
+   %    }
+   %    image(b0, b1, l, col=rainbow(1000))
+   %    return(l)
+   % }
+   % 
+   % ll = plot.loss(squared.error, seq(0,3,length=100), seq(-1,3,length=100))
+
+
+   \begin{frame}
+   \frametitle{Least squares}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/7abf182b36.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % ll = plot.loss(absolute.loss, seq(0,3,length=100), seq(-1,3,length=100))
+
+
+   \begin{frame}
+   \frametitle{Absolute deviation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/1d67104fb5.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Simple Linear Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_simple_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Least Squares Solutions}
+
+   \begin{block}
+   {Regression line parameters: $(\beta_0, \beta_1)$}
+   \begin{itemize}[<+->]
+   \item $$
+   \widehat{\beta}_1 = \frac{\sum_{i=1}^n(X_i - \overline{X})(Y_i - \overline{Y})}{\sum_{i=1}^n (X_i-\overline{X})^2} = \frac{\widehat{Cov}(X,Y)}{\widehat{Var}(X)}.$$
+
+   \item $$\widehat{\beta}_0 = \overline{Y} - \widehat{\beta}_1 \cdot \overline{X}.$$
+
+   \end{itemize}
+   \end{block}
+   \begin{block}
+   {Estimating variance: $\sigma^2$}
+   \begin{itemize}[<+->]
+   \item  Strength of association between $Y$ and $X$ will depend on variability of errors $\varepsilon$,  as in two sample $t$-test.
+
+   \item $$
+   \widehat{\sigma}^2 = \frac{1}{n-2} \sum_{i=1}^n (Y_i - \widehat{\beta}_0 - \widehat{\beta}_1 X_i)^2 = \frac{SSE}{n-2} = MSE.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Least Squares}
+
+   \begin{block}
+   {Predicting the mean}
+   (Conditional) mean can be estimated for any given mother of height $X$ as
+   $$
+   \widehat{Y} = \widehat{f}(X) = \widehat{\beta}_0 + \widehat{\beta}_1 \cdot X.$$
+   where $(\widehat{\beta}_0, \widehat{\beta}_1)$ are the minimizers of SSE.
+   \end{block}
+
+   \begin{block}
+   {Estimate of $\sigma^2$}
+   \begin{itemize}
+
+
+   \item
+   $$
+   \widehat{\sigma}^2 = \frac{1}{n-2} \sum_{i=1}^n \left(Y_i - \widehat{f}(X_i)\right)^2 = \frac{1}{n-2} \sum_{i=1}^n \left(Y_i - \widehat{Y}_i\right)^2.$$
+   \item Why $n-2$? According to our statistical model
+   $$
+   \frac{\widehat{\sigma}^2}{\sigma^2} \sim \frac{\chi^2_{n-2}}{n-2}.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Simple Linear Model}
+
+   \resizebox{!}{2.5in}{\includegraphics{./figs/simple/axes_simple_full.png}}
+
+   \begin{center}
+   Why $\chi^2_{n-2}$?
+   \end{center}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference}
+
+   \begin{block}
+   {What do we mean by inference?}
+   \begin{itemize}[<+->]
+   \item Generally: ``learning something about
+   the relationship between the sample $(X_1, \dots, X_n)$ and $(Y_1, \dots, Y_n)$.''
+
+   \item In the simple linear regression model, learning about $\beta_0, \beta_1$:
+   \begin{itemize}
+   \item {\em confidence intervals, hypothesis tests}.
+   \end{itemize}
+   \end{itemize}
+   \end{block}
+   \begin{block}
+   {Tools for inference}
+   \begin{itemize}[<+->]
+   \item Most of the questions of ``inference'' in this course
+   can be answered in terms of $t$-statistics or $F$-statistics.
+
+   \item First we will talk about $t$-statistics, later $F$-statistics.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Hypothesis tests}
+
+   \begin{block}
+   {What is a (statistical) hypothesis?}
+   Examples:
+   \begin{itemize}[<+->]
+   \item One sample problem: given an independent sample $\pmb{X}=(X_1, \dots, X_n)$ where $X_i\sim N(\mu,\sigma^2)$, the {\em null hypothesis $H_0:\mu=0$} says that in fact the population mean is 0.
+
+   \item Two sample problem: given two independent samples $\pmb{Z}=(Z_1, \dots, Z_n)$, $\pmb{W}=(W_1, \dots, W_m)$  where $Z_i\sim N(\mu_1,\sigma^2)$ and $W_i \sim N(\mu_2, \sigma^2)$, the {\em null hypothesis $H_0:\mu_1=\mu_2$} says that in fact the population mean of the two samples are identical.
+   \end{itemize}
+   \end{block}
+   \begin{block}
+   {Testing a hypothesis}
+   \begin{itemize}
+   \item We test a null hypothesis, $H_0$ based on some test statistic $T$ whose distribution is fully known when $H_0$ is true.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{$t$-statistics}
+
+   \begin{block}    {What is a $t$-statistic?}
+
+   \begin{itemize}
+   \item Start with $Z \sim N(0,1)$ is standard normal and $S^2 \sim \chi^2_{\nu}$, independent of $Z$.
+   \item Compute
+   $$
+   T = \frac{Z}{\sqrt{\frac{S^2}{\nu}}}.$$
+
+   \item Then,  $T \sim t_{\nu}$ has a $t$-distribution with $\nu$ degrees of freedom.
+
+
+   \item Generally, a $t$-statistic has the form
+   $$
+   T = \frac{\text{parameter estimate - true parameter, i.e. $\widehat{\beta}_1-\beta_1$}}{\text{standard error of parameter, i.e. $SE(\widehat{\beta}_1)$}}$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % xseq <- seq(-3,3,0.01)
+   % plot(xseq, dt(xseq, 10), xlab='s', ylab='Density -- f(s)', type='l', lwd=3, col='red')
+   % lines(xseq, dnorm(xseq), lty=2, lwd=3, col='orange')
+   % abline(v=qt(0.975,10), lty=1, col='red')
+   % abline(v=qt(0.025,10), lty=1, col='red')
+   % abline(v=qnorm(0.975), lty=2, col='orange')
+   % abline(v=qnorm(0.025), lty=2, col='orange')
+   % legend(-1,0.2, c('t, 10 df', 'Normal'), lty=c(1,2), col=c('red', 'orange'))
+   % 
+   % 
+   % 
+
+
+   \begin{frame}
+   \frametitle{$t$ vs. Normal}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/d291f0ec75.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/simple.html#density-of-a-random-variable}{R code}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpsrDu1e/data'
+   % import pylab, numpy as np
+   % import scipy.stats
+   % 
+   % df = 10
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2, label='Normal')
+   % pylab.plot(x,scipy.stats.t.pdf(x, df)*100, linewidth=2, label=r'$T$, df=10')
+   % 
+   % x2 = np.linspace(2,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % x2 = np.linspace(-4,-2,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % # The t region
+   % 
+   % x2 = np.linspace(scipy.stats.t.isf(0.025,df),4, 101)
+   % y2 = scipy.stats.t.pdf(x2, df)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='gray', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % 
+   % x2 = np.linspace(-4,-scipy.stats.t.isf(0.025,df), 101)
+   % y2 = scipy.stats.t.pdf(x2, df)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='gray', hatch='\\', alpha=0.5)
+   % 
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % pylab.legend()
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Student's $T$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c30434d44c.pdf}}    
+   \end{center}
+   Comparison of two-sided {\color{blue} 5\% rejection rule}, df=10
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Example of a $t$-statistic}
+
+   \begin{block}
+   {One sample $t$-test}
+   \begin{itemize}
+
+   \item Given an independent sample $\pmb{X}=(X_1, \dots, X_n)$ where $X_i\sim N(\mu,\sigma^2)$ we can test $H_0:\mu=0$ using a $T$-statistic.
+
+   \item We can prove that the random variables
+   $$\overline{X} \sim N(\mu, \sigma^2/n), \qquad \frac{S^2_X}{\sigma^2} \sim \frac{\chi^2_{n-1}}{n-1}$$
+   are independent.
+
+   \item Therefore, for any $\mu$
+   $$
+   \frac{\overline{X} - \mu}{S_X / \sqrt{n}} = \frac{ (\overline{X}-\mu) / (\sigma/\sqrt{n})}{S_X / \sigma} \sim t_{n-1}.$$
+   \item Finally, under $H_0:\mu=0$, $\overline{X}/(S_X/\sqrt{n}) \sim t_{n-1}
+   $
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {What is a confidence interval?}
+   Examples:
+   \begin{itemize}[<+->]
+   \item One sample problem: instead of deciding whether $\mu=0$, we might want to come up with an (random) interval $[L,U]$ based on the sample $\pmb{X}$ such that the probability
+   the true (nonrandom) $\mu$ is contained in $[L,U]$ equal to $1-\alpha$, i.e. 95\%.
+   \item Two sample problem: find a (random) interval $[L,U]$ based on the samples $\pmb{Z}$ and $\pmb{W}$ such that
+   the probability the true (nonrandom) $\mu_1-\mu_2$ is contained in $[L,U]$ is equal to $1-\alpha$, i.e. 95\%.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Example of a confidence interval}
+
+   \begin{block}
+   {One sample: confidence interval for $\mu$}
+   \begin{itemize}[<+->]
+
+   \item Given an independent sample $(X_1, \dots, X_n)$ where
+   $X_i\sim N(\mu,\sigma^2)$ we can test construct
+   a $(1-\alpha)*100\%$ using the
+   numerator and denominator of the $t$-statistic...
+
+   \item Let $q=t_{n-1,(1-\alpha/2)}$
+
+   $$
+   \begin{aligned}
+   1 - \alpha &= P\left(-q \leq \frac{\mu - \overline{X}}
+   {S_X / \sqrt{n}} \leq q \right) \\
+   &= P\left(-q \cdot {S_X / \sqrt{n}} \leq {\mu - \overline{X}}
+   \leq q  \cdot {S_X / \sqrt{n}} \right) \\
+   &= P\left(\overline{X} - q  \cdot {S_X / \sqrt{n}}
+   \leq {\mu} \leq \overline{X} + q  \cdot {S_X / \sqrt{n}} \right) \\
+   \end{aligned}
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference in regression}
+
+   \begin{block}
+   {Heights example}
+   \begin{itemize}
+
+   \item Model:
+   $$
+   Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i,$$
+   errors $\varepsilon_i$ are independent $N(0, \sigma^2)$.
+   \item In our ``prototypical'' data example, we might want to now if there
+   really is a linear association between ${\tt Daughter}=Y$
+   and ${\tt Mother}=X$, {\em hypothesis test} of $H_0:\beta_1=0$.
+   This assumes the model above is correct, but that $\beta_1=0$.
+
+   \item Or, we might want to have a range of values that we can be fairly certain $\beta_1$ lies between: a {\em confidence interval} for $\beta_1$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Full Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_simple_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Reduced Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_simple_reduced.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Both Models}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_simple.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression: setup for inference}
+
+   \begin{block}{Geometry}
+
+   \begin{itemize}
+
+   \item Let $L$ be the subspace of $\real^n$ spanned $\pmb{1}=(1, \dots, 1)$ and $\pmb{X}=(X_1, \dots, X_n)$.
+   \item Then,
+   $$\pmb{Y} = P_L\pmb{Y} + (\pmb{Y} - P_L\pmb{Y}) = \widehat{\pmb{Y}} + (Y - \widehat{\pmb{Y}}) = \widehat{\pmb{Y}} + e$$
+   \item In our model $\mu=\beta_0 \pmb{1} + \beta_1 \pmb{X} \in L$ so that
+   $$
+   \widehat{\pmb{Y}} = \mu + P_L\pmb{\varepsilon}, \qquad \pmb{e} = P_{L^{\perp}}{\pmb{Y}} = P_{L^{\perp}}\pmb{\varepsilon}$$
+   \item Our assumption that $\varepsilon_i$'s are independent $N(0,\sigma^2)$ tells us that (don't worry about proving this)
+   \begin{itemize}
+   \item $\pmb{e}$ and $\widehat{\pmb{Y}}$ are independent
+
+   \item $\widehat{\sigma}^2 = \|\pmb{e}\|^2 / (n-2) \sim \sigma^2 \cdot \chi^2_{n-2} / (n-2)$.
+   \end{itemize}
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression: distributions}
+
+   \begin{block}
+   {Distribution of $\widehat{\beta}_1$}
+   \begin{itemize}
+
+   \item Our assumptions tell us that
+   $$
+   \widehat{\beta}_1 \sim N\left(\beta_1, \frac{\sigma^2}{\sum_{i=1}^n(X_i-\overline{X})^2}\right)$$
+
+   \item Therefore,
+   $$\frac{\widehat{\beta}_1 - \beta_1}{\sigma \sqrt{\frac{1}{\sum_{i=1}^n(X_i-\overline{X})^2}}} \sim N(0,1).$$
+
+   \end{itemize}
+   \end{block}
+   \begin{block}
+   {Standard error of $\widehat{\beta}_1$}
+   $$
+   SE(\widehat{\beta}_1) = \widehat{\sigma} \sqrt{\frac{1}{\sum_{i=1}^n(X_i-\overline{X})^2}} \qquad \text{independent of $\widehat{\beta}_1$}$$
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression: testing}
+
+   \begin{block}
+   {$t$-test of $H_0:\beta_1=\beta_1^0$}
+   \begin{itemize}[<+->]
+
+   \item Suppose we want to test that $\beta_1$ is some pre-specified
+   value, $\beta_1^0$ (this is often 0: i.e. is there a linear association)
+
+   \item Under $H_0:\beta_1=\beta_1^0$
+   $$\frac{\widehat{\beta}_1 - \beta^0_1}{\widehat{\sigma} \sqrt{\frac{1}{\sum_{i=1}^n(X_i-\overline{X})^2}}} = \frac{\widehat{\beta}_1 - \beta^0_1}{ \frac{\widehat{\sigma}}{\sigma}\cdot \sigma \sqrt{\frac{1}{\sum_{i=1}^n(X_i-\overline{X})^2}}} \sim t_{n-2}.$$
+
+
+   \item Reject $H_0:\beta_1=\beta_1^0$ if $|T| > t_{n-2, 1-\alpha/2}$.
+
+   \end{itemize}
+
+   \end{block}
+
+   \begin{block}
+   {Why reject for large $|T|$?}
+
+   \begin{itemize}[<+->]
+
+   \item Observing a large $|T|$ is unlikely if $\beta_1 = \beta_1^0$: reasonable to conclude that $H_0$ is false.
+
+   \item Common to report $p$-value $= \Pp(|T_{n-2}| > |T|).$
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals based on $t$ distribution}
+
+   \begin{block}
+   {Generic setup}
+   \begin{itemize}[<+->]
+   \item Suppose we have a parameter estimate $\widehat{\theta} \sim N(\theta, \widetilde{\sigma}^2)$, and standard error $SE(\widehat{\theta})$ such that
+   $$
+   \frac{\widehat{\theta}-\theta}{SE(\widehat{\theta})} \sim t_{\nu}.$$
+
+   \item $(1-\alpha) \cdot 100 \%$ confidence interval:
+   $$
+   \widehat{\theta} \pm SE(\widehat{\theta}) \cdot t_{\nu, 1-\alpha/2}.$$
+
+   \item Why? Expand absolute value as we did for the one-sample CI
+   $$
+   1 - \alpha = \Pp\left(\left|\frac{\widehat{\theta} - \theta}{SE(\widehat{\theta})} \right| < t_{\nu, 1-\alpha/2}\right)
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals for regression parameters}
+
+   \begin{block}
+   {Interval for $\beta_1$}
+   A $(1-\alpha) \cdot 100 \%$ confidence interval:
+   $$
+   \widehat{\beta}_1 \pm SE(\widehat{\beta}_1) \cdot t_{n-2, 1-\alpha/2}.$$
+
+
+   \end{block}
+
+   \begin{block}
+   {Interval for regression line $\beta_0 + \beta_1 \cdot X$}
+   \begin{itemize}[<+->]
+
+   \item $(1-\alpha) \cdot 100 \%$ confidence interval:
+   $$
+   \widehat{\beta}_0 + \widehat{\beta}_1 X \pm SE(\widehat{\beta}_0 + \widehat{\beta}_1 X) \cdot t_{n-2, 1-\alpha/2}$$
+   where $$
+   SE(a_0\widehat{\beta}_0 + a_1\widehat{\beta}_1) = \widehat{\sigma} \sqrt{\frac{a_0^2}{n} + \frac{(a_0\overline{X} - a_1)^2}{\sum_{i=1}^n \left(X_i-\overline{X}\right)^2}}$$
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Forecasting (prediction) interval}
+
+   \begin{block}
+   {Predicting a new observation}
+   \begin{itemize}[<+->]
+
+   \item Suppose we want an interval that will contain
+   the height of the daughter in a new family sampled from the population
+   where the mother has height $X_{\text{new}}$, i.e. an
+   interval that will cover
+   $$
+   Y_{\text{new}} = \beta_0 + \beta_1 X_{\text{new}} + \varepsilon_{\text{new}}$$
+   with a certain probability.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Forecasting (prediction) interval}
+
+   \begin{block}
+   {Predicting a new observation}
+   \begin{itemize}[<+->]
+
+   \item
+   $$
+   SE(\widehat{\beta}_0 + \widehat{\beta}_1 X_{\text{new}} + \varepsilon_{\text{new}}) = \widehat{\sigma} \sqrt{1 + \frac{1}{n} + \frac{(\overline{X} - X_{\text{new}})^2}{\sum_{i=1}^n \left(X_i-\overline{X}\right)^2}}.$$
+
+   \item Prediction interval  is
+   $$ \widehat{\beta}_0 +  \widehat{\beta}_1 X_{\text{new}} \pm t_{n-2, 1-\alpha/2} \cdot SE(\widehat{\beta}_0 + \widehat{\beta}_1 X_{\text{new}} + \varepsilon_{\text{new}})
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

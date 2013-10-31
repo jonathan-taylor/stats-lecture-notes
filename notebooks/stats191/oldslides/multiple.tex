@@ -1,0 +1,967 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Multiple linear regression (Ch. 3, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression}
+
+   \begin{block}
+   {Outline}
+   \begin{itemize}
+
+
+   \item Specifying the model.
+
+   \item Fitting the model: least squares.
+
+   \item Interpretation of the coefficients.
+
+   \item More on $F$-statistics.
+
+   \item Matrix approach to linear regression.
+
+   \item $T$-statistics revisited.
+
+   \item More $F$ statistics.
+
+   \item Tests involving more than one $\beta$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Job supervisor data: $n=30$}
+
+   \begin{block}
+   {Description}
+
+   \begin{tabular}{c|l}
+   Variable & Description \\ \hline
+   $Y$ & Overall supervisor job rating \\
+   $X_1$ & How well do they handle complaints \\
+   $X_2$ & Do they allow  special priveleges \\
+   $X_3$ & Give opportunity to learn new things \\
+   $X_4$ & Raises based on performance \\
+   $X_5$ & Too critical of poor performance\\
+   $X_6$ & Good rate of advancement \\
+   \end{tabular}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/supervisor.table'
+   % supervisor.table <- read.table(url, header=T)
+   % 
+   % pairs(supervisor.table, pch=23, bg='orange',
+   % cex.labels=6, cex=2)
+
+
+   \begin{frame}
+   \frametitle{Job supervisor data}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/a7ea3b76fe.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/multiple.html#job-supervisor-example}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Specifying the model}
+
+   \begin{block}
+   {Multiple linear regression      model}
+
+   \begin{itemize}
+
+   \item Rather than one predictor, we have $p=6$ predictors.
+
+   \item $$
+   Y_i = \beta_0 + \beta_1 X_{i1} + \dots + \beta_p X_{ip} + \varepsilon_i
+   $$
+
+   \item Errors $\varepsilon$ are assumed independent $N(0,\sigma^2)$, as in simple linear regression.
+
+   \item Coefficients are called (partial) regression coefficients because they ``allow'' for the effect of other variables.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Multiple Regression}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_multiple_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Fitting the model}
+
+   \begin{block}
+   {Least squares}
+   \begin{itemize}
+
+   \item Just as in simple linear regression, model is fit by minimizing
+   $$
+   \begin{aligned}
+   SSE(\beta_0, \dots, \beta_p) &= \sum_{i=1}^n(Y_i - (\beta_0 + \sum_{j=1}^p \beta_j X_{ij}))^2 \\
+   &= \|Y - \widehat{Y}(\beta)\|^2
+   \end{aligned}
+   $$
+
+   \item Minimizers: $\widehat{\beta} = (\widehat{\beta}_0, \dots, \widehat{\beta}_p)$ are
+   the ``least squares estimates'': are also normally distributed as in simple linear regression.
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Error component}
+
+   \begin{block}
+   {Estimating $\sigma^2$}
+   \begin{itemize}
+
+
+   \item As in simple regression
+   $$
+   \widehat{\sigma}^2 = \frac{SSE}{n-p-1} \sim \sigma^2 \cdot \frac{\chi^2_{n-p-1}}{n-p-1}$$
+   independent of $\widehat{\beta}$.
+
+
+   \item
+   Why $\chi^2_{n-p-1}$?
+   Typically, the degrees of freedom in the estimate of $\sigma^2$ is $n-\# \text{number of parameters in regression function}$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interpretation of $\beta_j$'s}
+
+   \begin{block}
+   {Supervisor example}
+   \begin{itemize}
+
+   \item Take $\beta_1$ for example. This is the amount the average
+   job rating increases for one ``unit'' of ``Handles complaints'',
+   keeping everything else constant.
+
+   \item Units of ``Handles complaints'' are individual favorable responses, so on average
+   for every extra person who rated the supervisor as good at handling complaints
+   (other things being fixed), the average job rating increases by $\beta_1$.
+
+   \item We often phrase this as the effect of ``Handles complaints'' {\em
+   allowing for} or {\em controlling for} the other variables.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Interpretation of $\beta_j$'s}
+
+   \begin{block}
+   {Why are they {\em partial} regression coefficients?}
+   \begin{itemize}
+
+   \item The term {\em partial} refers to the fact that the coefficient $\beta_j$
+   represent the partial effect of $\pmb{X}_j$ on $\pmb{Y}$, i.e. after the effect of all other variables have been removed.
+
+   \item Specifically,
+   $$
+   Y_i - \sum_{l=1, l \neq j}^k X_{il} \beta_l = \beta_0 + \beta_j X_{ij} + \varepsilon_i.$$
+
+
+   \item Let $e_{i,(j)}$ be the residuals from regressing $\pmb{Y}$ onto all $\pmb{X}_{\cdot}$'s except $\pmb{X}_j$, and let $X_{i,(j)}$ be the residuals from
+   regressing $\pmb{X}_j$ onto all $\pmb{X}_{\cdot}$'s except $\pmb{X}_j$, and let $X_{i,(j)}$.
+
+   \item If we regress $e_{i,(j)}$ against $X_{i,(j)}$, the coefficient
+   is {\em exactly} the same as in the original model (see \href{http://stats191.stanford.edu/multiple.html}{R code}).
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Goodness of fit for multiple regression}
+
+   \begin{block}
+   {Sums of squares}
+   $$
+   \begin{aligned}
+   SSE &= \sum_{i=1}^n(Y_i - \widehat{Y}_i)^2 \\
+   SSR &= \sum_{i=1}^n(\overline{Y} - \widehat{Y}_i)^2 \\
+   SST &= \sum_{i=1}^n(Y_i - \overline{Y})^2 \\
+   R^2 &= \frac{SSR}{SST}
+   \end{aligned}
+   $$
+   $R^2$ is called the {\em multiple correlation coefficient} of the model, or
+   the {\em coefficient of multiple determination}.
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Adjusted $R^2$}
+
+   \begin{block}
+   {Compensating for more variables}
+   \begin{itemize}
+
+   \item As we add more and more variables to the model -- even random ones, $R^2$ will increase to 1.
+
+   \item Adjusted $R^2$ tries to take this into account by replacing
+   sums of squares by {\em mean squares}
+   $$
+   R^2_a = 1 - \frac{SSE/(n-p-1)}{SST/(n-1)} = 1 - \frac{MSE}{MST}.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Goodness of fit test}
+
+   \begin{block}
+   {Another $F$-test}
+   \begin{itemize}
+   \item As in simple linear regression, we measure the goodness of fit
+   of the regression model by
+   $$
+   F = \frac{MSR}{MSE} = \frac{\|\overline{Y}\cdot \pmb{1} - \widehat{\pmb{Y}}\|^2/p}{\|Y - \widehat{\pmb{Y}}\|^2/(n-p-1)}.$$
+
+   \item Under $H_0:\beta_1 = \dots = \beta_p=0$,
+   $$
+   F \sim F_{p, n-p-1}$$
+   so reject $H_0$ at level $\alpha$ if $F > F_{p,n-p-1,1-\alpha}.$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Full Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_multiple_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Reduced Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_multiple_reduced.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Both Models}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_multiple.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Intuition behind the $F$ test}
+
+   \begin{block}
+   {Measuring lengths}
+   \begin{itemize}
+   \item The $F$ statistic is a ratio of lengths of orthogonal vectors (divided by degrees of freedom).
+
+   \item We can prove that our model implies
+   $$
+   \begin{aligned}
+   \Ee \left(MSR\right) &= \sigma^2 + \underbrace{\|\pmb{\mu} - \overline{\mu} \cdot \pmb{1}\|^2 / p}_{(*)} \\
+   \Ee \left(MSE\right) &= \sigma^2 \\
+   \mu_i &= \Ee(Y_i) = \beta_0 + X_{i1} \beta_1  + \dots +  X_{ip} \beta_p
+   \end{aligned}
+   $$
+   so $F$ should be not be too far from 1 if $H_0$ is true, i.e. $(*)=0$.
+
+
+   \item If $F$ is large, it is evidence that $(*) \neq 0$, i.e. $H_0$ is false.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{$F$-test revisited}
+
+   \begin{block}
+   {Example in more detail}
+   \begin{itemize}
+   \item {\em Full (bigger) model :}
+   $$
+   Y_i = \beta_0 + \beta_1 X_{i1} + \dots \beta_p X_{ip} + \varepsilon_i$$
+   \item {\em Reduced (smaller) model:}
+   $$
+   Y_i = \beta_0  + \varepsilon_i$$
+
+   \item The $F$-statistic has the form
+   $$
+   F=\frac{(SSE(R) - SSE(F)) / (df_R - df_F)}{SSE(F) / df_F}.$$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Goodness of Fit Test}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_multiple.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Goodness of Fit Test}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Matrix formulation}
+
+   \begin{block}
+   {Equivalent formulation}
+   $${\pmb Y}_{n \times 1} = \pmb{X}_{n \times (p + 1)} \pmb{\beta}_{(p+1) \times 1} + \pmb{\varepsilon}_{n \times 1}$$
+   \begin{itemize}
+
+   \item $\pmb{X}$ is called the {\em design matrix} of the model
+   \item $\pmb{\varepsilon} \sim N(0, \sigma^2 I_{n \times n})$ is multivariate normal
+   \end{itemize}
+   \end{block}
+   \begin{block}
+   {$SSE$ in matrix form}
+   $$
+   SSE(\beta) = (\pmb{Y} - \pmb{X} \pmb{\beta})'(\pmb{Y} - \pmb{X} \pmb{\beta})
+   $$
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Matrix formulation}
+
+   \begin{block}
+   {Design matrix}
+   \begin{itemize}
+   \item The design matrix is the
+   $n \times (p+1)$ matrix with entries
+   $$
+   \pmb{X} =
+   \begin{pmatrix}
+   1 & X_{11} & X_{12} & \dots & X_{1,p} \\
+   \vdots &   \vdots & \ddots & \vdots \\
+   1 & X_{n1} & X_{n2} &\dots & X_{n,p} \\
+   \end{pmatrix}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Least squares solution}
+
+   \begin{block}
+   {Solving for $\Bh{}$}
+   \begin{itemize}
+   \item Normal equations
+   $$
+   \frac{\partial}{\partial \beta_j} SSE \biggl|_{\Bh{}} = -2 \left(\pmb{Y} - \pmb{X} \Bh{} \right)^t \pmb{X}_j = 0, \qquad 0 \leq j \leq p.$$
+
+   \item Equivalent to
+   $$
+   \begin{aligned}
+   (\pmb{Y} - \pmb{X}\pmb{\Bh{}})^t\pmb{X} &= 0 \\
+   \pmb{\Bh{}} &= (\pmb{X}^t\pmb{X})^{-1}\pmb{X}^t\pmb{Y}
+   \end{aligned}
+   $$
+
+   \item Properties:
+   $$
+   \pmb{\Bh{}} \sim N\left(\pmb{\beta}, \sigma^2 (\pmb{X}^t \pmb{X})^{-1} \right), \text{indep. of $\widehat{\sigma}^2$}
+   $$
+   \item  \href{http://stats191.stanford.edu/multiple.html}{R code}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for multiple regression}
+
+   \begin{block}
+   {Regression function at one point}
+
+   \begin{itemize}
+   \item One thing one might want to {\em learn} about the regression function in the supervisor example is something about the regression function at some fixed values of $\pmb{X}_{1}, \dots, \pmb{X}_{6}$, i.e. what can be said about
+   \begin{equation}
+   \label{eq:comb}
+   \beta_0 + 65 \cdot \beta_1  + 50 \cdot \beta_2  + 55 \cdot \beta_3 + 64 \cdot \beta_4 + 75 \cdot \beta_5 + 40 \cdot \beta_6   \tag{*}
+   \end{equation}
+   roughly the regression function at ``typical'' values of the predictors.
+
+   \item The expression \eqref{eq:comb} is equivalent to
+   $$
+   \sum_{j=0}^6 a_j \beta_j, \qquad a=(1,65,50,55,64,75,40).$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for $\sum_{j=0}^p a_j \beta_j$}
+
+   \begin{block}
+   {Confidence interval for $\sum_{j=0}^p a_j \beta_j$}
+   \begin{itemize}
+   \item Suppose we want  a $(1-\alpha)\cdot 100\%$ CI for $\sum_{j=0}^p a_j\beta_j$.
+
+   \item Just as in simple linear regression:
+
+   $$
+   \sum_{j=0}^p a_j \widehat{\beta}_j \pm t_{1-\alpha/2, n-p-1} \cdot SE\left(\sum_{j=0}^p a_j\widehat{\beta}_j\right).$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for $\sum_{j=0}^p a_j \beta_j$}
+
+   \begin{block}
+   {$T$-statistics revisited}
+   \begin{itemize}
+   \item Suppose we want to test
+   $$H_0:\sum_{j=0}^p a_j\beta_j= h.$$ As in simple linear regression, it is based on
+   $$
+   T = \frac{\sum_{j=0}^p a_j \widehat{\beta}_j - h}{SE(\sum_{j=0}^p a_j \widehat{\beta}_j)}.$$
+   \item If $H_0$ is true, then $T \sim t_{n-p-1}$, so we reject
+   $H_0$ at level $\alpha$ if
+   $$
+   \begin{aligned}
+   |T| &\geq t_{1-\alpha/2,n-p-1}, \qquad \text{ OR} \\
+   p-\text{value} &= {\tt 2*(1-pt(|T|, n-p-1))} \leq \alpha.
+   \end{aligned}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for $\sum_{j=0}^p a_j \beta_j$}
+
+   \begin{block}
+   {One-sided tests}
+   \begin{itemize}
+   \item Suppose, instead, we wanted to test the one-sided hypothesis
+   $$H_0:\sum_{j=0}^p a_j\beta_j \leq  h, \  \text{vs.} \ H_a: \sum_{j=0}^p a_j\beta_j >  h$$
+   \item If $H_0$ is true, then $T$ is no longer exactly $t_{n-p-1}$
+   but
+   $$
+   \Pp \left(T > t_{1-\alpha, n-p-1}\right) \leq 1 - \alpha$$
+   so we reject $H_0$ at level $\alpha$ if
+   $$
+   \begin{aligned}
+   T &\geq t_{1-\alpha,n-p-1}, \qquad \text{ OR} \\
+   p-\text{value} &= {\tt (1-pt(T, n-p-1))} \leq \alpha.
+   \end{aligned}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for $\sum_{j=0}^p a_j \beta_j$}
+
+   \begin{block}
+   {Standard error of $\sum_{j=0}^p a_j \widehat{\beta}_j$}
+   \begin{itemize}
+   \item Based on matrix approach to regression
+   $$
+   SE\left(\sum_{j=0}^p a_j\widehat{\beta}_j \right) = \sqrt{\widehat{\sigma}^2 a (X^TX)^{-1} a^T}.$$
+
+   \item Don't worry too much about implementation -- \RR will do this for you in general, \href{http://stats191.stanford.edu/multiple.html}{R code}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for $\sum_{j=0}^p a_j \beta_j$}
+
+   \begin{block}
+   {Prediction interval}
+   \begin{itemize}
+
+   \item ``Identical'' to simple linear regression.
+
+   \item Prediction interval at $X_{1,new}, \dots, X_{p,new}$:
+   $$
+   \begin{aligned}
+   \lefteqn{\widehat{\beta}_0 + \sum_{j=1}^p X_{j,new} \widehat{\beta}_j\pm t_{1-\alpha/2, n-p-1}} \\
+   & \qquad \qquad  \times \ \sqrt{\widehat{\sigma}^2 + SE\left(\widehat{\beta}_0 + \sum_{j=1}^p X_{j,new}\widehat{\beta}_j\right)^2}.
+   \end{aligned}
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for multiple regression}
+
+   \begin{block}
+   {Questions about many (combinations) of $\beta_j$'s}
+   \begin{itemize}
+
+   \item In multiple regression we can ask more complicated questions
+   than in simple regression.
+
+
+   \item For instance, we could ask whether
+   \begin{itemize}
+
+   \item $X_2:$ Do they allow  special priveleges
+
+   \item $X_3:$ Give opportunity to learn new things
+   \end{itemize}
+   explains little of the variability in the data, and might be dropped
+   from the regression model.
+   \item These questions can be answered answered by $F$-statistics.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   {Dropping one or more variables}
+   \begin{itemize}
+
+   \item       Suppose we wanted to test whether how the supervisor
+   handles special priveleges, or allows employees to try new things
+   explains a significant amount of the variability in the overall job rating. Formally, this is:
+   $$
+   H_0:\beta_{2}=\beta_3=0, \  \text{ vs.} \  H_a: \text{one of $\beta_2, \beta_3 \neq 0$}$$
+
+   \item This test is again an $F$-test based on two models
+   $$
+   \begin{aligned}
+   R: Y_i &= \beta_0 + \beta_1 X_{i1} + \beta_4 X_{i4} + \beta_5 X_{i5} + \beta_6 X_{i6} + \varepsilon_i \\
+   F: Y_i &= \beta_0 + \sum_{j=1}^6 \beta_j X_{ij} + \varepsilon_i \\
+   \end{aligned}
+   $$
+
+   \item {\bf Note:} The reduced model $R$ must be a special case of the full model $F$ to use the $F$-test.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Full Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general1_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Reduced Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general1_reduced.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Both Models}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general1.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   {$SSE$ of a model}
+   \begin{itemize}[<+->]
+   \item In the graphic, a ``model'', ${\cal M}$ is a subspace of $\mathbb{R}^n$ = column space of $\pmb{X}$.
+
+
+   \item Least squares fit = projection onto the subspace of ${\cal M}$,
+   yielding predicted values $\widehat{Y}_{{\cal M}}$
+
+   \item Error sum of squares:
+   $$
+   SSE({\cal M}) = \|Y - \widehat{Y}_{{\cal M}}\|^2.
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   {$F$-statistic for $H_0:\beta_2=\beta_3=0$}
+   \begin{itemize}
+   \item
+   \begin{equation}
+   \begin{aligned}
+   F &=\frac{\frac{SSE(R) - SSE(F)}{2}}{\frac{SSE(F)}{n-1-p}} \\
+   & \sim F_{2, n-p-1}       \qquad   (\text{if $H_0$ is true})
+   \end{aligned}
+   \end{equation}
+   \item Reject $H_0$ at level $\alpha$ if $F > F_{1-\alpha, 2, n-1-p}$.
+
+   \item Here is an example \href{http://stats191.stanford.edu/multiple.html}{R code}.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   {Dropping an arbitrary subset}
+   \begin{itemize}
+   \item For an arbitrary model, suppose we want to test
+   $$    \begin{aligned}
+   H_0:&\beta_{i_1}=\dots=\beta_{i_j}=0 \\
+   H_a:& \text{one of $\beta_{i_1}, \dots \beta_{i_j} \neq 0$}
+   \end{aligned}
+   $$
+   for some subset $\{i_1, \dots, i_j\} \subset \{0, \dots, p\}$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   {$F$-statistic for $H_0:\beta_{i_1}=\dots=\beta_{i_j}=0$}
+   \begin{itemize}
+   \item You guessed it: it is based on the two models:
+   $$
+   \begin{aligned}
+   R: Y_i &= \sum_{l=0, l \not \in \{i_1, \dots, i_j\}}^p \beta_j X_{il} + \varepsilon_i \\
+   F: Y_i &=  \sum_{j=0}^p \beta_j X_{il} + \varepsilon_i \\
+   \end{aligned}
+   $$
+   where $X_{i0}=1$ for all $i$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   {$F$-statistic for $H_0:\beta_{i_1}=\dots=\beta_{i_j}=0$}
+   \begin{itemize}
+   \item  $$
+   \begin{aligned}
+   F &=\frac{\frac{SSE(R) - SSE(F)}{j}}{\frac{SSE(F)}{n-p-1}} \\
+   & \sim F_{j, n-p-1}     \qquad    (\text{if $H_0$ is true})
+   \end{aligned}
+   $$
+   \item Reject $H_0$ at level $\alpha$ if $F > F_{1-\alpha, j, n-1-p}$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Full Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Reduced Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general_reduced.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Both Models}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_general.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Inference for more than one $\beta$}
+
+   \begin{block}
+   { General   $F$-tests}
+   \begin{itemize}
+   \item Given two models $R \subset F$ (i.e. $R$ is a subspace of $F$),
+   we can consider testing
+   $$
+   H_0: \text{$R$ is adequate (i.e. $\mathbb{E}(Y) \in R$)}$$
+   vs.
+   $$
+   H_a: \text{$F$ is adequate (i.e. $\mathbb{E}(Y) \in F$)}.$$
+
+   \item The test statistic is
+   $$
+   F = \frac{(SSE(R) - SSE(F)) / (df_R - df_F)}{SSE(F)/df_F}$$
+
+   \item If $H_0$ is true, $F \sim F_{df_R-df_F, df_F}$ so we reject
+   $H_0$ at level $\alpha$ if  $F > F_{df_R-df_F, df_F, 1-\alpha}$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Constraints}
+
+   \begin{block}
+   {Constraining $\beta_1=\beta_3$ (after deciding $\beta_2=\beta_4=\beta_5=\beta_6=0$)}
+   \begin{itemize}
+   \item Full model:
+   $$
+   Y_i = \beta_0 + \beta_1 X_{i1}  + \beta_3 X_{i3} + \varepsilon_i
+   $$
+
+   \item Reduced model:
+   $$
+   \begin{aligned}
+   Y_i &= \beta_0 + \tilde{\beta}_1 X_{i1}  + \tilde{\beta}_1 X_{i3} + \varepsilon_i \\
+   &= \beta_0 + \tilde{\beta}_1 (X_{i1}  + X_{i3}) + \varepsilon_i \\
+   \end{aligned}
+   $$
+   \end{itemize}
+   \href{http://stats191.stanford.edu/multiple.html}{R code}.
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Constraints}
+
+   \begin{block}
+   {Constraining $\beta_1+\beta_3=1$ (after deciding $\beta_2=\beta_4=\beta_5=\beta_6=0$)}
+   \begin{itemize}
+   \item Full model:
+   $$
+   Y_i = \beta_0 + \beta_1 X_{i1}  + \beta_3 X_{i3} + \varepsilon_i
+   $$
+
+   \item Reduced model:
+   $$
+   \begin{aligned}
+   Y_i &= \beta_0 + \tilde{\beta}_1 X_{i1}  + (1 - \tilde{\beta}_1) X_{i3} + \varepsilon_i \\
+   Y_i - X_{i3} &= \beta_0 + \tilde{\beta}_1 (X_{i1}  - X_{i3}) + \varepsilon_i \\
+   \end{aligned}
+   $$
+   \end{itemize}
+   \href{http://stats191.stanford.edu/multiple.html}{R code}.
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Back to interpretation of $\beta_j$'s}
+
+   \begin{block}
+   {Supervisor example}
+   \begin{itemize}
+
+   \item Earlier, we said that $\beta_1$ is the effect
+   for  ``Handles complaints'' controlling for the other variables.
+
+   \item Why? Let's look at the $T$ for testing $H_0:\beta_1=0$:
+   $$
+   T = \frac{\widehat{\beta}_1}{SE(\widehat{\beta}_1)}
+   $$
+   \item Under $H_0:\beta_1=0$, $T^2 \sim F_{1, n-p-1}$ and
+   $F$ tests are ``always'' a comparison of two models.
+
+   \item The full model has all variables while the reduced model
+   has $\beta_1=0$. Hence, both model include or {\em control for}
+   the other variables.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

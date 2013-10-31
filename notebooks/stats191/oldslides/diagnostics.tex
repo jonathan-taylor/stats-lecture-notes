@@ -1,0 +1,621 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Diagnostics \& Influence  (Ch. 4, RABE)}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostics in multiple linear model}
+
+   \begin{block}
+   {Outline}
+   \begin{itemize}
+
+   \item Diagnostics -- again
+   \item Different residuals
+
+
+   \item Influence
+
+   \item Outlier detection
+
+   \item Residual plots:
+   \begin{itemize}
+   \item partial regression (added variable) plot,
+
+   \item partial residual (residual plus component) plot
+   \end{itemize}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Scottish hill races data}
+
+   \begin{block}
+   {Description}
+
+   \begin{tabular}{c|l}
+   Variable & Description \\ \hline
+   {\tt Time} & Record time to complete course \\
+   {\tt Distance} & Distance in the course \\
+   {\tt Climb} & Vertical climb in the course \\
+   \end{tabular}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % library(car)
+   % 
+   % url = 'http://stats191.stanford.edu/data/scottish_races.table'
+   % races.table = read.table(url, header=T)
+   % attach(races.table)
+   % plot(races.table[,3:5], pch=23, bg='orange', cex=2)
+   % races.lm = lm(Time ~ Distance + Climb)
+
+
+   \begin{frame}
+   \frametitle{Scottish hill races data}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/653bdcdd78.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#scottish-hill-races}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostics}
+
+   \begin{block}
+   {What can go wrong?}
+
+   \begin{itemize}[<+->]
+
+   \item
+   Regression function can be wrong: maybe regression function should be quadratic
+   (see \Rhref{simple_diagnostics/anscombeout.html}{R code}).
+
+   \item Model for the errors
+   may be incorrect:
+   \begin{itemize}
+   \item  may not be normally distributed.
+   \item  may not be independent.
+
+   \item  may not have the same variance.
+   \end{itemize}
+
+   \item Detecting problems is more {\em art} then {\em science}, i.e.
+   we cannot {\em test} for all possible problems in a regression model.
+
+   \item Basic idea of diagnostic measures: if model is correct then
+   residuals $e_i = Y_i -\widehat{Y}_i, 1 \leq i \leq n$ should look like a sample of
+   (not quite independent) $N(0, \sigma^2)$ random variables.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % par(mfrow=c(2,2))
+   % plot(races.lm, pch=23 ,bg='orange',cex=2)
+
+
+   \begin{frame}
+   \frametitle{Standard diagnostic plots}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c158b29344.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#standard-diagnostic-plots}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Problems with the errors}
+
+   \begin{block}
+   {Possible problems \& diagnostic checks}
+   \begin{itemize}[<+->]
+
+   \item
+   Errors may not be normally distributed or may not have  the same
+   variance -- {\tt qqnorm} can help with this. This may not
+   be too important in large samples.
+
+   \item Variance may not be constant. Can also be addressed in a plot of
+   $\pmb{X}$ vs. $\pmb{e}$: {\em fan shape} or other trend indicate
+   non-constant variance.
+
+
+   \item Influential observations. Which points ``affect'' the regression line the most?
+
+   \item Outliers: points where the model really does not fit! Possibly mistakes in data transcription, lab errors, who knows? Should be recognized and (hopefully) explained.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Residuals}
+
+   \begin{block}
+   {Types of residuals}
+   \begin{itemize}[<+->]
+   \item Ordinary residuals: $e_i = Y_i - \widehat{Y}_i$. These measure the deviation of predicted value from observed value, but their distribution depends on unknown scale, $\sigma$.
+   \item Internally studentized residuals ({\tt rstandard} in {\tt R}): $r_i = e_i / s(e_i) = e_i / \widehat{\sigma} \sqrt{1 - H_{ii}}$, $H$ is the ``hat'' matrix. These are almost $t$-distributed, except $\widehat{\sigma}$ depends on $e_i$.
+   \item Externally studentized residuals ({\tt rstudent} in {\tt R}): $t_i = e_i / \widehat{\sigma_{(i)}} \sqrt{1 - H_{ii}} \sim t_{n-p-2}.$ These are
+   exactly $t$ distributed so we know their distribution and can use them for tests, if desired.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % par(mfrow=c(2,2))
+   % plot(races.lm, pch=23 ,bg='orange',cex=2)
+
+
+   \begin{frame}
+   \frametitle{Standard diagnostic plots}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c158b29344.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#standard-diagnostic-plots}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Influence of an observation}
+
+   \begin{block}
+   {Dropping an observation}
+   \begin{itemize}[<+->]
+
+   \item In this setting, a $\cdot_{(i)}$ indicates $i$-th observation was not used in fitting the model.
+
+   \item For example: $\widehat{Y}_{j(i)}$ is the regression
+   function evaluated at the $j$-th observations  predictors BUT
+   the coefficients $(\widehat{\beta}_{0(i)}, \dots, \widehat{\beta}_{p(i)})$
+   were fit after deleting $i$-th row of data.
+
+   \item Idea: if $\widehat{Y}_{j(i)}$ is very different than $\widehat{Y}_j$ (using all the data) then $i$ is an influential point, at least for estimating the regression function at $(X_{1,j}, \dots, X_{p,j})$.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Influence of an observation}
+
+   \begin{block}
+   {$DFFITS$}
+   \begin{itemize}[<+->]
+
+   \item $$
+   DFFITS_i = \frac{\widehat{Y}_i - \widehat{Y}_{i(i)}}{\widehat{\sigma}_{(i)} \sqrt{H_{ii}}}$$
+
+   \item This quantity measures how much the regression function changes at the
+   $i$-th case / observation when the $i$-th case / observation is deleted.
+
+   \item For small/medium datasets: value of 1 or greater is ``suspicious''. For large dataset: value of $2 \sqrt{(p+1)/n}$.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % plot(dffits(races.lm), pch=23, bg='orange',
+   % cex=2, ylab="DFFITS")
+
+
+   \begin{frame}
+   \frametitle{Influence of an observation: DFFITS}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/7f072c5ce5.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#dffits}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Influence of an observation}
+
+   \begin{block}
+   {Cook's distance}
+   \begin{itemize}[<+->]
+
+   \item $$
+   D_i = \frac{\sum_{j=1}^n(\widehat{Y}_j - \widehat{Y}_{j(i)})^2}{(p+1) \, \widehat{\sigma}^2}$$
+
+   \item This quantity measures how much the entire regression function changes when the $i$-th case is deleted.
+
+   \item Should be comparable to $F_{p+1,n-p-1}$: if the ``$p$-value'' of $D_i$ is 50 percent or more, then the $i$-th case is likely influential: investigate further.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % plot(cooks.distance(races.lm), pch=23,
+   % bg='orange', cex=2, ylab="Cook's distance")
+
+
+   \begin{frame}
+   \frametitle{Influence of an observation: Cook's distance}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/d90b17541a.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#cook-s-distance}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Influence of an observation}
+
+   \begin{block}
+   {$DFBETAS$}
+   \begin{itemize}[<+->]
+
+   \item $$
+   DFBETAS_{j(i)} = \frac{\widehat{\beta}_j - \widehat{\beta}_{j(i)}}{\sqrt{\widehat{\sigma}^2_{(i)} (X^TX)^{-1}_{jj}}}.$$
+
+   \item This quantity measures how much the coefficients change when the $i$-th case is deleted.
+
+   \item For small/medium datasets: absolute value of 1 or greater is ``suspicious''. For large dataset: absolute value of $2 /  \sqrt{n}$.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % plot(dfbetas(races.lm)[,'Climb'], pch=23,
+   % bg='orange', cex=2, ylab="DFBETA (Climb)")
+
+
+   \begin{frame}
+   \frametitle{Influence of an observation: DFBETA, Climb}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/22337f9a00.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#dfbetas}{R code}
+   \end{frame}
+
+   %CODE
+       % plot(dfbetas(races.lm)[,'Distance'], pch=23,
+   % bg='orange', cex=2, ylab="DFBETA (Distance)")
+
+
+   \begin{frame}
+   \frametitle{Influence of an observation: DFBETA, Distance}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/aaf46be76f.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#dfbetas}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Outliers}
+
+   \begin{block}
+   {Basic definition}
+   \begin{itemize}[<+->]
+   \item {\em Outlier:} an observation pair $(Y, X_1, \dots, X_p)$ that
+   does not follow the model, while most other observations seem to follow the model.
+   \item Outlier in predictors: the $X$ values of the observation may lie
+   outside the ``cloud'' of other $X$ values. This means you may be extrapolating your model inappropriately. The values $H_{ii}$ can be used to measure
+   how ``outlying'' the $X$ values are.
+
+   \item Outlier in response: the $Y$ value of the observation may lie very far from the fitted model. If the studentized residuals are large: observation may be an outlier.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % plot(hatvalues(races.lm), pch=23,
+   % bg='orange', cex=2, ylab='Hat values')
+
+
+   \begin{frame}
+   \frametitle{Outlying $X$ values}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e1c1e810fa.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#hat-values}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Outliers}
+
+   \begin{block}
+   {Crude (response) outlier detection test}
+   \begin{itemize}[<+->]
+
+
+   \item Strategy to detect outliers: ``flag'' large residuals.
+
+   \item Problem: if $n$ is large, if we ``threshold'' at $t_{1-\alpha/2, n-p-2}$ we will get many outliers by chance even if model is correct. In fact, we expect to see $n \cdot \alpha$ ``outliers'' by this test. Every large data set would have outliers in it, even if model was entirely correct!
+
+   \item Problem is known as {\em multiple comparisons} or {\em simultaneous inference.} We are performing $n$ hypothesis tests, but would still like
+   to control the probability of making {\em any} false positive errors.
+   \item One solution: Bonferroni correction, threshold at
+   $t_{1 - \alpha/(2*n), n-p-2}$.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple comparisons}
+
+   \begin{block}
+   {      Bonferroni correction}
+   \begin{itemize}[<+->]
+
+   \item If we are doing many $t$ (or other) tests, say $m >>1$ we can control
+   overall false positive rate at $\alpha$ by testing each one at level $\alpha/m$.
+
+   \item Proof, when the model is correct, with studentized residuals $T_i$:
+   $$
+   \begin{aligned}
+   \lefteqn{  P\left( \text{at least one false positive} \right)} \\
+   & \qquad = P \left(\cup_{i=1}^m |T_i| \geq t_{1 - \alpha/(2*m), n-p-2} \right) \\
+   & \qquad \leq \sum_{i=1}^m P \left( |T_i| \geq t_{1 - \alpha/(2*m), n-p-2} \right) \\
+   & = \sum_{i=1}^m  \frac{\alpha}{m} = \alpha.
+   \end{aligned}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostic plots}
+
+   \begin{block}
+   {Problems in the regression function}
+   \begin{itemize}[<+->]
+
+   \item True regression function may have higher-order non-linear terms, polynomial or otherwise.
+
+   \item We may be missing terms involving more than one $\pmb{X}_{(\cdot)}$, i.e.
+   $\pmb{X}_i \cdot \pmb{X}_j$ (called an {\em interaction}).
+
+   \item Some simple plots: {\em added-variable} and {\em component plus residual} plots can help to find nonlinear functions of {\em one variable}.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostic plots}
+
+   \begin{block}
+   {Added variable plots}
+   \begin{itemize}[<+->]
+   \item Useful for finding influential points, outliers.
+
+
+   \item Procedure:
+   \begin{itemize}
+   \item let $\tilde{e}_{X_j,i}, 1\leq i \leq n$ be the residuals after regressing $\pmb{X}_j$ onto all columns of $\pmb{X}$ except $\pmb{X}_j$;
+   \item let $e_{X_j,i}$ be the residuals after regressing $\pmb{Y}$ onto all columns of $\pmb{X}$ except $\pmb{X}_j$;
+
+   \item Plot $\tilde{e}_{X_j}$ against $e_{X_j}$.
+   \end{itemize}
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % av.plots(races.lm, 'Distance')
+
+
+   \begin{frame}
+   \frametitle{Added variable: {\tt Distance}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/1f52e9a470.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#added-variable-plots}{R code}
+   \end{frame}
+
+   %CODE
+       % av.plots(races.lm, 'Climb')
+
+
+   \begin{frame}
+   \frametitle{Added variable: {\tt Climb}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/4155e1c682.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#added-variable-plots}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostic plots}
+
+   \begin{block}
+   {Component + residual plots}
+   \begin{itemize}
+   \item Can help to determine non-linear trend in data.
+
+
+   \item Procedure: plot $X_{ij}, 1 \leq i \leq n$ vs. $e_i + \widehat{\beta}_j \cdot X_{ij} , 1 \leq i \leq n$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % cr.plots(races.lm, 'Distance')
+
+
+   \begin{frame}
+   \frametitle{Component + residual: {\tt Distance}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/56dda9b3a1.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#component-residual-plots}{R code}
+   \end{frame}
+
+   %CODE
+       % cr.plots(races.lm, 'Climb')
+
+
+   \begin{frame}
+   \frametitle{Component + residual: {\tt Climb}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/97da419d62.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/diagnostics.html#component-residual-plots}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
