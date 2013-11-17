@@ -5,6 +5,7 @@ from IPython.utils.path import get_ipython_dir
 c = get_config()
 
 IPYTHONDIR = get_ipython_dir()
+# Each static directory may have js etc subdirectories
 PROFILES_PATH=pjoin(IPYTHONDIR, 'ipython_static_profiles')
 extra_static_paths = [pjoin(PROFILES_PATH, sdir)
                       for sdir in (
