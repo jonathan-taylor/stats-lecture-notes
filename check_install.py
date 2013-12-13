@@ -12,7 +12,7 @@ from os.path import join as pjoin, isdir
 from subprocess import Popen, PIPE
 from distutils.version import LooseVersion
 import shutil
-# Requires Python 2.7
+# Requires Python 2.7 or installation of argparse package
 from argparse import ArgumentParser
 
 MIN_IPYTHON='1.0.0'
@@ -36,7 +36,7 @@ def back_tick(cmd, ret_err=False, as_str=True, raise_err=None):
         Whether to decode outputs to unicode string on exit.
     raise_err : None or bool, optional
         If True, raise RuntimeError for non-zero return code. If None, set to
-        True when `ret_err` is False, True if `ret_err` is True
+        True when `ret_err` is False, False if `ret_err` is True
 
     Returns
     -------
@@ -48,14 +48,16 @@ def back_tick(cmd, ret_err=False, as_str=True, raise_err=None):
 
     Raises
     ------
-    Raises RuntimeError if command returns non-zero exit code
+    Raises RuntimeError if command returns non-zero exit code and `raise_err` is
+    True
     """
     if raise_err is None:
         raise_err = False if ret_err else True
-    proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    cmd_is_seq = isinstance(cmd, (list, tuple))
+    proc = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=not cmd_is_seq)
     out, err = proc.communicate()
     retcode = proc.returncode
-    cmd_str = ' '.join(cmd) if isinstance(cmd, (list, tuple)) else cmd
+    cmd_str = ' '.join(cmd) if cmd_is_seq else cmd
     if retcode is None:
         proc.terminate()
         raise RuntimeError(cmd_str + ' process did not terminate')
