@@ -123,4 +123,5 @@ Topics
 .. toctree::
    :maxdepth: 2
 
+* Course introduction and review (`html <notebooks/Review.slides.html>`_, `pdf <notebooks/Review.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Review.ipynb>`_)
 
