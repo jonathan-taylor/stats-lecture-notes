@@ -33,7 +33,7 @@ Instructor & TAs
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=David%20Walsh>`_
   * Office hours: TBA
 
-* Final exam: Following the Stanford `calendar <http://studentaffairs.stanford.edu/registrar/winter-exams>`_: Friday, March 23 @ 12:15PM
+* Final exam: Following the Stanford `calendar <http://studentaffairs.stanford.edu/registrar/students/winter-exams>`_: Thursday, March 20 @ 3:30PM
 
 *******************
 Schedule & Location
@@ -52,7 +52,11 @@ Textbook
 Computing environment
 *********************
 
-We will use `R <http://cran.r-project.org>`_, which you can read about `here <http://www.nytimes.com/2009/01/07/technology/business-computing/07program.html>`_.
+We will use `R <http://cran.r-project.org>`_ for most examples, with
+some python mixed in, particularly `numpy <http://www.numpy.org/>`_ and
+`matplotlib <http://matplotlib.org/>`_.
+
+All of the course notes are written with the `ipython notebook <http://ipython.org/notebook.html>`_, a great tool for interactive computing. Most `R` code is run through the `R magic <http://ipython.org/ipython-doc/dev/config/extensions/rmagic.html>`_.
 
 *************
 Prerequisites
@@ -86,12 +90,12 @@ For those taking 4 units:
 
 * 5 assignments (50%)
 * data analysis project (20%)
-* final exam (30%) (according to Stanford calendar: F 03/23 @ 12:15PM)
+* final exam (30%) (according to Stanford calendar: Th 03/20 @ 3:30PM)
 
 For those taking 3 units:
 
 * 5 assignments (70%)
-* final exam (30%) (according to Stanford calendar: F 03/23 @ 12:15PM)
+* final exam (30%) (according to Stanford calendar: Th 03/20 @ 3:30PM)
 
 
 .. .. assignments:: 
@@ -123,5 +127,5 @@ Topics
 .. toctree::
    :maxdepth: 2
 
-* Course introduction and review (`html <notebooks/Review.slides.html>`_, `pdf <notebooks/Review.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Review.ipynb>`_)
+* Course introduction and review (`slides <notebooks/Review.slides.html>`_, `html <notebooks/Review.html>`_, `pdf <notebooks/Review.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Review.ipynb>`_)
 

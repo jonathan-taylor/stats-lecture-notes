@@ -8,7 +8,9 @@ def build_nbook(nbook):
 cd %s; 
 ipython nbconvert --to=latex --post PDF --template=stats191_article.tplx "%s";
 ipython nbconvert --to=slides --template=stats191_slides.tplx "%s";
+ipython nbconvert --to=html "%s";
  ''' % (nbook_dir, 
+        os.path.abspath(nbook),
         os.path.abspath(nbook),
         os.path.abspath(nbook))
     os.system(cmd)
@@ -25,8 +27,8 @@ def make_web(clean=True, build_pdf=True):
             build_nbook(nbook)
 
 
-    os.system('mkdir -p  www/notebooks ; mkdir www/exercises ; cp latex/header.tex www;')
-    os.system("mkdir www/data; cp data/* www/data; cp notebooks/* www/notebooks; cp -r notebooks/figs/* www/notebooks/figs; make html; cp -r _build/html/* www; ")
+    os.system('mkdir -p  www/notebooks/figs ; mkdir www/exercises ; cp latex/header.tex www;')
+    os.system("mkdir www/data; cp data/* www/data; cp -r notebooks/* www/notebooks; make html; cp -r _build/html/* www; ")
 
 def deploy():
     os.system("rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats191/WWW/")
