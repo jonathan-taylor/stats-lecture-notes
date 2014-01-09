@@ -16,22 +16,22 @@ Instructor & TAs
 
 * TA: Yunjin Choi
 
-  * Office: Sequoia Hall TBA
+  * Office: Sequoia Hall 208
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Yunjin%20Choi>`_
-  * Office hours: TBA
+  * Office hours: M 9:00-11:00
 
 
 * TA: Minyong Lee
 
-  * Office: Sequoia Hall TBA
+  * Office: Sequoia Hall 241
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Minyong%20Lee>`_
-  * Office hours: TBA
+  * Office hours: W 9:00-11:00
 
 * TA: David Walsh
 
-  * Office: Sequoia Hall TBA
+  * Office: Sequoia Hall 211
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=David%20Walsh>`_
-  * Office hours: TBA
+  * Office hours: Th 4:00-6:00
 
 * Final exam: Following the Stanford `calendar <http://studentaffairs.stanford.edu/registrar/students/winter-exams>`_: Thursday, March 20 @ 3:30PM
 
@@ -128,4 +128,6 @@ Topics
    :maxdepth: 2
 
 * Course introduction and review (`slides <notebooks/Review.slides.html>`_, `html <notebooks/Review.html>`_, `pdf <notebooks/Review.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Review.ipynb>`_)
+
+* Simple linear regression (`slides <notebooks/Simple%20linear%20regression.slides.html>`_, `html <notebooks/Simple%20linear%20regression.html>`_, `pdf <notebooks/Simple%20linear%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Simple%20linear%20regression.ipynb>`_)
 
