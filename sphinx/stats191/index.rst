@@ -97,9 +97,10 @@ For those taking 3 units:
 * 5 assignments (70%)
 * final exam (30%) (according to Stanford calendar: Th 03/20 @ 3:30PM)
 
+Assignments
+-----------
 
-.. .. assignments:: 
-..    :assigned: 
+* Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_)
 
 
 .. Project
