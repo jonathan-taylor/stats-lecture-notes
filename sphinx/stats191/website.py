@@ -34,5 +34,5 @@ def make_web(clean=True, build_pdf=True):
 def deploy():
     os.system('rm -fr www/notebooks/oldnotebooks www/notebooks/oldslides ')
     os.system("rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats191/WWW/")
-    os.system("rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes/sphinx/stats191/www")
+    os.system("rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes-working/sphinx/stats191/www")
 
