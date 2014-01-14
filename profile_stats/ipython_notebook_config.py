@@ -1,15 +1,19 @@
-# Configuration file for ipython-notebook.
+# Statistics configuration file for ipython-notebook.
+from os.path import join as pjoin, dirname
+from IPython.utils.path import get_ipython_dir
 
 c = get_config()
 
-PROFILES_PATH='/Users/jonathantaylor/.ipython/ipython_static_profiles'
-extra_static_paths = ["{0}/{1}".format(PROFILES_PATH, sdir)
+IPYTHONDIR = get_ipython_dir()
+# Each static directory may have js etc subdirectories
+PROFILES_PATH=pjoin(IPYTHONDIR, 'ipython_static_profiles')
+extra_static_paths = [pjoin(PROFILES_PATH, sdir)
                       for sdir in (
-        'css_selector',
-        'slidemode',
-        'init_cell'
-        )]
-extra_static_paths.append('/Users/jonathantaylor/.ipython/profile_stats306b/static')
+                          'css_selector',
+                          'slidemode',
+                          'init_cell'
+                      )]
+extra_static_paths.append(pjoin(dirname(__file__), 'static'))
 c.NotebookApp.extra_static_paths = extra_static_paths
 
 #------------------------------------------------------------------------------
