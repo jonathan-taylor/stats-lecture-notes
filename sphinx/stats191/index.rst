@@ -130,5 +130,7 @@ Topics
 
 * Course introduction and review (`slides <notebooks/Review.slides.html>`_, `html <notebooks/Review.html>`_, `pdf <notebooks/Review.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Review.ipynb>`_)
 
+* Some tips on R (`html <notebooks/Some%20tips%20on%20R.html>`_, `pdf <notebooks/Some%20tips%20on%20R.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Some%20tips%20on%20R.ipynb>`_)
+
 * Simple linear regression (`slides <notebooks/Simple%20linear%20regression.slides.html>`_, `html <notebooks/Simple%20linear%20regression.html>`_, `pdf <notebooks/Simple%20linear%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Simple%20linear%20regression.ipynb>`_)
 

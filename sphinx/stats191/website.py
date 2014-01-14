@@ -23,6 +23,7 @@ def make_web(clean=True, build_pdf=True):
         os.system('make clean;')
     
     os.system('mkdir -p notebooks; cp -r ../../notebooks/stats191/* notebooks/')        
+    os.system('mkdir -p www/R; cp R/* www/R; cp -r assignments/* notebooks/; rm -fr notebooks/oldslides notebooks/oldnotebooks')        
     os.system('cp -r assignments/* notebooks/; rm -fr notebooks/oldslides notebooks/oldnotebooks')        
     for nbook in glob.glob('notebooks/*ipynb'):
         build_nbook(nbook, build_pdf=build_pdf)
@@ -33,4 +34,5 @@ def make_web(clean=True, build_pdf=True):
 def deploy():
     os.system('rm -fr www/notebooks/oldnotebooks www/notebooks/oldslides ')
     os.system("rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats191/WWW/")
+    os.system("rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes/sphinx/stats191/www")
 
