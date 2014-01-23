@@ -134,3 +134,5 @@ Topics
 
 * Simple linear regression (`slides <notebooks/Simple%20linear%20regression.slides.html>`_, `html <notebooks/Simple%20linear%20regression.html>`_, `pdf <notebooks/Simple%20linear%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Simple%20linear%20regression.ipynb>`_)
 
+* Diagnostics for simple linear regression (`slides <notebooks/Simple%20diagnostics.slides.html>`_, `html <notebooks/Simple%20diagnostics.html>`_, `pdf <notebooks/Simple%20diagnostics.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Simple%20diagnostics.ipynb>`_)
+
