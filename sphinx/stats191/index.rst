@@ -23,7 +23,7 @@ Instructor & TAs
 
 * TA: Minyong Lee
 
-  * Office: Sequoia Hall 241
+  * Office: Sequoia Hall 207
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Minyong%20Lee>`_
   * Office hours: W 9:00-11:00
 
