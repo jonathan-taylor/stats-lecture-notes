@@ -16,7 +16,7 @@ Instructor & TAs
 
 * TA: Yunjin Choi
 
-  * Office: Sequoia Hall 208
+  * Office: Sequoia Hall 207
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Yunjin%20Choi>`_
   * Office hours: M 9:00-11:00
 
@@ -101,6 +101,8 @@ Assignments
 -----------
 
 * Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_)
+
+* Assignment 2 (`html <notebooks/Assignment2.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment2.ipynb>`_)
 
 
 .. Project
