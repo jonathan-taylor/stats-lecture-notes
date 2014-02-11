@@ -100,9 +100,11 @@ For those taking 3 units:
 Assignments
 -----------
 
-* Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_)
+* Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_). Solution (`html <notebooks/Solution1.html>`_).
 
 * Assignment 2 (`html <notebooks/Assignment2.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment2.ipynb>`_)
+
+* Assignment 3 (`html <notebooks/Assignment3.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment3.ipynb>`_)
 
 
 .. Project
