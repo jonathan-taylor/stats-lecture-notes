@@ -142,3 +142,4 @@ Topics
 
 * Diagnostics for multiple linear regression (`slides <notebooks/Diagnostics%20for%20multiple%20regression.slides.html>`_, `html <notebooks/Diagnostics%20for%20multiple%20regression.html>`_, `pdf <notebooks/Diagnostics%20for%20multiple%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Diagnostics%20for%20multiple%20regression.ipynb>`_)
 
+* Interactions and qualitatitve variables (`slides <notebooks/Interactions.slides.html>`_, `html <notebooks/Interactions.html>`_, `pdf <notebooks/Interactions.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Interactions.ipynb>`_)
