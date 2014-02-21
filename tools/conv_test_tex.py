@@ -12,13 +12,17 @@ Example use:
 
     python tools/conv_test_tex.py notebooks/stats191/oldslides/selection.tex
 """
+from __future__ import print_function
 
 import sys
 from os.path import join as pjoin, split as psplit, abspath, dirname, splitext
+from warnings import warn
 
 import io
 import json
 from subprocess import Popen, PIPE
+
+from pygments.lexers import guess_lexer
 
 import IPython.nbformat.current as nbf
 
@@ -60,6 +64,10 @@ class ParsePDJ(object):
             bres = self.process_inline(c)
         elif t == 'BulletList':
             bres = self.process_bulletlist(c, indentation_level + 1)
+        elif t == 'OrderedList':
+            bres = self.process_orderedlist(c, indentation_level + 1)
+        elif t == 'Table':
+            bres = self.process_table(c)
         else:
             raise ValueError('Not yet for ' + t)
         return bres
@@ -82,6 +90,20 @@ class ParsePDJ(object):
                 res.append(self.apply_indent(out_str, '* ', indentation_level))
         return '\n'.join(res)
 
+    def process_orderedlist(self, blist, indentation_level=0):
+        """ A list of blocks """
+        res = []
+        # Discard attributes
+        _, blist = blist
+        for item in blist:
+            for block in item:
+                out_str = self.process_block(block, indentation_level)
+                res.append(self.apply_indent(out_str, '1. ', indentation_level))
+        return '\n'.join(res)
+
+    def process_blockquote(self, bquote):
+        return self.apply_indent(self.process_block(bquote), '> ')
+
     def process_inline(self, inline, math_inline=None):
         """ Process an inline element """
         if math_inline is None:
@@ -96,6 +118,8 @@ class ParsePDJ(object):
                 res.append(' ')
             elif t == 'Math':
                 res.append(self.process_math(c, math_inline))
+            elif t in ('Code', 'RawInline'):
+                res += ['``', c[1], '``']
             elif t == 'Quoted':
                 res.append(self.process_quoted(c))
             elif t == 'Span':
@@ -104,6 +128,10 @@ class ParsePDJ(object):
                 res.append(self.process_link(c))
             elif t == 'Emph':
                 res += ['*', self.process_inline(c), '*']
+            elif t == 'Strong':
+                res += ['**', self.process_inline(c), '**']
+            elif t == 'LineBreak':
+                res += '\n'
             else:
                 raise ValueError("not yet for " + t)
         return ''.join(res)
@@ -116,8 +144,15 @@ class ParsePDJ(object):
                                             metadata=META_SLIDE,
                                             level=level))
 
+    def process_codeblock(self, codeblock):
+        """ Process a code block from pandoc json """
+        attrs, contents = codeblock
+        if self.guess_language(contents) == 'R':
+            contents = '%%R\n' + contents
+        self._add_cell(nbf.new_code_cell(contents))
+
     def process_block_list(self, blocks):
-        return '\n'.join(self.process_block(block) for block in blocks)
+        return '\n'.join([self.process_block(block) for block in blocks])
 
     def process_table(self, table):
         """ Process a table
@@ -146,6 +181,14 @@ class ParsePDJ(object):
             tab_res.append(' | '.join(row))
         return '\n'.join(tab_res)
 
+    def guess_language(self, lang_str):
+        """ Guess whether passed string is R or python
+        """
+        for shoey in 'matplotlib', 'numpy', 'scipy', 'pylab':
+            if shoey in lang_str:
+                return 'python'
+        return 'R'
+
     def flush_markdown(self):
         if len(self._markdown_buffer) == 0:
             return
@@ -160,6 +203,9 @@ class ParsePDJ(object):
     def _init_cells(self):
         self._cells = []
 
+    def _post_cells(self):
+        pass
+
     def parse(self, pdj, name=''):
         meta, body = pdj
         self._markdown_buffer = ''
@@ -169,10 +215,19 @@ class ParsePDJ(object):
             if t == 'Header':
                 self.process_header(c)
                 continue
-            elif t == 'Para':
+            elif t == 'CodeBlock':
+                self.process_codeblock(c)
+                continue
+            elif t in ('Para', 'Plain'):
                 res = self.process_inline(c)
+            elif t == 'RawBlock':
+                res = c[1]
+            elif t == 'BlockQuote':
+                res = self.process_blockquote(c)
             elif t == 'BulletList':
                 res = self.process_bulletlist(c)
+            elif t == 'OrderedList':
+                res = self.process_orderedlist(c)
             elif t == 'Table':
                 res = self.process_table(c)
             else:
@@ -180,6 +235,7 @@ class ParsePDJ(object):
             if res != '':
                 self._markdown_buffer = '\n'.join((self._markdown_buffer, res))
         self.flush_markdown()
+        self._post_cells()
         nb = nbf.new_notebook(name=name)
         ws = nbf.new_worksheet()
         ws['cells'] += self._cells[:]
@@ -189,73 +245,75 @@ class ParsePDJ(object):
 
 class ParsePDJJT(ParsePDJ):
 
-    def __init__(self, code_fragments, force_inline=True):
-        self.code_fragments = code_fragments
-        super(ParsePDJJT, self).__init__(force_inline)
-
-    def process_link(self, link):
-        """ Trap [R Code] links and replace with found R code """
-        txt, target = link
-        url, name = target
-        txt = self.process_inline(txt)
-        if txt == 'R code':
-            code = '\n'.join(('%%R', self._code_waiting.pop(0)))
-            self._add_cell(nbf.new_code_cell(code))
-            return ''
-        return '[{0}]({1})'.format(txt, url)
-
     def _init_cells(self):
         self._cells = [
             nbf.new_code_cell('%load_ext rmagic',
                               metadata=META_SKIP)
         ]
 
-    def parse(self, pdj, name=''):
-        self._code_waiting = self.code_fragments[:]
-        res = super(ParsePDJJT, self).parse(pdj, name)
-        assert len(self._code_waiting) == 0
-        return res
+    def _post_cells(self):
+        pass
 
 
-def extract_codes(liner):
-    """ Extract code fragments from tex file
+def insert_codes(liner):
+    """ Extract code fragments from tex file and replace in tex
 
-    Extract continuous lines of comments starting with %CODE
+    Extract continuous lines of comments starting with %CODE and replace in
+    tex file using verbatim environment
 
     Specific to Jonathan's slide output format
     """
-    in_code = False
-    codes = []
-    for line in liner:
-        line = line.strip()
-        if not in_code:
-            in_code = line == '%CODE'
-            code_lines = []
-            continue
-        if not line.startswith('%'):
-            in_code = False
-            codes.append('\n'.join(code_lines))
-            continue
-        if line == '%':
-            code_lines.append('')
-            continue
-        assert line[1] == ' '
-        code_lines.append(line[2:])
-    if in_code: # in case we're at the last line
-        codes.append('\n'.join(code_lines))
-    return codes
+    state = 'default'
+    new_lines = []
+    for raw_line in liner:
+        line = raw_line.strip()
+        rline = raw_line.rstrip()
+        if state == 'default':
+            if line == '%CODE':
+                state = 'code'
+                code_lines = []
+            else:
+                new_lines.append(rline)
+        elif state == 'code':
+            if not line.startswith('%'):
+                state = 'after-code'
+            elif line == '%':
+                code_lines.append('')
+            else:
+                assert line[1] == ' '
+                code_lines.append(line[2:])
+        elif state == 'after-code':
+            new_lines.append(rline)
+            if line == r'\begin{frame}':
+                state = 'after-frame'
+        elif state == 'after-frame':
+            if line.startswith(r'\resizebox'):
+                new_lines.append(r'\begin{verbatim}')
+                new_lines += code_lines
+                new_lines.append(r'\end{verbatim}')
+                state = 'after-resize'
+            else:
+                new_lines.append(rline)
+        elif state == 'after-resize':
+            if line.startswith(r'\href') and 'R code' in line:
+                # skip this line
+                continue
+            new_lines.append(rline)
+            if line == r'\end{frame}':
+                state = 'default'
+    return '\n'.join(new_lines)
 
 
 def parse_tex(fname):
-    to_json = Popen('pandoc -t json ' + fname, stdout=PIPE, stderr=PIPE, shell=True)
-    json_str, err_str = to_json.communicate()
+    with open(fname, 'rb') as fobj:
+        proc_tex = insert_codes(fobj)
+    to_json = Popen('pandoc -r latex -t json ', stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
+    json_str, err_str = to_json.communicate(proc_tex)
     if to_json.returncode != 0:
         raise RuntimeError('Command failed')
     json_str = json_str.decode('utf-8')
     pdj = json.loads(json_str)
-    with open(fname, 'rt') as fobj:
-        codes = extract_codes(fobj)
-    parser = ParsePDJJT(codes)
+    parser = ParsePDJJT()
     return parser.parse(pdj)
 
 
