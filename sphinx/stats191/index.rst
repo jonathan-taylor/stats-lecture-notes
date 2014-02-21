@@ -106,6 +106,8 @@ Assignments
 
 * Assignment 3 (`html <notebooks/Assignment3.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment3.ipynb>`_)
 
+* Assignment 4 (`html <notebooks/Assignment4.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment4.ipynb>`_)
+
 
 .. Project
 .. -------
