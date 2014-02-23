@@ -1,0 +1,1168 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Review before final}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Final review}
+
+   \begin{block}
+   {Overview}
+   \begin{itemize}
+
+   \item Simple linear regression.
+
+   \item Diagnostics for simple linear regression.
+
+   \item Multiple linear regression.
+
+   \item Diagnostics.
+
+   \item Interactions and ANOVA.
+
+   \item Weighted Least Squares.
+
+   \item Autocorrelation.
+
+   \item Model selection.
+
+   \item Logistic regression.
+
+   \item Poisson regression.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpw7WwaI')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpw7WwaI/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % x = 62
+   % xf, yf = pylab.poly_between([x-.5,x+.5], [50,50], [75, 75])
+   % g = (M < x+.5) * (M >= x-.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.2, hatch='/', label='_nolegend_')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % s = pylab.scatter([x],D[g].mean(), s=130, c='yellow', marker='^')
+   % s.set_label('Average at %d' % int(x))
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='D on M', color='black')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Simple linear regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/276a37f541.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression}
+
+   \begin{block}
+   {Least squares}
+   \begin{itemize}
+   \item We will be using ``least squares'' regression. This measures
+   the goodness of fit of a line by the sum of squared errors, $SSE$.
+   \item Least squares regression chooses the line that minimizes
+   $$
+   SSE(\beta_0, \beta_1) = \sum_{i=1}^n (Y_i - \beta_0 - \beta_1 \cdot X_i)^2.$$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Simple Linear Model}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_simple_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression}
+
+   \begin{block}    {What is a $t$-statistic?}
+
+   \begin{itemize}
+   \item Start with $Z \sim N(0,1)$ is standard normal and $S^2 \sim \chi^2_{\nu}$, independent of $Z$.
+   \item Compute
+   $$
+   T = \frac{Z}{\sqrt{\frac{S^2}{\nu}}}.$$
+
+   \item Then,  $T \sim t_{\nu}$ has a $t$-distribution with $\nu$ degrees of freedom.
+
+
+   \item Generally, a $t$-statistic has the form
+   $$
+   T = \frac{\text{parameter estimate - true parameter, i.e. \widehat{\beta}_1-\beta_1}}{\text{standard error of parameter, i.e. SE(\widehat{\beta}_1)}}$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression}
+
+   \begin{block}
+   {Interval for $\beta_1$}
+   A $(1-\alpha) \cdot 100 \%$ confidence interval:
+   $$
+   \widehat{\beta}_1 \pm SE(\widehat{\beta}_1) \cdot t_{n-2, 1-\alpha/2}.$$
+
+
+   \end{block}
+
+   \begin{block}
+   {Interval for regression line $\beta_0 + \beta_1 \cdot X$}
+   \begin{itemize}[<+->]
+
+   \item $(1-\alpha) \cdot 100 \%$ confidence interval:
+   $$
+   \widehat{\beta}_0 + \widehat{\beta}_1 X \pm SE(\widehat{\beta}_0 + \widehat{\beta}_1 X) \cdot t_{n-2, 1-\alpha/2}$$
+   where $$
+   SE(a_0\widehat{\beta}_0 + a_1\widehat{\beta}_1) = \widehat{\sigma} \sqrt{\frac{a_0^2}{n} + \frac{(a_0\overline{X} - a_1)^2}{\sum_{i=1}^n \left(X_i-\overline{X}\right)^2}}$$
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear regression}
+
+   \begin{block}
+   {Predicting a new observation}
+   \begin{itemize}[<+->]
+
+   \item
+   $$
+   SE(\widehat{\beta}_0 + \widehat{\beta}_1 X_{\text{new}} + \varepsilon_{\text{new}}) = \widehat{\sigma} \sqrt{1 + \frac{1}{n} + \frac{(\overline{X} - X_{\text{new}})^2}{\sum_{i=1}^n \left(X_i-\overline{X}\right)^2}}.$$
+
+   \item Prediction interval  is
+   $$ \widehat{\beta}_0 +  \widehat{\beta}_1 X_{\text{new}} \pm t_{n-2, 1-\alpha/2} \cdot SE(\widehat{\beta}_0 + \widehat{\beta}_1 X_{\text{new}} + \varepsilon_{\text{new}})
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear diagnostics}
+
+   \begin{block}
+   {Sums of squares}
+   $$
+   \begin{aligned}
+   SSE &= \sum_{i=1}^n(Y_i - \widehat{Y}_i)^2 = \sum_{i=1}^n (Y_i - \widehat{\beta}_0 - \widehat{\beta}_1 X_i)^2 \\
+   SSR &= \sum_{i=1}^n(\overline{Y} - \widehat{Y}_i)^2 = \sum_{i=1}^n (\overline{Y} - \widehat{\beta}_0 - \widehat{\beta}_1 X_i)^2 \\
+   SST &= \sum_{i=1}^n(Y_i - \overline{Y})^2 = SSE + SSR \\
+   R^2 &= \frac{SSR}{SST} = 1 - \frac{SSE}{SST} = \widehat{Cor}(\pmb{X},\pmb{Y})^2.
+   \end{aligned}
+   $$
+
+
+   Basic idea: if $R^2$ is large: a lot  of the variability in $\pmb{Y}$ is explained by $\pmb{X}$.
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear diagnostics}
+
+   \begin{block}
+   {$F$-test in simple linear regression}
+   \begin{itemize}
+   \item {\em Full (bigger) model :}
+   $$
+   FM: \qquad Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$$
+   \item {\em Reduced (smaller) model:}
+   $$
+   RM: \qquad Y_i = \beta_0  + \varepsilon_i$$
+
+   \item The $F$-statistic has the form
+   $$
+   F=\frac{(SSE(RM) - SSE(FM)) / (df_{RM} - df_{FM})}{SSE(FM) / df_{FM}}.$$
+   \item Reject $H_0: RM$ is correct, if $F > F_{1-\alpha, 1, n-2}$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Simple linear diagnostics}
+
+   \begin{block}
+   {What are the assumptions}
+   \begin{itemize}
+   \item $$
+   Y_i = \beta_0 + \beta_1 X_{i} + \varepsilon_i
+   $$
+   \item Errors $\varepsilon_i$ are assumed independent $N(0,\sigma^2)$.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % 
+   % plot(anscombe$X2, resid(simple.lm), ylab='Residual', xlab='X',
+   %      pch=23, bg='orange', cex=2)
+   % 
+   % ## put a horizontal line through 0
+   % abline(h=0, lwd=2, col='red', lty=2)
+   % 
+   % 
+
+
+   \begin{frame}
+   \frametitle{Residuals from linear model}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/26830ab3f8.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/simple_diagnostics.html#poorly-fitting-linear-model}{R code}
+   \end{frame}
+
+   %CODE
+       % 
+   % # Improve model by adding quadratic term
+   % # Instead of attaching, can use the "data" argument to lm
+   % 
+   % quadratic.lm <- lm(Y2 ~ poly(X2, 2), data=anscombe)
+   % 
+   % # Replot data, adding fitted quadratic
+   % Xsort <- sort(anscombe$X2)
+   % plot(anscombe$X2, anscombe$Y2, pch=23, bg='orange', cex=2, ylab='Y', xlab='X')
+   % lines(Xsort, predict(quadratic.lm, list(X2=Xsort)), col='red', lty=2, lwd=2)
+   % 
+   % 
+
+
+   \begin{frame}
+   \frametitle{Quadratic model}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/20e15ae786.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/simple_diagnostics.html#poorly-fitting-linear-model}{R code}
+   \end{frame}
+
+   %CODE
+       % 
+   % plot(anscombe$X2, resid(quadratic.lm), ylab='Residual',
+   %      xlab='X', pch=23, bg='orange', cex=2)
+   % ## put a horizontal line through 0
+   % abline(h=0, lwd=2, col='red', lty=2)
+   % 
+   % 
+
+
+   \begin{frame}
+   \frametitle{Residuals from quadratic model}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/ef7e20b21e.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/simple_diagnostics.html#poorly-fitting-linear-model}{R code}
+   \end{frame}
+
+   %CODE
+       % qqnorm(resid(quadratic.lm), pch=23, bg='orange', cex=2)
+
+
+   \begin{frame}
+   \frametitle{QQplot of residuals from quadratic model}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/0669147262.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/simple_diagnostics.html#poorly-fitting-linear-model}{R code}
+   \end{frame}
+
+   %CODE
+       % plot(GSS[good], resid(viral.lm), pch=23,
+   % bg='orange', cex=2, xlab='GSS', ylab='Residual')
+   % abline(h=0, lwd=2, col='red', lty=2)
+
+
+   \begin{frame}
+   \frametitle{Simple linear diagnostics}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/0824cf9384.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/simple_diagnostics.html#outlier-and-nonconstant-variance}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression      model}
+
+   \begin{block}
+   {Specifying the model}
+
+   \begin{itemize}
+
+   \item Rather than one predictor, we have $p=6$ predictors.
+
+   \item $$
+   Y_i = \beta_0 + \beta_1 X_{i1} + \dots + \beta_p X_{ip} + \varepsilon_i
+   $$
+
+   \item Errors $\varepsilon$ are assumed independent $N(0,\sigma^2)$, as in simple linear regression.
+
+   \item Coefficients are called (partial) regression coefficients because they ``allow'' for the effect of other variables.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Geometry of Least Squares: Multiple Regression}
+
+   \resizebox{!}{3in}{\includegraphics{./figs/simple/axes_multiple_full.png}}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression}
+
+   \begin{block}
+   {$F$-test}
+   \begin{itemize}
+   \item {\em Full (bigger) model :}
+   $$
+   Y_i = \beta_0 + \beta_1 X_{i1} + \dots \beta_p X_{ip} + \varepsilon_i$$
+   \item {\em Reduced (smaller) model:}
+   $$
+   Y_i = \beta_0  + \varepsilon_i$$
+
+   \item The $F$-statistic has the form
+   $$
+   F=\frac{(SSE(R) - SSE(F)) / (df_R - df_F)}{SSE(F) / df_F}.$$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression}
+
+   \begin{block}
+   {Matrix formulation}
+   $${\pmb Y}_{n \times 1} = \pmb{X}_{n \times (p + 1)} \pmb{\beta}_{(p+1) \times 1} + \pmb{\varepsilon}_{n \times 1}$$
+   \begin{itemize}
+
+   \item $\pmb{X}$ is called the {\em design matrix} of the model
+   \item $\pmb{\varepsilon} \sim N(0, \sigma^2 I_{n \times n})$ is multivariate normal
+   \end{itemize}
+   \end{block}
+   \begin{block}
+   {$SSE$ in matrix form}
+   $$
+   SSE(\beta) = (\pmb{Y} - \pmb{X} \pmb{\beta})'(\pmb{Y} - \pmb{X} \pmb{\beta})
+   $$
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression}
+
+   \begin{block}
+   {Least squares solution}
+   \begin{itemize}
+   \item Normal equations
+   $$
+   \frac{\partial}{\partial \beta_j} SSE \biggl|_{\Bh{}} = -2 \left(\pmb{Y} - \pmb{X} \Bh{} \right)^t \pmb{X}_j = 0, \qquad 0 \leq j \leq p.$$
+
+   \item Equivalent to
+   $$
+   \begin{aligned}
+   (\pmb{Y} - \pmb{X}\pmb{\Bh{}})^t\pmb{X} &= 0 \\
+   \pmb{\Bh{}} &= (\pmb{X}^t\pmb{X})^{-1}\pmb{X}^t\pmb{Y}
+   \end{aligned}
+   $$
+
+   \item Properties:
+   $$
+   \pmb{\Bh{}} \sim N\left(\pmb{\beta}, \sigma^2 (\pmb{X}^t \pmb{X})^{-1} \right), \text{indep. of \widehat{\sigma}^2}
+   $$
+   \item  \href{http://stats191.stanford.edu/multiple.html}{R code}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression}
+
+   \begin{block}
+   {Confidence interval for $\sum_{j=0}^p a_j \beta_j$}
+   \begin{itemize}
+   \item Suppose we want  a $(1-\alpha)\cdot 100\%$ CI for $\sum_{j=0}^p a_j\beta_j$.
+
+   \item Just as in simple linear regression:
+
+   $$
+   \sum_{j=0}^p a_j \widehat{\beta}_j \pm t_{1-\alpha/2, n-p-1} \cdot SE\left(\sum_{j=0}^p a_j\widehat{\beta}_j\right).$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Multiple linear regression}
+
+   \begin{block}
+   { General   $F$-tests}
+   \begin{itemize}
+   \item Given two models $R \subset F$ (i.e. $R$ is a subspace of $F$),
+   we can consider testing
+   $$
+   H_0: \text{R is adequate (i.e. \mathbb{E}(Y) \in R)}$$
+   vs.
+   $$
+   H_a: \text{F is adequate (i.e. \mathbb{E}(Y) \in F)}.$$
+
+   \item The test statistic is
+   $$
+   F = \frac{(SSE(R) - SSE(F)) / (df_R - df_F)}{SSE(F)/df_F}$$
+
+   \item If $H_0$ is true, $F \sim F_{df_R-df_F, df_F}$ so we reject
+   $H_0$ at level $\alpha$ if  $F > F_{df_R-df_F, df_F, 1-\alpha}$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostics}
+
+   \begin{block}
+   {What can go wrong?}
+
+   \begin{itemize}[<+->]
+
+   \item
+   Regression function can be wrong: maybe regression function should be quadratic
+   (see \Rhref{simple_diagnostics/anscombeout.html}{R code}).
+
+   \item Model for the errors
+   may be incorrect:
+   \begin{itemize}
+   \item  may not be normally distributed.
+   \item  may not be independent.
+
+   \item  may not have the same variance.
+   \end{itemize}
+
+   \item Detecting problems is more {\em art} then {\em science}, i.e.
+   we cannot {\em test} for all possible problems in a regression model.
+
+   \item Basic idea of diagnostic measures: if model is correct then
+   residuals $e_i = Y_i -\widehat{Y}_i, 1 \leq i \leq n$ should look like a sample of
+   (not quite independent) $N(0, \sigma^2)$ random variables.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % library(car)
+   % 
+   % url = 'http://stats191.stanford.edu/data/scottish_races.table'
+   % races.table = read.table(url, header=T)
+   % attach(races.table)
+   % races.lm = lm(Time ~ Distance + Climb)
+   % par(mfrow=c(2,2))
+   % plot(races.lm, pch=23 ,bg='orange',cex=2)
+
+
+   \begin{frame}
+   \frametitle{Diagnostics}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/2a80862179.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostics}
+
+   \begin{block}
+   {$DFFITS$}
+   \begin{itemize}[<+->]
+
+   \item $$
+   DFFITS_i = \frac{\widehat{Y}_i - \widehat{Y}_{i(i)}}{\widehat{\sigma}_{(i)} \sqrt{H_{ii}}}$$
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostics}
+
+   \begin{block}
+   {Cook's distance}
+   \begin{itemize}[<+->]
+
+   \item $$
+   D_i = \frac{\sum_{j=1}^n(\widehat{Y}_j - \widehat{Y}_{j(i)})^2}{(p+1) \, \widehat{\sigma}^2}$$
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Influence of an observation}
+
+   \begin{block}
+   {$DFBETAS$}
+   \begin{itemize}[<+->]
+
+   \item $$
+   DFBETAS_{j(i)} = \frac{\widehat{\beta}_j - \widehat{\beta}_{j(i)}}{\sqrt{\widehat{\sigma}^2_{(i)} (X^TX)^{-1}_{jj}}}.$$
+
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Diagnostics}
+
+   \begin{block}
+   {Outliers}
+   \begin{itemize}[<+->]
+   \item Observations $(Y, X_1, \dots, X_p)$ that
+   do not follow the model, while most other observations seem to follow the model.
+
+   \item One solution: Bonferroni correction, threshold at
+   $t_{1 - \alpha/(2*n), n-p-2}$.
+   \item Bonferroni: if we
+   are doing many $t$ (or other) tests, say $m >>1$ we can control
+   overall false positive rate at $\alpha$ by testing each one at level $\alpha/m$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/minority.table'
+   % 
+   % minority.table <- read.table(url, header=T)
+   % minority.table$ETHN <- factor(minority.table$ETHN)
+   % attach(minority.table)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % 
+   % 
+   % 
+   % 
+   % minority.lm1 <- lm(JPERF ~ TEST)
+   % summary(minority.lm1)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % abline(minority.lm1$coef, lwd=3, col='blue')
+
+
+   \begin{frame}
+   \frametitle{No difference}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/37c064b804.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %CODE
+       % minority.lm2 = lm(JPERF ~ TEST + TEST:ETHN)
+   % summary(minority.lm2)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % 
+   % abline(minority.lm2$coef['(Intercept)'], minority.lm2$coef['TEST'], lwd=3, col='purple')
+   % abline(minority.lm2$coef['(Intercept)'], minority.lm2$coef['TEST'] + minority.lm2$coef['TEST:ETHN1'], lwd=3, col='green')
+
+
+   \begin{frame}
+   \frametitle{Different slopes, same intercept}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/628321a694.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %CODE
+       % minority.lm3 = lm(JPERF ~ TEST + ETHN)
+   % summary(minority.lm3)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % abline(minority.lm3$coef['(Intercept)'], minority.lm3$coef['TEST'], lwd=3, col='purple')
+   % abline(minority.lm3$coef['(Intercept)'] + minority.lm3$coef['ETHN1'], minority.lm3$coef['TEST'], lwd=3, col='green')
+
+
+   \begin{frame}
+   \frametitle{Different intercepts, same slope}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/78aad55d8a.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %CODE
+       % minority.lm4 = lm(JPERF ~ TEST * ETHN)
+   % summary(minority.lm4)
+   % 
+   % plot(TEST, JPERF, type='n')
+   % points(TEST[(ETHN == 0)], JPERF[(ETHN == 0)], pch=21, cex=2, bg='purple')
+   % points(TEST[(ETHN == 1)], JPERF[(ETHN == 1)], pch=25, cex=2, bg='green')
+   % abline(minority.lm4$coef['(Intercept)'], minority.lm4$coef['TEST'], lwd=3, col='purple')
+   % abline(minority.lm4$coef['(Intercept)'] + minority.lm4$coef['ETHN1'],
+   %        minority.lm4$coef['TEST'] + minority.lm4$coef['TEST:ETHN1'], lwd=3, col='green')
+
+
+   \begin{frame}
+   \frametitle{Different intercepts, different slopes}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/645008123b.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/interactions.html#minority-employment-data}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {ANOVA table: One-way}
+   \begin{itemize}[<+->]
+
+   \item
+   {\tiny
+   \begin{tabular}{l|ccc}
+   Source  & $SS$    & $df$ &  $E(MS)$ \\ \hline
+   Treatments &    $SSTR = \sum_{i=1}^r n_i \left(\overline{Y}_{i\cdot} - \overline{Y}_{\cdot\cdot}\right)^2$ &   $r-1$     & $\sigma^2 + \frac{\sum_{i=1}^r n_i \alpha_i^2}{r-1}$ \\
+   Error &  $SSE = \sum_{i=1}^r \sum_{j=1}^{n_i}(Y_{ij} - \overline{Y}_{i\cdot})^2$ & $\sum_{i=1}^r n_i - r$ & $\sigma^2$ \\
+   \end{tabular}}
+
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {ANOVA table: Two-way (assuming $n_{ij}=n$)}
+   {\small
+   \begin{tabular}{lc}
+   Term & $SS$     \\ \hline
+   $A$ &    $SSA = nm\sum_{i=1}^r  \left(\overline{Y}_{i\cdot\cdot} - \overline{Y}_{\cdot\cdot\cdot}\right)^2$ \\
+   $B$ &     $SSB = nr\sum_{j=1}^m  \left(\overline{Y}_{\cdot j\cdot} - \overline{Y}_{\cdot\cdot\cdot}\right)^2$ \\
+   $AB$ &    $SSAB = n\sum_{i=1}^r \sum_{j=1}^m  \left(\overline{Y}_{ij\cdot} - \overline{Y}_{i\cdot\cdot} - \overline{Y}_{\cdot j\cdot} + \overline{Y}_{\cdot\cdot\cdot}\right)^2$ \\
+   Error &  $SSE = \sum_{i=1}^r \sum_{j=1}^m \sum_{k=1}^{n}(Y_{ijk} - \overline{Y}_{ij\cdot})^2$  \\
+   \end{tabular}}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{ANOVA models}
+
+   \begin{block}
+   {ANOVA table: Two-way (assuming $n_{ij}=n$)}
+   \begin{itemize}
+   \item {\small
+   \begin{tabular}{lcc}
+   $SS$    & $df$ &  $E(MS)$ \\ \hline
+   $SSA$ &   $r-1$     & $\sigma^2 + nm\frac{\sum_{i=1}^r \alpha_i^2}{r-1}$ \\
+   $SSB$ &   $m-1$     & $\sigma^2 + nr\frac{\sum_{j=1}^m \beta_j^2}{m-1}$ \\
+   $SSAB$ &   $(m-1)(r-1)$     & $\sigma^2 + n\frac{\sum_{i=1}^r\sum_{j=1}^m (\alpha\beta)_{ij}^2}{(r-1)(m-1)}$ \\
+   $SSE$ & $(n-1)mr$ & $\sigma^2$ \\
+   \end{tabular}}
+   \item Also talked briefly about random effects.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Weighted least squares}
+
+   \begin{block}
+   {Weighted Least Squares}
+
+   \begin{itemize}
+
+   \item Weighted Least Squares
+   $$
+   SSE(\beta, w) = \sum_{i=1}^n w_i \left(Y_i - \beta_0 - \beta_1 X_i\right)^2.
+   $$
+
+   \item In general, weights should be
+     like:
+   $$
+   w_i = \frac{1}{\text{Var}(\varepsilon_i)}.$$
+   \item Briefly talked about efficiency of estimators.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % url = 'http://stats191.stanford.edu/data/nasdaq_2011.csv'
+   % nasdaq.data = read.table(url, header=TRUE, sep=',')
+   % 
+   % plot(nasdaq.data$Date, nasdaq.data$Close, xlab='Date', ylab='NASDAQ close',
+   %      pch=23, bg='red', cex=2)
+
+
+   \begin{frame}
+   \frametitle{NASDAQ daily close 2011}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/40a1d58d2b.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/correlated_errors.html#nasdaq}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correlated errors}
+
+   \begin{block}
+   {AR(1) noise}
+   \begin{itemize}
+
+   \item Suppose that, instead of being independent, the errors in our model were
+   $$
+   \varepsilon_t = \rho \cdot \varepsilon_{t-1} + \omega_t, \qquad -1 < \rho < 1$$
+   with $\omega_t \sim N(0,\sigma^2)$ independent.
+   \item If $\rho$ is close to 1, then errors are very correlated, $\rho=0$ is independence.
+   \item This is ``Auto-Regressive Order (1)'' noise (AR(1)). Many other
+   models of correlation exist: ARMA, ARIMA, ARCH, GARCH, etc.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correlated errors}
+
+   \begin{block}
+   {Correcting for AR(1)                      }
+   \begin{itemize}
+   \item Suppose we know $\rho$, if we ``whiten'' the data and regressors
+   $$
+   \begin{aligned}
+   \tilde{Y}_{t+1} &= Y_{t+1} - \rho Y_t, t > 1   \\
+   \tilde{X}_{(t+1)j} &= X_{(t+1)j} - \rho X_{tj}, i > 1
+   \end{aligned}
+   $$
+   for $1 \leq t \leq n-1$.
+   This model satisfies ``usual'' assumptions, i.e. the errors
+   $$
+   \tilde{\varepsilon}_t = \omega_{t+1} = \varepsilon_{t+1} - \rho \cdot \varepsilon_t$$
+   are independent $N(0,\sigma^2)$.
+
+   \item For coefficients in new model $\tilde{\beta}$, $\beta_0 = \tilde{\beta}_0 / (1 - \rho)$, $\beta_j = \tilde{\beta}_j.$
+
+   \item Problem: in general, we don't know $\rho$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {Criteria}
+
+   \begin{itemize}
+
+   \item $$
+   C_p({\cal M}) = \frac{SSE({\cal M})}{\widehat{\sigma}^2} + 2 \cdot p({\cal M}) - n.$$
+
+   \item Akaike (AIC) defined as
+   $$
+   AIC({\cal M}) = - 2 \log L({\cal M}) + 2 p({\cal M})
+   $$
+   where $L({\cal M})$ is the maximized likelihood of the model.
+
+   \item Bayes (BIC) defined as
+   $$
+   BIC({\cal M}) = - 2 \log L({\cal M}) + \log n \cdot p({\cal M})
+   $$
+
+   \item Adjusted $R^2$
+
+   \item Stepwise ({\tt step}) vs. best subsets ({\tt leaps}).
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % nsample = 100
+   % ntrial = 50
+   % mu = 5 * c(1:nsample) / nsample
+   % mu = mu - mean(mu)
+   % 
+   % get.sample = function() {
+   %   return(rnorm(nsample) + mu)
+   % }
+   % 
+   % MSE = function(mu.hat, mu) {
+   %   return(sum((mu.hat - mu)^2) / length(mu))
+   % }
+   % 
+   % alpha = seq(0.0,1,length=20)
+   % 
+   % mse = numeric(length(alpha))
+   % 
+   % for (i in 1:ntrial) {
+   %   Z = get.sample()
+   %   for (j in 1:length(alpha)) {
+   %     mse[j] = mse[j] + MSE(alpha[j] * Z, mu) / ntrial
+   %   }
+   % }
+   % 
+   % plot(alpha, mse, type='l', lwd=2, col='red', ylim=c(0, max(mse)),
+   %      xlab='Shrinkage parameter, alpha', ylab='MSE(alpha)')
+
+
+   \begin{frame}
+   \frametitle{Shrinking an estimator}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6f7df230c4.png}}    
+   \end{center}
+   \href{http://stats191.stanford.edu/selection.html#bias-variance-tradeoff}{R code}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Model selection}
+
+   \begin{block}
+   {$K$-fold cross-validation                     }
+       \begin{itemize}
+
+       \item Fix a model ${\cal M}$.
+       Break data set into $K$ approximately equal sized groups $(G_1, \dots, G_K)$.
+
+       \item {\tt for (i in 1:K)} Use all groups
+       except $G_i$ to fit model, predict  outcome in group $G_i$ based on this model $\widehat{Y}_{j,{\cal M}, G_i}, j \in G_i$.
+
+       \item Estimate
+   $$
+   CV({\cal M}) = \frac{1}{n}\sum_{i=1}^K \sum_{j \in G_i} (Y_j - \widehat{Y}_{j,{\cal M},G_i})^2.$$
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Logistic regression}
+
+   \begin{block}
+       {Logistic model}
+       \begin{itemize}
+       \item Logistic model
+   $$
+   \pi(X_1,X_2) = \frac{\exp(\beta_0 + \beta_1 X_1 + \beta_2 X_2)}{1 + \exp(\beta_0 + \beta_1 X_1 + \beta_2 X_2)}
+   $$
+
+   \item This automatically fixes $0 \leq E(Y) = \pi(X_1,X_2) \leq 1$.
+
+
+   \item {\bf Note:}
+   $$
+   \text{logit}(\pi(X_1, X_2)) = \log\left(\frac{\pi(X_1, X_2)}{1 - \pi(X_1,X_2)}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2
+   $$
+
+       \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Logistic regression}
+
+   \begin{block}
+   {Odds Ratios}
+
+   \begin{itemize}
+   \item     One reason logistic models are popular is that the
+       parameters have simple interpretations in terms of {\bf odds}
+   $$
+   ODDS(A) = \frac{P(A)}{1-P(A)}.
+   $$
+
+   \item Logistic model:
+   $$
+   OR_{X_j} = \frac{ODDS(\dots, X_j=x_j+1, \dots)}{ODDS(\dots, X_j=x_j, \dots)} = e^{\beta_j}
+   $$
+
+
+   \item If $X_j \in {0, 1}$ is dichotomous, then odds for group with $X_j = 1$ are
+       $e^{\beta_j}$ higher, other parameters being equal.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Logistic regression}
+
+   \begin{block}
+         {Deviance}
+         \begin{itemize}
+         \item For a model ${\cal M}$, $DEV({\cal M})$ replaces $SSE({\cal M})$.
+
+
+   \item In least squares regression, we use
+   $$
+   SSE({\cal M}_R) - SSE({\cal M}_F) \sim \sigma^2 \chi^2_{df_R-df_F}$$
+
+   \item This is replaced with
+   $$
+   DEV({\cal M}_R) - DEV({\cal M}_F) \overset{n \rightarrow \infty}{\sim} \chi^2_{df_R-df_F}$$
+
+   \item An example of a {\em generalized linear model}.
+
+         \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Poisson regression}
+
+   \begin{block}
+       {Poisson (log-linear) regression model}
+
+       \begin{itemize}
+       \item      Given observations and covariates
+        $Y_i , X_{ij} , 1 \leq i  \leq n, 1 \leq j  \leq p$.
+
+
+      \item {\bf Model:}
+   $$     Y_{i} \sim Poisson \left(\exp\left(\beta_0 + \sum_{j=1}^p \beta_j X_{ij} \right)\right)$$
+
+
+   \item Poisson assumption implies the  variance
+        function is
+   $$ V (\mu) = \mu.$$
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Poisson regression}
+
+   \begin{block}
+   {Interpretation of coefficients}
+
+   \begin{itemize}
+   \item   The log-linear model
+   means covariates have {\em multiplicative} effect.
+
+   \item Log-linear model model:
+   $$
+   \frac{E(Y|\dots, X_j=x_j+1, \dots)}{E(Y|\dots, X_j=x_j, \dots)} = e^{\beta_j}
+   $$
+
+
+   \item So, one unit increase in variable $j$ results in $e^{\beta_j}$
+   (multiplicative) increase the expected count, all other parameters being equal.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
