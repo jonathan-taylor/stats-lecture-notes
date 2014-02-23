@@ -123,7 +123,7 @@ class ParsePDJ(object):
             elif t == 'Quoted':
                 res.append(self.process_quoted(c))
             elif t == 'Span':
-                res += self.process_inline(c[1])
+                res += [self.process_inline(c[1]), '\n']
             elif t == 'Link':
                 res.append(self.process_link(c))
             elif t == 'Emph':
