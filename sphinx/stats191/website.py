@@ -6,7 +6,7 @@ def build_nbook(nbook, build_pdf=True):
     shutil.copy2('stats191_slides.tplx', nbook_dir)
     cmd = '''
 cd %s; 
-ipython nbconvert --to=slides --template=stats191_slides.tplx "%s";
+ipython nbconvert --to=slides "%s";
 ipython nbconvert --to=html "%s";
  ''' % (nbook_dir, 
         os.path.abspath(nbook),

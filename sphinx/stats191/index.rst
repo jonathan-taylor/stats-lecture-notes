@@ -109,11 +109,11 @@ Assignments
 * Assignment 4 (`html <notebooks/Assignment4.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment4.ipynb>`_)
 
 
-.. Project
-.. -------
+Project
+-------
 
-.. The `data analysis project description <restricted/project.pdf>`_  describes
-.. what is needed for your project. It is due March 13, 2014. 
+The `data analysis project description <project.pdf>`_  describes
+what is needed for your project. It is due March 14, 2014. 
 
 .. Practice exam
 .. -------------
@@ -151,3 +151,5 @@ Topics
 * Analysis of variance (`slides <notebooks/ANOVA.slides.html>`_, `html <notebooks/ANOVA.html>`_, `pdf <notebooks/ANOVA.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/ANOVA.ipynb>`_)
 
 * Transformations (`slides <notebooks/Transformations.slides.html>`_, `html <notebooks/Transformations.html>`_, `pdf <notebooks/Transformations.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Transformations.ipynb>`_)
+
+* Correlated errors (`slides <notebooks/Correlated%20errors.slides.html>`_, `html <notebooks/Correlated%20errors.html>`_, `pdf <notebooks/Correlated%20errors.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Correlated%20errors.ipynb>`_)
