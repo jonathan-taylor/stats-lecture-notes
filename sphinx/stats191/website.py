@@ -6,7 +6,7 @@ def build_nbook(nbook, build_pdf=True):
     shutil.copy2('stats191_slides.tplx', nbook_dir)
     cmd = '''
 cd %s; 
-ipython nbconvert --to=slides --template=stats191_slides.tplx "%s";
+ipython nbconvert --to=slides "%s";
 ipython nbconvert --to=html "%s";
  ''' % (nbook_dir, 
         os.path.abspath(nbook),
@@ -34,5 +34,5 @@ def make_web(clean=True, build_pdf=True):
 def deploy():
     os.system('rm -fr www/notebooks/oldnotebooks www/notebooks/oldslides ')
     os.system("rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats191/WWW/")
-    os.system("rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes/sphinx/stats191/www")
+    os.system("rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes-working/sphinx/stats191/www")
 
