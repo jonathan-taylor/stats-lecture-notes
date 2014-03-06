@@ -16,20 +16,20 @@ Instructor & TAs
 
 * TA: Yunjin Choi
 
-  * Office: Sequoia Hall 208
+  * Office: Sequoia Hall 207
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Yunjin%20Choi>`_
   * Office hours: M 9:00-11:00
 
 
 * TA: Minyong Lee
 
-  * Office: Sequoia Hall 241
+  * Office: Sequoia Hall 207
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Minyong%20Lee>`_
   * Office hours: W 9:00-11:00
 
 * TA: David Walsh
 
-  * Office: Sequoia Hall 211
+  * Office: Sequoia Hall 207
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=David%20Walsh>`_
   * Office hours: Th 4:00-6:00
 
@@ -100,14 +100,20 @@ For those taking 3 units:
 Assignments
 -----------
 
-* Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_)
+* Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_). Solution (`html <notebooks/Solution1.html>`_).
+
+* Assignment 2 (`html <notebooks/Assignment2.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment2.ipynb>`_)
+
+* Assignment 3 (`html <notebooks/Assignment3.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment3.ipynb>`_)
+
+* Assignment 4 (`html <notebooks/Assignment4.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment4.ipynb>`_)
 
 
-.. Project
-.. -------
+Project
+-------
 
-.. The `data analysis project description <restricted/project.pdf>`_  describes
-.. what is needed for your project. It is due March 13, 2014. 
+The `data analysis project description <project.pdf>`_  describes
+what is needed for your project. It is due March 14, 2014. 
 
 .. Practice exam
 .. -------------
@@ -134,3 +140,20 @@ Topics
 
 * Simple linear regression (`slides <notebooks/Simple%20linear%20regression.slides.html>`_, `html <notebooks/Simple%20linear%20regression.html>`_, `pdf <notebooks/Simple%20linear%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Simple%20linear%20regression.ipynb>`_)
 
+* Diagnostics for simple linear regression (`slides <notebooks/Simple%20diagnostics.slides.html>`_, `html <notebooks/Simple%20diagnostics.html>`_, `pdf <notebooks/Simple%20diagnostics.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Simple%20diagnostics.ipynb>`_)
+
+* Multiple linear regression (`slides <notebooks/Multiple%20linear%20regression.slides.html>`_, `html <notebooks/Multiple%20linear%20regression.html>`_, `pdf <notebooks/Multiple%20linear%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Multiple%20linear%20regression.ipynb>`_)
+
+* Diagnostics for multiple linear regression (`slides <notebooks/Diagnostics%20for%20multiple%20regression.slides.html>`_, `html <notebooks/Diagnostics%20for%20multiple%20regression.html>`_, `pdf <notebooks/Diagnostics%20for%20multiple%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Diagnostics%20for%20multiple%20regression.ipynb>`_)
+
+* Interactions and qualitatitve variables (`slides <notebooks/Interactions.slides.html>`_, `html <notebooks/Interactions.html>`_, `pdf <notebooks/Interactions.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Interactions.ipynb>`_)
+
+* Analysis of variance (`slides <notebooks/ANOVA.slides.html>`_, `html <notebooks/ANOVA.html>`_, `pdf <notebooks/ANOVA.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/ANOVA.ipynb>`_)
+
+* Transformations (`slides <notebooks/Transformations.slides.html>`_, `html <notebooks/Transformations.html>`_, `pdf <notebooks/Transformations.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Transformations.ipynb>`_)
+
+* Correlated errors (`slides <notebooks/Correlated%20errors.slides.html>`_, `html <notebooks/Correlated%20errors.html>`_, `pdf <notebooks/Correlated%20errors.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Correlated%20errors.ipynb>`_)
+
+* Selection (`slides <notebooks/Selection.slides.html>`_, `html <notebooks/Selection.html>`_, `pdf <notebooks/Selection.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Selection.ipynb>`_)
+
+* Penalized regression (`slides <notebooks/Penalized%20regression.slides.html>`_, `html <notebooks/Penalized%20regression.html>`_, `pdf <notebooks/Penalized%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Penalized%20regression.ipynb>`_)

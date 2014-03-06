@@ -1,0 +1,482 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice,listings,epic}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphicx}
+   \usepackage{amsmath,eepic,epic,algorithm}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\unsupervised}[1]{{\color{red} #1}}
+   \newcommand{\supervised}[1]{{\color{green} #1}}
+   \newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+   \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+   \newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+   \newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats191.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 191: Introduction to Applied Statistics}
+   \subtitle{Poisson regression}
+   \author{\copyright Jonathan Taylor \\
+   }
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Poisson regression}
+
+   \begin{block}
+   {Topics}
+   \begin{itemize}
+
+
+     \item Contingency tables.
+
+     \item Poisson regression.
+
+
+     \item Generalized linear model.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+     {Afterlife}
+     \begin{itemize}
+     \item   Men and women were asked whether they believed in the
+   after life (1991 General Social Survey).
+
+   \item
+     \begin{tabular}{l|c|c|c}
+       & Y & N or U & Total \\ \hline
+   M & 435 & 147 & 582 \\
+   F & 375 & 134 & 509 \\ \hline
+   Total & 810 & 281 & 1091
+     \end{tabular}
+
+   \item Question: is belief in the afterlife independent of gender?
+
+     \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Poisson counts}
+
+   \begin{block}
+   {Definition}
+   \begin{itemize}
+   \item A random variable $Y$ is a Poisson random variable
+   with parameter $\lambda$ if
+   $$
+   P(Y=j) = e^{-\lambda} \frac{\lambda^j}{j!}, \qquad \forall j \geq 0.
+   $$
+   \item Some simple calculations show that
+   $$
+   E(Y)=\text{Var}(Y)=\lambda.
+   $$
+   \item Poisson models for counts are analogous to Gaussian for continuous
+   outcomes.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+       {Contingency table}
+
+       \begin{itemize}
+       \item     Model: $Y_{ij} \sim  Poisson(\lambda_{ij} )$.
+
+
+       \item {\bf Null:}
+       $H_0 : \text{independence}, \lambda_{ij} = \lambda \alpha_i \cdot \beta_j , \sum_i \alpha_i = 1,  \sum_j \beta_j = 1.$
+
+     \item {\bf
+       Alternative:} $H_a : \text{\lambda_{ij} 's are unrestricted}$
+
+   \item {\bf    Test statistic:} Pearson's $X^2$ :
+   $$
+   X^2 = \sum_{ij} \frac{(Y_{ij}-E_{ij})^2}{E_{ij}} \approx \chi^2_1 \  \text{under H_0}$$
+
+   \item
+       Why 1 df ? Independence model has 5 parameters, two
+       constraints = 3 df. Unrestricted has 4 parameters.
+
+     \item This is actually a {\em regression model} for the count data.
+
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+   {Contingency table as regression model}
+   \begin{itemize}
+   \item     Under independence
+   $$
+   \begin{aligned}
+     \log(E (Y_{ij} )) &= \log \lambda_{ij} = \log \lambda  + \log \alpha_i + \log \beta_j
+   \end{aligned}
+   $$
+
+   \item     OR, the model has a {\em log link}.
+
+   \item     What about the variance? Because of Poisson assumption
+          $$                  Var(Y_{ij} ) = E (Y_{ij})$$
+
+        \item     OR, the {\em variance function} is
+                             $$V (\mu) = \mu.$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+       {Contingency table $(k \times m)$}
+       \begin{itemize}
+       \item     Suppose we had $k$ categories on one axis, $m$ on the other
+       (i.e. previous example $k = m = 2$). We call this as $k \times m$
+       contingency table.
+
+     \item Independence model:
+   $$        \log(E (Y_{ij} )) = \log \lambda_{ij} = \log \lambda  + \log \alpha_i + \log \beta_j$$
+
+
+
+       \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+       {Contingency tables}
+       \begin{itemize}
+    \item Test for independence: Pearson's
+   $$
+   X^2 = \sum_{ij} \frac{(Y_{ij}-E_{ij})^2}{E_{ij}} \approx \chi^2_{(k-1)(m-1)} \  \text{under H_0}$$
+
+
+       \item Alternative test statistic
+   $$
+   G = 2\sum_{ij} Y_{ij} \log \left(\frac{Y_{ij}}{E_{ij}}\right)$$
+       \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+       {Independence tests}
+       \begin{itemize}[<+->]
+       \item Unlike in other cases, in this case the {\em full model}
+       has as many parameters as observations (i.e. it's saturated).
+
+       \item This test is known as a {\em goodness of fit} test.
+       \item {\em How well does the independence model fit this data}?
+       \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+       {Lumber company example}
+       \begin{itemize}
+       \item $Y$ : number of customers visting store from region;
+
+    \item $X_1$ : number of housing units in region;
+
+    \item $X_2$ : average household income;
+
+    \item $X_3$ : average housing unit age in region;
+
+    \item $X_4$ : distance to nearest competitor;
+
+    \item $X_5$ : distance to store in miles.
+
+       \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+       {Poisson (log-linear) regression model}
+
+       \begin{itemize}
+       \item      Given observations and covariates
+        $Y_i , X_{ij} , 1 \leq i  \leq n, 1 \leq j  \leq p$.
+
+
+      \item {\bf Model:}
+   $$     Y_{i} \sim Poisson \left(\exp\left(\beta_0 + \sum_{j=1}^p \beta_j X_{ij} \right)\right)$$
+
+
+   \item Poisson assumption implies the  variance
+        function is
+   $$ V (\mu) = \mu.$$
+       \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Poisson regression}
+
+   \begin{block}
+   {Interpretation of coefficients}
+
+   \begin{itemize}
+   \item   The log-linear model
+   means covariates have {\em multiplicative} effect.
+
+   \item Log-linear model model:
+   $$
+   \frac{E(Y|\dots, X_j=x_j+1, \dots)}{E(Y|\dots, X_j=x_j, \dots)} = e^{\beta_j}
+   $$
+
+
+   \item So, one unit increase in variable $j$ results in $e^{\beta_j}$
+   (multiplicative) increase the expected count, all other parameters being equal.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Count data}
+
+   \begin{block}
+         {Generalized linear models}
+         \begin{itemize}
+         \item Logistic model:
+   $$ \logit(\pi) = \beta_0 + \sum_j \beta_j X_j \qquad V(\pi)=\pi(1-\pi)$$
+
+   \item Poisson log-linear model:
+   $$
+   \log(\mu) = \beta_0 + \sum_j \beta_j X_j, \qquad V(\mu) = \mu$$
+
+   \item These are the ingredients to a GLM \dots
+         \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Generalized linear models}
+
+   \begin{block}
+         {Specifying a model}
+         \begin{itemize}
+         \item Given $(Y, X_1, \dots, X_p)$, a GLM is specified by the
+   (link, variance function) pair $(V, g)$.
+
+   \item Fit using IRLS like logistic.
+
+   \item Inference in terms of deviance or Pearson's $X^2$:
+   $$
+   X^2({\cal M}) = \sum_{i=1}^n \frac{(Y_i - \widehat{\mu}_{{\cal M},i})^2}{V(\widehat{\mu}_{{\cal M},i})}$$
+         \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Generalized linear models}
+
+   \begin{block}
+         {Deviance}
+         \begin{itemize}
+         \item Replaces $SSE$ in least squares
+
+         \item Definition
+   $$
+   DEV({\cal M}) = -2 \left(\log L(\widehat{\mu}({\cal M})|Y,X) - \log(Y|Y,X) \right) $$
+
+   \item Difference between fitted values of ${\cal M}$ and "saturated model" with $\widehat{\mu}=Y$.
+
+
+   \item Poisson deviance
+   $$
+   DEV({\cal M}|Y) = 2 \sum_{i=1}^n \left( Y_i \log \left(Y_i / \widehat{\mu}_{{\cal M},i} \right) + (Y_i - \widehat{\mu}_{{\cal M},i} ) \right)
+   $$
+         \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Generalized linear models}
+
+   \begin{block}
+         {Deviance tests}
+         \begin{itemize}
+         \item To test $H_0:{\cal M}={\cal M}_R$ vs. $H_a: {\cal M}={\cal M}_F$,
+   we use
+   $$DEV({\cal M}_R) - DEV({\cal M}_F) \sim \chi^2_{df_R-df_F}$$
+
+   \item In contingency example ${\cal M}_R$ is the independence model
+   $$
+   \log(E(Y_{ij})) = \lambda + \alpha_i  + \beta_j$$
+   with ${\cal M}_F$ being the ``saturated model.''
+
+
+         \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
