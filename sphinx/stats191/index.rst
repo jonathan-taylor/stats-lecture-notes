@@ -153,3 +153,7 @@ Topics
 * Transformations (`slides <notebooks/Transformations.slides.html>`_, `html <notebooks/Transformations.html>`_, `pdf <notebooks/Transformations.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Transformations.ipynb>`_)
 
 * Correlated errors (`slides <notebooks/Correlated%20errors.slides.html>`_, `html <notebooks/Correlated%20errors.html>`_, `pdf <notebooks/Correlated%20errors.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Correlated%20errors.ipynb>`_)
+
+* Selection (`slides <notebooks/Selection.slides.html>`_, `html <notebooks/Selection.html>`_, `pdf <notebooks/Selection.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Selection.ipynb>`_)
+
+* Penalized regression (`slides <notebooks/Penalized%20regression.slides.html>`_, `html <notebooks/Penalized%20regression.html>`_, `pdf <notebooks/Penalized%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Penalized%20regression.ipynb>`_)
