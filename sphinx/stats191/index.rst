@@ -108,6 +108,8 @@ Assignments
 
 * Assignment 4 (`html <notebooks/Assignment4.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment4.ipynb>`_)
 
+* Assignment 5 (`html <notebooks/Assignment5.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment5.ipynb>`_)
+
 
 Project
 -------
@@ -115,11 +117,10 @@ Project
 The `data analysis project description <project.pdf>`_  describes
 what is needed for your project. It is due March 14, 2014. 
 
-.. Practice exam
-.. -------------
+Practice exam
+-------------
 
-.. You can find a practice exam `here <restricted/practice_exam.pdf>`_. 
-.. A `second <restricted/practice_exam2.pdf>`_ one is also available.
+You can find a practice exam `here <practice_exam.pdf>`_. 
 
 .. ******
 .. Slides
@@ -157,3 +158,5 @@ Topics
 * Selection (`slides <notebooks/Selection.slides.html>`_, `html <notebooks/Selection.html>`_, `pdf <notebooks/Selection.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Selection.ipynb>`_)
 
 * Penalized regression (`slides <notebooks/Penalized%20regression.slides.html>`_, `html <notebooks/Penalized%20regression.html>`_, `pdf <notebooks/Penalized%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Penalized%20regression.ipynb>`_)
+
+* Logistic (`slides <notebooks/Logistic.slides.html>`_, `html <notebooks/Logistic.html>`_, `pdf <notebooks/Logistic.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Logistic.ipynb>`_)
