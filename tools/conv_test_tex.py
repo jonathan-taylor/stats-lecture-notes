@@ -68,6 +68,11 @@ class ParsePDJ(object):
             bres = self.process_orderedlist(c, indentation_level + 1)
         elif t == 'Table':
             bres = self.process_table(c)
+        elif t == 'BlockQuote':
+            bres = []
+            for block in c:
+                bres.append(self.process_block(block, indentation_level+1))
+            bres = '\n'.join(bres)
         else:
             raise ValueError('Not yet for ' + t)
         return bres
@@ -88,6 +93,17 @@ class ParsePDJ(object):
             for block in item:
                 out_str = self.process_block(block, indentation_level)
                 res.append(self.apply_indent(out_str, '* ', indentation_level))
+        return '\n'.join(res)
+
+    def process_definitionlist(self, dlist, indentation_level=0):
+        """ A list of blocks """
+        res = []
+        # Discard attributes
+        for item in dlist:
+            label, blocks = item
+            line_res = [self.process_inline(label)]
+            line_res.append(self.process_bulletlist(blocks, indentation_level))
+            res.append(' '.join(line_res))
         return '\n'.join(res)
 
     def process_orderedlist(self, blist, indentation_level=0):
@@ -132,6 +148,10 @@ class ParsePDJ(object):
                 res += ['**', self.process_inline(c), '**']
             elif t == 'LineBreak':
                 res += '\n'
+            elif t == 'Superscript':
+                res += '<sup>' + self.process_inline(c) + '</sup>'
+            elif t == 'Subscript':
+                res += '<sup>' + self.process_inline(c) + '</sup>'
             else:
                 raise ValueError("not yet for " + t)
         return ''.join(res)
@@ -230,6 +250,8 @@ class ParsePDJ(object):
                 res = self.process_orderedlist(c)
             elif t == 'Table':
                 res = self.process_table(c)
+            elif t == 'DefinitionList':
+                res = self.process_definitionlist(c)
             else:
                 raise ValueError('Not yet for ' + t)
             if res != '':
