@@ -24,7 +24,7 @@ from IPython.nbformat.current import reads, NotebookNode
 
 def run_notebook(nb):
     km = KernelManager()
-    km.start_kernel(stderr=open(os.devnull, 'w'))
+    km.start_kernel(argv=['--profile', 'stats'], stderr=sys.stderr)# open(os.devnull, 'w'))
     try:
         kc = km.client()
     except AttributeError:

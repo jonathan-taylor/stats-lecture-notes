@@ -224,17 +224,16 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
+
    % p = 1./38
    % n = 10
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, XX-170)
+   % PL_density(p, XX-170)
    % pylab.gca().set_xlim([-400,1200])
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlabel('\$')
@@ -256,17 +255,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 10
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = (350 * x - 10 * (n - x))
    % XX[-1] = XX[-2] + 100
-   % denshist(p, (XX-170.)/n)
+   % PL_density(p, (XX-170.)/n)
    % pylab.gca().set_xlim([-400./n,1200./n])
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlabel('\$')
@@ -288,17 +285,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 100
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, XX-170)
+   % PL_density(p, XX-170)
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlim([-1000,3000])
    % pylab.gca().set_xlabel('\$')
@@ -320,17 +315,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 100
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, (XX-170)/n)
+   % PL_density(p, (XX-170)/n)
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlim([-1000./n,3000./n])
    % pylab.gca().set_xlabel('\$')
@@ -352,17 +345,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 1000
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, XX-170)
+   % PL_density(p, XX-170)
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlim([-6000,6000])
    % pylab.gca().set_xlabel('\$')
@@ -384,17 +375,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 1000
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, (XX-170)/n)
+   % PL_density(p, (XX-170)/n)
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlim([-6000./n, 6000./n])
    % pylab.gca().set_xlabel('\$')
@@ -416,17 +405,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 10000
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, (XX-170))
+   % PL_density(p, (XX-170))
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlim([-20000,10000])
    % pylab.gca().set_xlabel('\$')
@@ -448,17 +435,15 @@
    % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m')
    % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
    % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpIeQh3m/data'
-   % from conv import conv
-   % from denshist import denshist
    % p = 1./38
    % n = 10000
-   % x, p = conv(p, n)
+   % x, p = conv_binom(p, n)
    % cp = np.cumsum(p)
    % k = (cp >= 0)
    % XX = np.zeros(x.shape[0]+1)
    % XX[:-1] = 350 * x - 10 * (n - x)
    % XX[-1] = XX[-2] + 100
-   % denshist(p, (XX-170)/n)
+   % PL_density(p, (XX-170)/n)
    % pylab.gca().set_ylabel('$\%$ per \$')
    % pylab.gca().set_xlim([-20000./n,10000./n])
    % pylab.gca().set_xlabel('\$')
