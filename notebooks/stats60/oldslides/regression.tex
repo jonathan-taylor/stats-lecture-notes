@@ -1,0 +1,1093 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphics}
+   \usepackage{amsmath,eepic,epic}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 60: Introduction to Statistical Methods}
+   \subtitle{Chapters 10-12: Regression} 
+   \author{}% {Jonathan Taylor \\
+   %Department of Statistics \\
+   %Stanford University
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % xf, yf = pylab.poly_between([67.5,68.5], [50,50], [75, 75])
+   % g = (M < 68.5) * (M >= 67.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % s = pylab.scatter([68],D[g].mean(), s=130, c='black', marker='^')
+   % s.set_label('Average at 68')
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'b-', linewidth=3, label='SD line')
+   % pylab.legend(['SD line'])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/41db84d0ad.pdf}}    
+   \end{center}
+   The average in the 68in strip is below the SD line.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Regression line}
+
+   \begin{itemize}
+   \item    Instead of the SD line we choose a line that minimizes
+   the ``vertical distances'' from each point to the line.
+
+   \item The quality of a line is measured by the r.m.s.
+   of these distances, called {\em \color{red} residuals}.
+
+   \item Each choice of slope / intercept yields a new
+   set of residuals.
+
+   \item The regression line has the residuals with smallest r.m.s.
+
+   \item This is using the {\em \color{red} least squares} to
+   choose the slope and intercept.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/sample_regression.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % pylab.scatter(X,Y)
+   % 
+   % a = 0.3*X + 4
+   % for i in range(X.shape[0]):
+   %     pylab.arrow(X[i], Y[i], 0, a[i] - Y[i], color='red')
+   % SSE = np.sum((a-Y)**2)
+   % pylab.plot([X.min(), X.max()],[0.3*X.min()+4,0.3*X.max()+4], 'r-', linewidth=3)
+   % pylab.title('Error(slope=0.3, intercept=4): %0.2f' % np.sqrt(SSE / X.shape[0]))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Intercept=4, Slope=0.3}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/49b7e7cf4c.pdf}}    
+   \end{center}
+   Error is r.m.s. of {\bf \color{red} lengths}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/sample_regression.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % pylab.scatter(X,Y)
+   % 
+   % slope = Y.std() / X.std()
+   % intercept = Y.mean() - slope * X.mean()
+   % a = slope*X + intercept
+   % for i in range(X.shape[0]):
+   %     pylab.arrow(X[i], Y[i], 0, a[i] - Y[i], color='red')
+   % SSE = np.sum((a-Y)**2)
+   % pylab.plot([X.min(), X.max()],[slope*X.min()+intercept,slope*X.max()+intercept], 'r-', linewidth=3)
+   % pylab.title('Error(SD line): %0.2f' % np.sqrt(SSE / X.shape[0]))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Fit for SD line}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6ec4dca6a8.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Regression line}
+   \begin{itemize}
+   \item    The best fitting regression line
+   passes through
+   the point of averages and has slope
+   $$
+   \text{slope} = r(X,Y) \times \frac{SD(Y)}{SD(X)}.
+   $$
+   \item The intercept is
+   $$
+   \text{intercept} = \bar{Y} - \text{slope} \times \bar{X}.
+   $$
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/sample_regression.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % pylab.scatter(X,Y)
+   % 
+   % slope = np.corrcoef([X,Y])[0,1] * Y.std() / X.std()
+   % intercept = Y.mean() - slope * X.mean()
+   % a = slope*X + intercept
+   % for i in range(X.shape[0]):
+   %     pylab.arrow(X[i], Y[i], 0, a[i] - Y[i], color='red')
+   % SSE = np.sum((a-Y)**2)
+   % pylab.plot([X.min(), X.max()],[slope*X.min()+intercept,slope*X.max()+intercept], 'r-', linewidth=3)
+   % pylab.title('Error(regression line): %0.2f' % np.sqrt(SSE / X.shape[0]))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Fit for regression line}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/772934cf00.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'b-', linewidth=3, label='SD line')
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='regression', color='black')
+   % pylab.legend(['SD line', 'regression'])
+   % 
+   % def error(a,b):
+   %     F = a*M+b
+   %     return np.sqrt(np.sum((D-F)**2))
+   % 
+   % slope_SD = D.std() / M.std()
+   % intercept_SD = D.mean() - slope_SD * M.mean()
+   % 
+   % slope_r = np.corrcoef([D,M])[0,1] * D.std() / M.std()
+   % intercept_r = D.mean() - slope_r * M.mean()
+   % 
+   % pylab.title('Error(SD line)=%0.1f, Error(regression)=%0.1f' %
+   %             (error(slope_SD, intercept_SD),
+   %             error(slope_r, intercept_r)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/941681b361.pdf}}    
+   \end{center}
+   The mother/daughter data
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % 
+   % xf, yf = pylab.poly_between([67.5,68.5], [50,50], [75, 75])
+   % g = (M < 68.5) * (M >= 67.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % 
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'b-', linewidth=3, label='SD line')
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='regression', color='black')
+   % pylab.legend(['SD line', 'regression'])
+   % 
+   % def error(a,b):
+   %     F = a*M+b
+   %     return np.sqrt(np.sum((D-F)**2))
+   % 
+   % slope_SD = D.std() / M.std()
+   % intercept_SD = D.mean() - slope_SD * M.mean()
+   % 
+   % slope_r = np.corrcoef([D,M])[0,1] * D.std() / M.std()
+   % intercept_r = D.mean() - slope_r * M.mean()
+   % 
+   % pylab.title('Error(SD line)=%0.1f, Error(regression)=%0.1f' %
+   %             (error(slope_SD, intercept_SD),
+   %             error(slope_r, intercept_r)))
+   % s = pylab.scatter([68],D[g].mean(), s=130, c='black', marker='^')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9d92f9b490.pdf}}    
+   \end{center}
+   The regression line is closer to the mean of 68 in group.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Working with regressions}
+   The following quantities are enough to do all
+   regression problems
+   \begin{itemize}
+   \item $\text{average}(X), \text{SD}(X)$
+   \item $\text{average}(X), \text{SD}(Y)$
+   \item $r(X,Y)$
+   \end{itemize}
+   \end{block}
+
+   \begin{block}
+   {Example}
+   It is believed that the more alcohol there is in a person's blood
+   stream, the slower is that person's reaction times.
+   An experiment with 10 subjects yields
+   \begin{itemize}
+   \item average amount of alcohol in blood $0.14\%$ with SD $0.04\%$
+   \item average reaction time 0.42 seconds, SD 0.1 seconds
+   \item correlation coefficient 0.8
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question a)}
+   \begin{description}
+   \item[Q] Predict the reaction time of a person with an amount
+   of alcohol of 0.22\%.
+   \item[A1] One way is to first compute the slope, intercept
+   $$
+   \begin{aligned}
+   \text{slope} &= \frac{0.8 \times 0.1}{0.04} = 2.0 \frac{\text{seconds}}{\%}     \\
+   \text{intercept} &= 0.42 - 2. \times 0.14 = 0.14 \, \text{seconds}
+   \end{aligned}
+   $$
+   So, the predicted time is
+   $$
+   2 \times 0.22 + 0.14 = 0.58 \, \text{seconds}
+   $$
+   \item[A2]
+   $$
+   0.42 + (0.22 - 0.14) \times 2. = 0.58 \, \text{seconds}
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question b)}
+   \begin{description}
+   \item[Q] Find the regression line for regressing
+   reaction time on alcohol level.
+   \item[A] From part A1 on previous slide:
+   the predicted reaction time as a function of alcohol level is
+   $$
+   0.14 + 2. \times \text{alcohol level in \%}
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question c)}
+   \begin{description}
+   \item[Q] Predict the reaction time of a person
+   whose alcohol level is at the 20th percentile. What percentile
+   does that correspond to in reaction time?
+   \item[A] The 20th percentile of blood alcohol is (using normal approximation)
+   $$
+   \begin{aligned}
+   \lefteqn{0.14 + 0.04 \times \text{20th percentile of normal}} \\
+   & \qquad = 0.14 + 0.04 \times (-0.84) \\
+   & \qquad = 0.11
+   \end{aligned}
+   $$
+   So, we predict a reaction time of
+   $$
+   0.14 + 2 \times 0.11 = 0.36
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question c) continued}
+
+   This is $(0.36-0.42)/0.1=-0.6$ in standardized units, so
+   it corresponds to roughly the 30th percentile (from A-104)
+   \end{block}
+
+   \begin{block}
+   {Question d)}
+   \begin{description}
+   \item[Q]    Predict the amount of alcohol a person has in
+   her bloodstream if the reaction time is 0.37 seconds.
+   \item[A] Using the A2 form from part a), we predict
+   $$
+   0.14 + 0.8 \times \frac{0.04}{0.1} (0.37-0.42) = 0.124 \%
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Regression fallacy}
+
+   \begin{itemize}
+   \item    Note that someone in the 20th percentile of alcohol
+   level had predicted 30th percentile in reaction time.
+   \item This is a general phenomenon, Galton referred to it as
+   ``regression to mediocrity.''
+   \end{itemize}
+
+   \end{block}
+
+   \begin{block}
+   {Test-retest version of regression fallacy}
+   In a test-retest situation, usually the bottom
+   group on the first test will show some improvement,
+   and the top group will fall back.
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % ## library(alr3)
+   % ## data(heights)
+   % ## attach(heights)
+   % ## lm(Dheight ~ Mheight)
+   % 
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % 
+   % xf, yf = pylab.poly_between([67.5,68.5], [50,50], [75, 75])
+   % g = (M < 68.5) * (M >= 67.5)
+   % 
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'b-', linewidth=3, label='SD line')
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='D on M', color='black')
+   % pylab.plot([Mbar-r*3.5*Msd,Mbar,Mbar+r*3.5*Msd],
+   %            [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], '-', linewidth=3, label='M on D', color='yellow')
+   % pylab.legend(['SD line', 'D on M', 'M on D'])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/d58a27080f.pdf}}    
+   \end{center}
+   There are two regression lines
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Prediction and regression}
+   \begin{itemize}
+   \item While there are two regression lines, the right way
+   to remember which to use is {\em \color{red} what do you want to predict}?
+   \item The variable you want to predict goes on the vertical axis ($Y$-axis).
+   \item The variable you want to base your prediction on  goes on the vertical axis ($X$-axis).
+   \item In many situations, it will be more natural to predict
+   one variable instead of another.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Accuracy of prediction}
+   \begin{itemize}
+   \item In discussing experiments, we discussed the
+   average of a set of measurements.
+   \item These can be used
+   to predict a new measurement: our best guess is just
+   the average of the previous meausrements.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {SD as a measure of accuracy}
+   \begin{itemize}
+   \item The SD of the set of measurements gives us some
+   idea of how accurate our prediction is
+   $$
+   \text{SD(list) = r.m.s.(deviations from average)}
+   $$
+   \item If our prediction is the average, then
+   $$
+   \text{SD(list) = r.m.s.(deviations from predictions)}
+   $$
+   \item With regression, we have a new way
+   to predict: using the regression line.
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Accuracy of prediction in regression}
+   \begin{itemize}
+   \item In regression, we are using more information:
+   the fact that tall mothers tend to give birth to  taller
+   daughters (but not quite as tall).
+   \item This should improve the accuracy of our prediction
+   of the daughter's height (which uses the mother's height).
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {\text{r.m.s.} of regression}
+   \begin{itemize}
+   \item Our regression line was chosen to minimize
+   the r.m.s. of the residuals of all ines
+   $$
+   \begin{aligned}
+   \text{r.m.s.}(\text{regression $Y$ on $X$}) &= \text{r.m.s.(residuals)} \\
+   &= \sqrt{\text{average}(\text{residuals}^2)} \\
+   \end{aligned}
+   $$
+   \item This r.m.s. is always less than the SD of
+   the dependent variable ($Y$) alone
+   $$
+   \text{r.m.s.}(\text{regression $Y$ on $X$}) = \sqrt{1-r^2} \times \text{SD}(Y)
+   $$
+   \item In mother/daughter example, this factor is 87\%.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % X = seq(0,20, length=21)
+   % Y = 0.5*X+1 + rnorm(21)
+   % 
+   % Y.lm = lm(Y~X)
+   % 
+   % p = predict(Y.lm)
+   % m = mean(Y)
+   % 
+   % # SST: deviations of Y's around
+   % # the horizontal line for the mean
+   % 
+   % plot(X, Y, pch=23, bg='red')
+   % abline(h=m, col='yellow', lwd=2)
+   % for (i in 1:21) {
+   %   points(X[i], m, pch=23, bg='yellow')
+   %   lines(c(X[i], X[i]), c(Y[i], m))
+   % }
+   % 
+   % # show the regression line as well
+   % 
+   % abline(Y.lm, col='green', lwd=2)
+   % 
+   % 
+
+
+   \begin{frame}
+   \frametitle{SD is based on residuals}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/b704968620.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % # SSE: deviations of Y's around
+   % # the regression line
+   % 
+   % plot(X, Y, pch=23, bg='red')
+   % abline(Y.lm, col='green', lwd=2)
+   % for (i in 1:21) {
+   %   points(X[i], p[i], pch=23, bg='green')
+   %   lines(c(X[i], X[i]), c(Y[i], p[i]))
+   % }
+   % 
+   % m = mean(Y)
+   % abline(h=m, col='yellow', lwd=2)
+   % 
+   % 
+   % 
+
+
+   \begin{frame}
+   \frametitle{So is r.m.s.(regression)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6891d23643.png}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {\text{r.m.s.} of regression}
+   \begin{itemize}
+   \item If the data cloud is football shaped,
+   then the r.m.s. gives an estimate of the spread
+   in each vertical strip of the regression line.
+
+   \item This is {\em \color{red} homoscedastic} scatter.
+   \item If the data cloud has a different shape, this scatter is
+   called {\em \color{red} heteroscedastic} and the regression
+   r.m.s. is not useful within a vertical strip
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % n = 300
+   % X = np.random.standard_normal(n)
+   % X.sort()
+   % w = 3
+   % Y = 4.5 * X + 1 + np.random.standard_normal(n) * w
+   % 
+   % xf, yf = pylab.poly_between([-1.25,-0.75], [-20,-20], [20, 20])
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % 
+   % xf, yf = pylab.poly_between([0.75,1.25], [-20,-20], [20, 20])
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % 
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xticks([])
+   % pylab.scatter(X, Y, c='red')
+   % pylab.gca().set_ylim([-10,15])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Homoscedastic scatter}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/1277e3368b.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % n = 300
+   % X = np.random.standard_normal(n)
+   % X.sort()
+   % w = np.linspace(1,6,n)
+   % Y = 0.5 * X + 1 + np.random.standard_normal(n) * w
+   % 
+   % xf, yf = pylab.poly_between([-1.25,-0.75], [-20,-20], [20, 20])
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % 
+   % xf, yf = pylab.poly_between([0.75,1.25], [-20,-20], [20, 20])
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % 
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xticks([])
+   % pylab.scatter(X, Y, c='red')
+   % pylab.gca().set_ylim([-10,15])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Heteroscedastic scatter}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e95b5a0a15.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % 
+   % D = ML.csv2rec('%s/wage.csv' % datadir)
+   % X = D['education']
+   % Y = D['logwage']
+   % Z = np.exp(Y)
+   % 
+   % 
+   % pylab.scatter(X, Z, c='red')
+   % a = pylab.gca()
+   % a.set_ylabel('Income (1000$)')
+   % a.set_xlabel('Education (years)')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Income vs. Education}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e786490df4.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % 
+   % D = ML.csv2rec('%s/wage.csv' % datadir)
+   % X = D['education']
+   % Y = D['logwage']
+   % Z = np.exp(Y)
+   % 
+   % 
+   % pylab.scatter(X, Y, c='red')
+   % a = pylab.gca()
+   % a.set_ylabel('log(Income (1000$))')
+   % a.set_xlabel('Education (years)')
+   % 
+
+
+   \begin{frame}
+   \frametitle{log(Income) vs. Education}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/1b2ffc79e1.pdf}}    
+   \end{center}
+   Logarithms may improve heteroscedastic scatter
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Example: using regression r.m.s. in vertical strips}
+   \begin{itemize}
+   \item Given the following
+     $$
+     \begin{aligned}
+       \text{average(mother)} &= 62.4\\
+       \text{SD(mother)} &= 2.3 \\
+       \text{average(daughter)} &= 63.8 \\
+       \text{SD(daughter)} &= 2.6 \\
+       \text{r(mother, daughter)} &= 0.49
+     \end{aligned}
+     $$
+   Of mothers of height 66in, what percentage
+   of their daughters will have height above 67in?
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Answer}
+   \begin{itemize}
+   \item Slope of regression line is
+   $$
+   \text{slope} = 0.49 \times \frac{2.6}{2.3} = 0.54
+   $$
+   \item The average height of daughters of
+   mothers of height 66in is
+   $$
+   63.8 + 0.54 \times (66 - 62.4) = 65.7
+   $$
+
+   \item The SD is taken to be r.m.s. of regression
+   $$
+   0.87 \times 2.6 = 2.3.
+   $$
+
+
+     \item 67 in corresponds to $(67-65.7)/2.3=0.6$ standardized units.
+
+     \item From A-104, the percentage is roughly 27\%.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/quadratic_example.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % pylab.scatter(X,Y, c='r', s=40)
+   % m = Y.std() * np.corrcoef([X,Y])[0,1] / X.std()
+   % b = Y.mean() - X.mean() * m
+   % 
+   % r = ((X*Y).mean() - X.mean() * Y.mean()) / (X.std() * Y.std())
+   % pylab.plot([X.mean()-3.5*X.std(),X.mean()+3.5*X.std()],
+   %            [Y.mean()-r*3.5*Y.std(),Y.mean()+r*3.5*Y.std()],
+   %            '-', linewidth=3, label='M on D', color='black')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/8a952cb2fb.pdf}}    
+   \end{center}
+   Regression doesn't work well for nonlinear patterns
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/quadratic_example.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % m = Y.std() * np.corrcoef([X,Y])[0,1] / X.std()
+   % b = Y.mean() - X.mean() * m
+   % 
+   % p = m * X + b
+   % resid = Y - p
+   % pylab.scatter(X, resid, c='r', s=40)
+   % pylab.gca().set_ylabel('Residuals')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6f079275b9.pdf}}    
+   \end{center}
+   Plotting the residuals can identify nonlinear patterns
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/heteroscedastic_example.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % 
+   % pylab.scatter(X, Y, s=40, c='red')
+   % pylab.gca().set_ylim([-10,15])
+   % m = Y.std() * np.corrcoef([X,Y])[0,1] / X.std()
+   % b = Y.mean() - X.mean() * m
+   % 
+   % r = ((X*Y).mean() - X.mean() * Y.mean()) / (X.std() * Y.std())
+   % pylab.plot([X.mean()-3.5*X.std(),X.mean()+3.5*X.std()],
+   %            [Y.mean()-r*3.5*Y.std(),Y.mean()+r*3.5*Y.std()],
+   %            '-', linewidth=3, label='M on D', color='black')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c3e87298b3.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpiviww2/data'
+   % import matplotlib.mlab as ML
+   % D = ML.csv2rec('%s/heteroscedastic_example.csv' % datadir)
+   % X = D['x']
+   % Y = D['y']
+   % 
+   % m = Y.std() * np.corrcoef([X,Y])[0,1] / X.std()
+   % b = Y.mean() - X.mean() * m
+   % 
+   % p = m * X + b
+   % resid = Y - p
+   % pylab.scatter(X, resid, c='r', s=40)
+   % pylab.gca().set_ylabel('Residuals')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9da1b16498.pdf}}    
+   \end{center}
+   Can also help identify heteroscedasticity
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

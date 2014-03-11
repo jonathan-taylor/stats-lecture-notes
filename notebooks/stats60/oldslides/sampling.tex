@@ -1,0 +1,1064 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphics}
+   \usepackage{amsmath,eepic,epic}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 60: Introduction to Statistical Methods}
+   \subtitle{Chapters 19-21: Sampling and the accuracy of percentages} 
+   \author{}% {Jonathan Taylor \\
+   %Department of Statistics \\
+   %Stanford University
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Opinion polls}
+
+   \begin{block}
+   {Presidential approval ratings}
+   \begin{itemize}
+   \item \href{http://www.rasmussenreports.com/public\string_content/politics/obama\string_administration/daily\string_presidential\string_tracking\string_poll}{{\color{blue} Rasmussen}}
+   \item \href{http://www.gallup.com/poll/113980/gallup-daily-obama-job-approval.aspx}{{\color{blue} Gallup}}
+   \item Both polls are trying to measure the same thing.
+   \item Why don't they agree?
+   \item Polls are sometimes wrong: \href{http://www.chicagotribune.com/news/politics/chi-chicagodays-deweydefeats-story,0,6484067.story}{{\color{blue} Truman / Dewey 1948}}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Opinion polls}
+
+   \begin{block}
+   {Sources of bias}
+   \begin{itemize}
+   \item Often difficult to identify bias.
+   \item Some examples:
+      \begin{itemize}
+      \item If what you measure differs from employed and unemployed, then
+      calling during the daytime can bias sample towards unemployed.
+      \item If what you measure differs from cell-phone users and
+      land line user then using a telephone book can bias sample
+      towards land-line owners.
+      \end{itemize}
+   \item Can often be (partly) remedied by {\em randomness}.
+   \item Cannot be remedied by taking a bigger poll: see \href{http://en.wikipedia.org/wiki/United_States_presidential_election,_1936}{{\color{blue} 1936 election}}.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Opinion polls \& percentages}
+
+   \begin{block}
+   {Model for percentages}
+   \begin{itemize}
+   \item An opinion poll to estimate a percentage
+   is based on a sample of size $N$. We assume this is
+   a {\em simple random sample}: a sample of size $N$ without replacement.
+
+   \item The sample is from a box with one ball per population member,
+   each having a 0-1 label.
+
+   \item The estimated percentage is
+   $$
+   \text{\bf estimated percentage} = \frac{\text{\bf sum of $N$ draws from box}}{N}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % X = np.random.sample((10000,2))
+   % pylab.scatter(X[:4800,0], X[:4800,1], s=5, color='red', alpha=.5)
+   % pylab.scatter(X[4800:,0], X[4800:,1], s=5, color='blue', alpha=.5)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box with {\color{red} 4800}, {\color{blue} 5200}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/ef092e5392.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % X = np.random.sample((10000,2))
+   % c = ['red'] * 4800 + ['blue'] * 5200
+   % s = random.sample(xrange(10000), 500)
+   % for col, marker in zip(['red', 'blue'], ['>', '<']):
+   %    subs = [i for i in s if c[i] == col]
+   %    pylab.scatter(X[subs,0], X[subs,1], s=100, color=col, alpha=.5, marker=marker)
+   % 
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % nred = np.array([c[ss] == 'red' for ss in s]).sum()
+   % pylab.title("# Red=%d, # Blue=%d, Observed %%=%0.1f" % (nred, 500-nred, (100.*(500-nred)/500)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box with {\color{red} 4800}, {\color{blue} 5200}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/45f1b28fba.pdf}}    
+   \end{center}
+   Sample of 500 without replacement
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % X = np.random.sample((100000,2))
+   % pylab.scatter(X[:48000,0], X[:48000,1], s=1, color='red', alpha=.1)
+   % pylab.scatter(X[48000:,0], X[48000:,1], s=1, color='blue', alpha=.1)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box with {\color{red} 48000}, {\color{blue} 52000}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/d5527bfd87.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % X = np.random.sample((100000,2))
+   % c = ['red'] * 48000 + ['blue'] * 52000
+   % s = random.sample(xrange(100000), 500)
+   % for col, marker in zip(['red', 'blue'], ['>', '<']):
+   %    subs = [i for i in s if c[i] == col]
+   %    pylab.scatter(X[subs,0], X[subs,1], s=100, color=col, alpha=.5, marker=marker)
+   % 
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % nred = np.array([c[ss] == 'red' for ss in s]).sum()
+   % pylab.title("# Red=%d, # Blue=%d, Observed %%=%0.1f" % (nred, 500-nred, (100.*(500-nred)/500)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box with {\color{red} 48000}, {\color{blue} 52000}}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/d5ff50c4e9.pdf}}    
+   \end{center}
+   Sample of 500 without replacement
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % n = 10000
+   % s = 500
+   % X = np.ones(n, np.float)
+   % X[:int(.48*n)] = 0.
+   % data = [100 * np.array(random.sample(X, s)).sum() / s for _ in range(2000)]
+   % pylab.hist(data, color='orange')
+   % pylab.gca().set_xlabel('Support (%)')
+   % pylab.gca().set_ylabel('Count (out of 2000)')
+   % pylab.title("average=%0.1f, SD=%0.1f" % (np.mean(data), np.std(data)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Sampling variability: (N=4800, Y=5200)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/7857ff0bd4.pdf}}    
+   \end{center}
+   Drawing 500 with 2000 repeats
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % n = 100000
+   % s = 500
+   % X = np.ones(n, np.float)
+   % X[:int(.48*n)] = 0.
+   % data = [100 * np.array(random.sample(X, s)).sum() / s for _ in range(2000)]
+   % pylab.hist(data, color='orange')
+   % pylab.gca().set_xlabel('Support (%)')
+   % pylab.gca().set_ylabel('Count (out of 2000)')
+   % pylab.title("average=%0.1f, SD=%0.1f" % (np.mean(data), np.std(data)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Sampling variability: (N=48000, Y=52000)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/2aa5693d06.pdf}}    
+   \end{center}
+   Drawing 500 with 2000 repeats
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % n = 10000
+   % s = 1000
+   % X = np.ones(n, np.float)
+   % X[:int(.48*n)] = 0.
+   % data = [100 * np.array(random.sample(X, s)).sum() / s for _ in range(2000)]
+   % pylab.hist(data, color='orange')
+   % pylab.gca().set_xlabel('Support (%)')
+   % pylab.gca().set_ylabel('Count (out of 2000)')
+   % pylab.title("average=%0.1f, SD=%0.1f" % (np.mean(data), np.std(data)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Sampling variability: (N=4800, Y=5200)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/63f5da3071.pdf}}    
+   \end{center}
+   Drawing 1000 with 2000 repeats
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % n = 100000
+   % s = 1000
+   % X = np.ones(n, np.float)
+   % X[:int(.48*n)] = 0.
+   % data = [100 * np.array(random.sample(X, s)).sum() / s for _ in range(2000)]
+   % pylab.hist(data, color='orange')
+   % pylab.gca().set_xlabel('Support (%)')
+   % pylab.gca().set_ylabel('Count (out of 2000)')
+   % pylab.title("average=%0.1f, SD=%0.1f" % (np.mean(data), np.std(data)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Sampling variability: (N=48000, Y=52000)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/af27183671.pdf}}    
+   \end{center}
+   Drawing 1000 with 2000 repeats
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {Estimating a percentage}
+   \begin{itemize}
+   \item In our boxes, the proportion of blue to red is fixed: there
+   are 52\% blue and 48 \% red. Our goal is to estimate
+   the proportion of blue (this is a {\em \color{blue} parameter})
+   \item When we sample, we don't recover exactly 52\%. Our observed
+   proportion is a {\em \color{orange} statistic}.
+   \item A model:
+   $$
+   \begin{aligned}
+   {\color{orange} \text{observed proportion}} &= {\color{blue} \text{true proportion}} + \text{chance error} \\
+   &= {\color{blue} 52\%} + \text{chance error} \\
+   \end{aligned}
+   $$
+   \item {\bf Note:} If poll is biased
+   $$
+   \begin{aligned}
+   {\color{orange} \text{observed proportion}} &= {\color{blue} \text{true proportion}} + {\color{purple} \text{bias}} + \text{chance error} \\
+   &= {\color{blue} 52\%} + {\color{purple} \text{bias}} + \text{chance error} \\
+   \end{aligned}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {Accuracy of percentages}
+   \begin{itemize}
+   \item Since the observed proportion is random, it has its own SE.
+   \item The rule for computing the SE of a percentage
+   for a simple random sample is related to SE of drawing
+   from a box of 0's and 1's.
+   $$
+   \begin{aligned}
+   \lefteqn{\text{SE(percentage from simple random sample size $N$)}} \\
+   & \qquad {\color{blue} \approxeq} {\color{purple} \frac{1}{N} } \sqrt{N} \sqrt{\text{proportion 0's} \times \text{proportion 1's}}
+   \end{aligned}
+   $$
+
+   \item {\bf Note:} the SE does not depend on how many tickets are in the box.
+   \item {\bf Note:} the {\color{blue} $\approxeq$} is there because
+   we are sampling without replacement.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {Correction factor for SE}
+   \begin{itemize}
+   \item To get the actual SE, we should multiply by a correction factor.
+   \item If there are $N_{pop}$ people in the population
+   and we sample $N_{sample}$
+   $$
+   \text{{\bf correction factor}} = \sqrt{\frac{N_{pop}-N_{sample}}{N_{pop}-1}}.
+   $$
+   \item For example, in our two boxes
+   \begin{itemize}
+   \item $N_{pop}=10000, N_{sample}=500$, correction = 0.97
+   \item $N_{pop}=100000, N_{sample}=500$, correction = 0.99
+   \end{itemize}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {Example}
+   \begin{description}
+   \item[Q] Suppose Brown 52\% of voting age Californians approve of
+   Governorn Brown's job performance.
+    If we sample 100 voting age Californians at random, we expect
+   the percentage who approve of Brown's performance to be
+   \underline{\hspace{1in}} give or take \underline{\hspace{1in}}.
+
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {Example}
+   \begin{description}
+   \item[A] The expected percentage or proportion is 52\%.
+   The SE is (ignoring the correction factor)
+   $$
+   \begin{aligned}
+   \text{SE({\bf percentage})} &= \frac{1}{100} \sqrt{100} \times \sqrt{0.52 \times 0.48} \\
+   & \approx 5\%
+   \end{aligned}
+   $$
+
+   We expect the percentage to be 52\% give or take 5\%.
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{description}
+   \item[Q] What if we had sampled 1000 voting age Californians?
+
+   \item[A] The expected proportion is the same. The SE is now
+   (ignoring the correction factor)
+   $$
+   \begin{aligned}
+   \text{SE({\bf percentage})}
+   & = \frac{1}{1000} \sqrt{1000} \sqrt{0.52 \times 0.48} \\
+   & \approx 1.5\%.
+   \end{aligned}
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Percentages}
+
+   \begin{block}
+   {A more realistic picture}
+   \begin{itemize}
+   \item In practice, when a poll is carried out, we don't know
+   how many {\color{red} red} / {\color{blue} blue} there are.
+
+   \item Taking a sample of size 500, say, gives us
+   information on 500 of this population.
+
+   \item Our goal, as statisticians, is to give the politicians
+   some idea of the {\em true} proportion of {\color{red} red} / {\color{blue} blue} in the box \dots
+
+   \item This is our first true {\em statistics} problem \dots
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % X = np.load("%s/sample_10000.npy" % datadir)
+   % pylab.scatter(X[:4800,0], X[:4800,1], s=5, color='gray', alpha=.5)
+   % pylab.scatter(X[4800:,0], X[4800:,1], s=5, color='gray', alpha=.5)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box we will poll \dots}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/29c18cdff6.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % X = np.load("%s/sample_10000.npy" % datadir)
+   % c2 = ['red'] * 4800 + ['blue'] * 5200
+   % c = ['gray'] * 10000
+   % sizes = [5]*10000
+   % s = [ss for ss in np.load("%s/sampled.npy" % datadir)]
+   % for ss in s:
+   %     c[ss] = c2[ss]; sizes[ss] = 100
+   % 
+   % for col, marker in zip(['red', 'blue'], ['>', '<']):
+   %    subs = [i for i in xrange(10000) if c[i] == col]
+   %    pylab.scatter(X[subs,0], X[subs,1], s=[sizes[i] for i in subs], color=[c[i] for i in subs], alpha=.5, marker=marker)
+   % 
+   % 
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Poll sample}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/397a591dd7.pdf}}    
+   \end{center}
+   Sample of 500 with replacement
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % X = np.load("%s/sample_10000.npy" % datadir)
+   % c2 = ['red'] * 4800 + ['blue'] * 5200
+   % c = ['gray'] * 10000
+   % sizes = [5]*10000
+   % s = [ss for ss in np.load("%s/sampled.npy" % datadir)]
+   % for ss in s:
+   %     c[ss] = c2[ss]; sizes[ss] = 100
+   % 
+   % for col, marker in zip(['gray', 'red', 'blue'], ['o', '>', '<']):
+   %    subs = [i for i in xrange(10000) if c[i] == col]
+   %    pylab.scatter(X[subs,0], X[subs,1], s=[sizes[i] for i in subs], color=[c[i] for i in subs], alpha=.5, marker=marker)
+   % 
+   % 
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.01,1.01])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.01,1.01])
+   % 
+
+
+   \begin{frame}
+   \frametitle{What we know after polling \dots}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/fea35b77fc.pdf}}    
+   \end{center}
+   Sample of 500 with replacement
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Estimating SE when proportions unknown}
+
+   \begin{block}
+   {A second statistic}
+   \begin{itemize}
+   \item Given a poll, we can work out the {\em observed}
+   proportion of 1's. Call this
+   $$
+   {\color{orange} \widehat{p}} = \text{\bf observed proportion} = \frac{\text{\# 1's in sample}}{\text{\# in sample}}
+   $$
+   \item We can estimate the SE of observed proportion of 1's
+   $$
+   \begin{aligned}
+   {\color{blue} \text{SE}(\widehat{p})}& \approx {\color{purple} \frac{1}{\text{\# in sample}}}  \times  \sqrt{\text{\# in sample}} \times
+   {\color{orange} \sqrt{\widehat{p} \times (1 - \widehat{p})}} \\
+   & = \frac{1}{\sqrt{\text{\# in sample}}} \times
+   {\color{orange} \sqrt{\widehat{p} \times (1 - \widehat{p})}} \\
+   \end{aligned}
+   $$
+
+   \item We call the estimate ${\color{orange} \sqrt{\widehat{p} \times (1 - \widehat{p})}}$ of the SD of the box a {\color{orange} {\em bootstrap}} estimate (among other things).
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Estimating percentages}
+
+   \begin{block}
+   {Example}
+   \begin{description}
+   \item[Q] A poll is undertaken to measure
+   Governor Brown's job approval rating: 1000 Californians
+   of voting age are polled, of whom 539 approve of his job performance.
+   What is the estimated approval rating? Estimate its SE.
+
+   \item[A] The estimated approval rating is 53.9\%. We can estimate
+   its SE as
+   $$
+   \begin{aligned}
+   {\color{blue} \text{SE({\bf approval rating})}} & \approx \frac{1}{\sqrt{1000}} \sqrt{0.539 \times 0.461} \\
+   & \approx 1.6 \% = {\color{orange} 1.6\%}.
+   \end{aligned}
+   $$
+
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Estimating percentages}
+
+   \begin{block}
+   {Normal approximation}
+   \begin{itemize}
+   \item Conversion to percentage points just changes the units.
+   \item We can use normal approximation to approximate chances,
+   as long as we standardize correctly.
+
+   \end{itemize}
+   \end{block}
+
+   \begin{block}
+   {Example}
+   \begin{description}
+   \item[Q] What are the chances a poll of 1000 voting age Californians
+   would show an estimated approval rating for Brown less than 50\%?
+   (Remember, his true approval is {\color{blue} 52\%})
+
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Estimating percentages}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{description}
+   \item[A] In standardized units, 50\% converts to
+   $$
+   \frac{50-52}{1.6} \approx -1.3
+   $$
+   We need area under normal curve from $(-\infty,-1.3]$ (continuity
+   correction could be used on raw counts, but won't make much difference
+   here).
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(-4,-1.3,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Normal approximation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/dc5f068074.pdf}}    
+   \end{center}
+   From A-104, chances are approximately 10\%
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {A new statistical concept}
+   \begin{itemize}
+   \item If we knew Governor Brown's true approval rating (52\%), we know that
+   when we poll 1000 voting age Californians, we expect a 52\% approval rating
+   give or take ${\color{blue} \sqrt{0.52 \times 0.48} /  \sqrt{1000} \approx 1.6\%}$.
+
+   \item Using the normal curve, there is 95\% probability that a poll of
+   1000 voting age Californians
+   will yield an estimated approval rating in the interval ${\color{blue} [48.8,55.2]}$.
+
+   \item Now reverse this picture, given a poll of 1000 voting age Californians,   what can we say about Governor Brown's true approval rating?
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Reversing the picture}
+   \begin{itemize}
+   \item Recall our model
+   $$
+   {\color{orange} \text{observed proportion}} = {\color{blue} \text{true proportion}} + \text{chance error}.
+   $$
+   \item Let's call ${\color{blue} \text{true proportion}=p}$, and recall
+   ${\color{orange} \text{observed proportion}} = {\color{orange} \widehat{p}}$.
+   \item We know (if we have a simple random sample):
+   \begin{itemize}
+   \item  $\text{E}({\color{orange} \text{observed proportion}}) = \text{E}({\widehat{p}}) = {\color{blue} \text{true proportion}}={ p}$
+   \item  $\text{SE}({\color{orange} \text{observed proportion}}) = \text{SE}({ \widehat{p}}) =  \frac{1}{\sqrt{1000}} \sqrt{{\color{blue} \text{true proportion}}(1-{\color{blue} \text{true proportion}})} = \frac{1}{\sqrt{1000}} \sqrt{p(1-p)}$
+   \end{itemize}
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Reversing the picture}
+   \begin{itemize}
+   \item The normal approximation says:
+   $$
+   \begin{aligned}
+   \text{P} \left(\text{$\widehat{p}$ greater than $p + \frac{2\sqrt{p \times (1-p)}}{\sqrt{1000}}$}\right) &\approx 2.5\% \\
+   \text{P} \left(\text{$\widehat{p}$ less than $p - \frac{2\sqrt{p \times (1-p)}}{\sqrt{1000}}$}\right) &\approx 2.5\% \\
+   \end{aligned}
+   $$
+   \item This is the same as saying
+   $$
+   \begin{aligned}
+   \text{P} \left(\text{$p$ less than $\widehat{p} - \frac{2\sqrt{p \times (1-p)}}{\sqrt{1000}}$}\right) &\approx 2.5\% \\
+   \text{P} \left(\text{$p$ greater than $\widehat{p} - \frac{2\sqrt{p \times (1-p)}}{\sqrt{1000}}$}\right) &\approx 2.5\% \\
+   \end{aligned}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Reversing the picture}
+   \begin{itemize}
+   \item In other words,
+   $$
+   \begin{aligned}
+   \text{P} \left(\text{$p$ between $\widehat{p} \pm \frac{2\sqrt{p \times (1-p)}}{\sqrt{1000}}$}\right) &\approx 95\% \\
+   \end{aligned}
+   $$
+   \item Or, color-coded
+   $$
+   \begin{aligned}
+   \text{P} \left(\text{${\color{blue} p}$ between ${\color{orange} \widehat{p}} \pm \frac{2\sqrt{{\color{blue} p} \times (1-{\color{blue} p})}}{\sqrt{1000}}$}\right) &\approx 95\% \\
+   \end{aligned}
+   $$
+   \item If we knew ${\color{blue} p}$ we would have an interval on the right based
+   on the {\color{orange} observed proportion} that says something about
+   {\color{blue} true proportion}. But we don't know ${\color{blue} p}$ \dots
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Using our bootstrap estimate of SE}
+   \begin{itemize}
+   \item Even though we don't know ${\color{blue} p}$ we estimated
+   $$
+   \frac{\sqrt{{\color{blue} p} \times (1-{\color{blue} p})}}{\sqrt{1000}}
+   $$
+   by the bootstrap estimate of SE
+   $$
+   \frac{\sqrt{{\color{orange} \widehat{p}} \times (1-{\color{orange} \widehat{p}})}}{\sqrt{1000}}
+   $$
+   \item If we can plug this in (and we can), we see that
+   $$
+   \begin{aligned}
+   \text{P} \left(\text{${\color{blue} p}$ between ${\color{orange} \widehat{p}} \pm \frac{2\sqrt{{\color{orange} \widehat{p}} \times (1-{\color{orange} \widehat{p}})}}{\sqrt{1000}}$}\right) &\approx 95\% \\
+   \end{aligned}
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Our first confidence interval}
+   \begin{itemize}
+   \item We call the interval
+   $$
+   \begin{aligned}
+   \lefteqn{\left[\widehat{p} - \frac{2\sqrt{\widehat{p}(1-\widehat{p})}}{\sqrt{1000}},
+    \widehat{p} + \frac{2\sqrt{\widehat{p}(1-\widehat{p})}}{\sqrt{1000}}\right]} \\
+    & \qquad = {\color{orange} \left[\widehat{p} - \frac{2\sqrt{\widehat{p}(1-\widehat{p})}}{\sqrt{1000}},
+    \widehat{p} + \frac{2\sqrt{\widehat{p}(1-\widehat{p})}}{\sqrt{1000}}\right]}
+    \end{aligned}
+    $$
+    an (approximate) 95\% confidence interval for the {\color{blue} true
+    proportion, $p$}.
+
+   \item The chances that the true ${\color{blue} p}$ is in this
+   {\color{orange} random interval} are about 95\%.
+
+   \item {\bf Note:} I will often drop  the {\em approximate} when we talk
+   about confidence intervals.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Example}
+   \begin{description}
+   \item[Q] Find a 95\% confidence interval for Governor Brown's
+   approval rating given 539 out of 1000 voting age Californians
+   polled approved of his job performance.
+   \item[A] We already saw the SE of the proportion was approximately
+   1.6\%. A 95\% confidence interval is therefore
+   $$
+   [53.9-2 \times 1.6, 53.9+2\times 1.6] = [50.7,57.1]
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Confidence intervals}
+
+   \begin{block}
+   {Example}
+   \begin{description}
+   \item[Note] This interval does include the 52\% (which is his
+   {\color{blue} true approval}, this interval ``covers'' the true parameter.
+   Not all 95\% confidence intervals do: only about 95\% of them do \dots
+   \item[Note] Recall the other interval we computed $[48.8,55.2]$: this
+   was an interval in which there is a 95\% probability the {\color{orange}
+   observed proportion} would be in if the {\color{blue} true proportion}
+   was {\color{blue} 52\%}. These intervals are different: one is based
+   on an {\color{orange} observed proportion}, the other is based on
+   a  box model with a  {\color{blue} true proportion}.
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % # need a different string to make a new version of plot
+   % approval = [0] * 48000 + [1] * 52000
+   % 
+   % def interval(box=approval, nsample=1000):
+   %     prop = np.array(random.sample(approval, nsample)).mean()
+   %     SE = np.sqrt(prop * (1 - prop) / nsample)
+   %     return 100 * (prop-2*SE), 100 * (prop+2*SE)
+   % 
+   % intervals = []
+   % missed = 0
+   % for i in range(200):
+   %     L, U = interval()
+   %     in_interval = (L <= 52) * (U >= 52)
+   %     if in_interval:
+   %         pylab.plot([L,U], [i,i], color='gray')
+   %     else:
+   %         missed += 1
+   %         pylab.plot([L,U], [i,i], color='red', linewidth=10)
+   % 
+   % pylab.plot([52,52],[0,200], linestyle='--', linewidth=4, color='blue')
+   % pylab.gca().set_yticks([])
+   % pylab.title("# covering 52%%=%d, # not covering 52%%=%d" % (200-missed, missed))
+   % 
+
+
+   \begin{frame}
+   \frametitle{An illustration of confidence intervals}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6e8e8957f2.pdf}}    
+   \end{center}
+   The {\color{blue} true proportion} doesn't change.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmp44902H/data'
+   % import random
+   % approval = [0] * 48000 + [1] * 52000
+   % 
+   % def interval(box=approval, nsample=1000):
+   %     prop = np.array(random.sample(approval, nsample)).mean()
+   %     SE = np.sqrt(prop * (1 - prop) / nsample)
+   %     return 100 * (prop-2*SE), 100 * (prop+2*SE)
+   % 
+   % intervals = []
+   % missed = 0
+   % for i in range(200):
+   %     L, U = interval()
+   %     in_interval = (L <= 52) * (U >= 52)
+   %     if in_interval:
+   %         pylab.plot([L,U], [i,i], color='gray')
+   %     else:
+   %         missed += 1
+   %         pylab.plot([L,U], [i,i], color='red', linewidth=10)
+   % 
+   % pylab.plot([52,52],[0,200], linestyle='--', linewidth=4, color='blue')
+   % pylab.gca().set_yticks([])
+   % pylab.title("# covering 52%%=%d, # not covering 52%%=%d" % (200-missed, missed))
+   % 
+
+
+   \begin{frame}
+   \frametitle{200 more}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/7224f70868.pdf}}    
+   \end{center}
+   Each {\color{orange} random interval} either covers {\color{blue} true proportion} or not.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
