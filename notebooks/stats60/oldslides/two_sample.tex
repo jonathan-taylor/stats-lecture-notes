@@ -1,0 +1,945 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphics}
+   \usepackage{amsmath,eepic,epic}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 60: Introduction to Statistical Methods}
+   \subtitle{Chapter 27: More tests for averages} 
+   \author{}% {Jonathan Taylor \\
+   %Department of Statistics \\
+   %Stanford University
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {NAEP reading test}
+   \begin{itemize}
+   \item In 1990, sample average was 290.
+
+   \item In 2004, sample average was 285.
+
+   \item Is this chance variation, or has something changed?
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {Two boxes}
+   \begin{itemize}
+   \item One box for 1990, average(1990 sample) = 290, SD(2004 sample) = 37.
+
+   \item A second box for 2004, average(2004 sample) = 285, SD(2004 sample) = 40.
+
+   \item So,
+   $$
+   \begin{aligned}
+   \text{SE(average(1990 sample))} &\approx 37 / \sqrt{1000} \\
+    &\approx 1.2\\
+   \text{SE(average(2004 sample))} &\approx 40 / \sqrt{1000} \\
+   &\approx 1.3\\
+   \end{aligned}
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {Two boxes}
+   \begin{itemize}
+   \item The null hypothesis is: {\color{blue} ``the average of the 1990 equals   (or is less than or equal to) the
+   average of the 2004 box.''}
+
+   \item The alternative is {\color{blue} ``the average of the 1990 box is greater than the  average of the 2004 box.''}
+
+   \item Our {\color{orange} $z$-score} will have ${\color{orange}285-290}-{\color{blue}{0}}={\color{orange} -5}$ in the numerator. We reject for large ${\color{orange} |z||}$ values that are negative.
+
+   \item What about the denominator?
+
+   \item We are using
+   $$
+   {\color{orange} \text{average(2004 sample) - average(1990 sample)}}
+   $$
+   to estimate the difference between the average
+   of the 2004 and 1990 box averages.
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {SE of a difference}
+   \begin{itemize}
+
+
+
+   \item So, the denominator should be
+   $$
+   {\color{blue} \text{SE}}({\color{orange} \text{average(2004 sample) -
+   average(1990 sample)}}).
+   $$
+
+   \item The SE of the difference of two {\bf independent}
+   quantities can be found from the individual SEs.
+
+   \item For our two box model, the {\color{orange} average(1990 sample)}
+   is independent of the {\color{orange} average(2004 sample)}.
+
+   \item The rule is
+   $$
+   \begin{aligned}
+   \lefteqn{{\color{blue} \text{SE}}({\color{orange}
+   \text{average(2004 sample) -
+   average(1990 sample)}})} \\
+   & \qquad \quad = \sqrt{{\color{blue}\text{SE}}({\color{orange} \text{1990 sample}})^2 + {\color{blue}\text{SE}}({\color{orange} \text{2004 sample}})^2}.
+   \end{aligned}
+   $$
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+
+   \item Applying the rule,
+   $$
+   \begin{aligned}
+   \lefteqn{ {\color{blue} \text{SE}}({\color{orange}
+   \text{average(2004 sample)} -}} \\
+   & \qquad \quad - \text{\color{orange}  average(1990 sample)})  \\
+   & \qquad \approx \sqrt{1.2^2+1.3^2} \approx 1.8
+   \end{aligned}
+   $$
+   \item The $z$-statistic is
+   $$
+   {\color{orange} z} = \frac{-5}{1.8} \approx -2.8
+   $$
+
+   \item The one-sided $P$-value is about $0.3\%$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {Example}
+   \begin{itemize}
+   \item In 1999, 13\% of the 17 year-old students had taken calculus
+   compared to 17\% in 2004 according to the NAEP samples.
+   Is the difference real or chance variation?
+
+   \item This question asks us to compare two proportions. We can take
+   the null hypothesis to be ``the proportion of 17 year olds who took
+   calculus in 1999 is equal to (or greater than or equal to) the
+   proportion who took calculus in 2004.''
+
+   \item The alternative is ``the proportion of 17 year olds
+   who took calculus in 1999 is less than the proportion who took calculus
+   in 2004.''
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {Example}
+   \begin{itemize}
+   \item We could rewrite this as $H_0: p_{1999} \geq p_{2004}$ vs.
+   $H_a:p_{1999} < p_{2004}$.
+
+   \item Our sample estimates are $\widehat{p}_{1999}=13\%, \widehat{p}_{2004}=17\%$.
+
+   \item They have estimated standard errors: $\text{SE}(\widehat{p}_{1999}) \approx \sqrt{0.13 \times 0.87 / 1000} \approx 1.1\%$, $\text{SE}(\widehat{p}_{2004}) \approx \sqrt{0.17 \times 0.83 / 1000} = 1.2\%$,
+
+   \item The \text{SE} of the difference is
+   $$
+   \text{SE}(\widehat{p}_{1999} - \widehat{p}_{2004}) \approx \sqrt{1.1^2 + 1.2^2} \approx 1.6\%.
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Comparing two samples}
+
+   \begin{block}
+   {Example}
+   \begin{itemize}
+   \item The $z$-score is
+   $$
+   z = \frac{13 - 17 - 0}{1.6} \approx -2.5
+   $$
+
+   \item The one-sided $P$-value is about 1\%.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Randomized experiments}
+
+   \begin{block}
+   {Randomized experiments}
+   \begin{itemize}
+   \item This {\em two-sample $z$-test} can also be used
+   for randomized controlled experiments.
+
+   \item Example:  200 subjects are split randomly into treatment
+   and placebo in a study on vitamin C on the number of colds.
+
+   \item In the treatment group average(treatment group)=2.3,
+   SD(treatment group) = 3.1.
+
+   \item In the placebo group average(placebo group)=2.6,
+   SD(placebo group) = 2.9.
+
+   \item Is there a difference in the number of colds in treatment
+   vs. placebo group?
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Randomized experiments}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+   \item Naively applying the two sample
+   $z$-test to this situation, yields
+   $$
+   z = \frac{(2.3 - 2.6) - 0}{\sqrt{\left(\frac{3.1}{\sqrt{100}}\right)^2 + \left(\frac{2.9}{\sqrt{100}}\right)^2}} = \frac{-0.3}{0.42} \approx -0.7.
+   $$
+
+
+   \item If we had taken a one-sided alternative, this would be a $P$-value of about 25\%.
+
+   \item Our two-box model does not apply here because the groups were selected
+   from the same ``box'' of 200 subjects.
+
+   \item The two samples are not independent: if a patient is in treatment,
+   he/she cannot also be in the control group.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Randomized experiments}
+
+   \begin{block}
+   {Box model for experiment}
+   \begin{itemize}
+   \item The best box model for this randomized experiment is a box
+   with 200 tickets.
+
+   \item Each ticket has two responses for each subject:
+   \begin{itemize}
+   \item ${\color{green} A}$: the number of colds if they receive the vitamin C;
+   \item ${\color{red} B}$: the number of colds if they receive the placebo.
+   \end{itemize}
+
+   \item In the experiment, we only observe ${\color{green} A}$ or
+   ${\color{red} B}$ for each subject.
+
+   \item Which one we see depends on the randomization.
+
+   \item Statistical theory says the $z$-test is applicable if the
+   sample is large enough to test
+   ${\color{blue} H_0: \text{average of all {\color{green} $A$}'s $\geq$ average of all {\color{red} $B$}'s}}$
+    against ${\color{blue} H_a: \text{average of all {\color{green} $A$}'s $<$
+    average of all {\color{red} $B$}'s}}$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % import numpy as np, pylab
+   % import random
+   % 
+   % ## sample2 = [np.random.randint(0,6) for _  in range(200)]
+   % ## sample = [np.random.randint(0,6) for _  in range(200)]
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, '%s/twosample.csv' % datadir)
+   % 
+   % import random
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %    pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %    pylab.text(X[i,0]-0.2, X[i,1], '%d' % sample['sample1'][i], ha='center', va='center', size=10)
+   %    pylab.text(X[i,0]+0.2, X[i,1], '%d' % sample['sample2'][i], ha='center', va='center', size=10)
+   %    pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   %    pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (hypothetical data)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/5223837e44.pdf}}    
+   \end{center}
+   The complete data (unobserved)
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % import numpy as np, pylab
+   % import random
+   % 
+   % ## sample2 = [np.random.randint(0,6) for _  in range(200)]
+   % ## sample = [np.random.randint(0,6) for _  in range(200)]
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, '%s/twosample.csv' % datadir)
+   % 
+   % import random
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    if treatment[i]:
+   %        pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %        pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %        pylab.text(X[i,0]-0.2, X[i,1], '%d' % sample['sample1'][i], ha='center', va='center', size=10)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % pylab.title("average(treatment)=%0.1f, SD(treatment)%0.1f" % (treatment_sample.mean(), treatment_sample.std()))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (hypothetical data)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c8f29b844c.pdf}}    
+   \end{center}
+   The treatment sample (observed).
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % import numpy as np, pylab
+   % import random
+   % 
+   % ## sample2 = [np.random.randint(0,6) for _  in range(200)]
+   % ## sample = [np.random.randint(0,6) for _  in range(200)]
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, '%s/twosample.csv' % datadir)
+   % 
+   % import random
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    if not treatment[i]:
+   %        pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %        pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %        pylab.text(X[i,0]+0.2, X[i,1], '%d' % sample['sample2'][i], ha='center', va='center', size=10)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % pylab.title("average(placebo)=%0.1f, SD(placebo)%0.1f" % (placebo_sample.mean(), placebo_sample.std()))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (hypothetical data)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/13c9fa1bbf.pdf}}    
+   \end{center}
+   The placebo sample (observed).
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % import numpy as np, pylab
+   % import random
+   % 
+   % ## sample2 = [np.random.randint(0,6) for _  in range(200)]
+   % ## sample = [np.random.randint(0,6) for _  in range(200)]
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, '%s/twosample.csv' % datadir)
+   % 
+   % import random
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %    pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %    if treatment[i]:
+   %        pylab.text(X[i,0]-0.2, X[i,1], '%d' % sample['sample1'][i], ha='center', va='center', size=10)
+   %    elif not treatment[i]:
+   %        pylab.text(X[i,0]+0.2, X[i,1], '%d' % sample['sample2'][i], ha='center', va='center', size=10)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (hypothetical data)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e6d8032720.pdf}}    
+   \end{center}
+   The entire sample (observed).
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Box model (hypothetical data)}
+
+   \begin{block}
+   {Example (continued)}
+
+   \begin{itemize}
+   \item We know
+     $$
+     \begin{aligned}
+     \text{average(treatment)} &= 2.3 \\
+     \text{SE(average(treatment))} &= 1.6 / \sqrt{100} = 0.16 \\
+     \text{average(placebo)} &= 2.5 \\
+     \text{SE(average(placebo))} &= 1.7 / \sqrt{100} = 0.17 \\
+     \end{aligned}
+     $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Box model (hypothetical data)}
+
+   \begin{block}
+   {Example (continued)}
+
+   \begin{itemize}
+
+
+   \item Therefore,
+     $$
+     \begin{aligned}
+     \lefteqn{\text{SE(average(treatment)-average(placebo))}} \\
+     & \qquad = \sqrt{0.16^2+0.17^2} \\
+     &= 0.23
+     \end{aligned}
+     $$
+     and
+     $$
+     z = \frac{2.3-2.5}{0.23} = -0.9
+     $$
+     \item The one-sided $P$-value is 18\%, when we test
+     $H_0: \text{average({\color{green} all treatments})} \geq \text{average({\color{red} all placebos})}$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Randomized experiments}
+
+   \begin{block}
+   {Binary responses}
+   \begin{itemize}
+   \item The randomization model is not applicable only to
+   quantitative things like the number of colds. The tickets
+   can have 0-1 values.
+
+   \item Suppose the experiment tests an experimental cancer treatment
+   and our outcome is whether or not the subject is remission free 5 years
+   after treatment.
+
+   \item Each subject has a {\color{green} 1 or 0} for their
+   outcome if they are treated, and a {\color{red} 1 or 0} for their
+   outcome if they receive placebo (or, more likely, standard of care).
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Randomized experiments}
+
+   \begin{block}
+   {Binary responses}
+   \begin{itemize}
+   \item In the experiment, we only observe ${\color{green} A}$ or
+   ${\color{red} B}$ for each subject.
+
+   \item Which one we see depends on the randomization.
+
+   \item Statistical theory says the $z$-test is applicable if the
+   sample is large enough to test
+   ${\color{blue} H_0: \text{proportion of all {\color{green} 1}'s $\leq$ proportion of all  {\color{red} 1}'s}}$ against
+      ${\color{blue} H_a: \text{proportion of all {\color{green} 1}'s $>$ proportion of all  {\color{red} 1}'s}}$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % ## import random
+   % ## sample2 = np.random.binomial(1, 0.6, (200,))
+   % ## sample = np.random.binomial(1, 0.8, (200,))
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, 'data/twosample_binary.csv')
+   % 
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample_binary.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %    pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %    pylab.text(X[i,0]-0.2, X[i,1], '%d' % sample['sample1'][i], ha='center', va='center', size=10)
+   %    pylab.text(X[i,0]+0.2, X[i,1], '%d' % sample['sample2'][i], ha='center', va='center', size=10)
+   %    pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   %    pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (for binary outcome)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c4200da009.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % ## import random
+   % ## sample2 = np.random.binomial(1, 0.6, (200,))
+   % ## sample = np.random.binomial(1, 0.8, (200,))
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, 'data/twosample_binary.csv')
+   % 
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample_binary.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    if treatment[i]:
+   %        pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %        pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %        pylab.text(X[i,0]-0.2, X[i,1], '%d' % sample['sample1'][i], ha='center', va='center', size=10)
+   %    pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   %    pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % 
+   % pylab.title("proportion(treatment)=%0.2f" % treatment_sample.mean())
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (for binary outcome)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/06103b3884.pdf}}    
+   \end{center}
+   Treatment group (observed).
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % # import random
+   % ## sample2 = np.random.binomial(1, 0.6, (200,))
+   % ## sample = np.random.binomial(1, 0.8, (200,))
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, 'data/twosample_binary.csv')
+   % 
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample_binary.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    if treatment[i]:
+   %        pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %        pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %        pylab.text(X[i,0]+0.2, X[i,1], '%d' % sample['sample2'][i], ha='center', va='center', size=10)
+   %    pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   %    pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % 
+   % pylab.title("proportion(standard of care)=%0.2f" % placebo_sample.mean())
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (for binary outcome)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/65b0e43d22.pdf}}    
+   \end{center}
+   Standard of care group (observed).
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpMRJ55K/data'
+   % # import random
+   % ## sample2 = np.random.binomial(1, 0.6, (200,))
+   % ## sample = np.random.binomial(1, 0.8, (200,))
+   % ## X = np.array([(s1,s2) for s1, s2 in zip(sample, sample2)], np.dtype([('sample1', np.int), ('sample2', np.int)]))
+   % ## treatment = random.sample(range(200), 100)
+   % ## treatment_bool = np.zeros(X.shape, np.bool)
+   % ## for i in treatment:
+   % ##     treatment_bool[i] = True
+   % ## X = pylab.rec_append_fields(X, 'treatment', treatment_bool)
+   % ## pylab.rec2csv(X, 'data/twosample_binary.csv')
+   % 
+   % X = np.mgrid[0:10:10j,0:20:20j].reshape((2,200))   + np.random.sample((2,200)) * 0.05
+   % X = X.T
+   % sample = pylab.csv2rec('%s/twosample_binary.csv' % datadir)
+   % 
+   % treatment = sample['treatment'].astype(np.bool)
+   % treatment_sample = sample[treatment]['sample1']
+   % placebo_sample = sample[~treatment]['sample2']
+   % 
+   % 
+   % for i in range(200):
+   %    pylab.fill_between([X[i,0]-.4,X[i,0]], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='green', alpha=0.3)
+   %    pylab.fill_between([X[i,0],X[i,0]+.4], [X[i,1]-.4,X[i,1]-.4], [X[i,1]+.3,X[i,1]+.3], facecolor='red', alpha=0.3)
+   %    if treatment[i]:
+   %        pylab.text(X[i,0]-0.2, X[i,1], '%d' % sample['sample1'][i], ha='center', va='center', size=10)
+   %    elif not treatment[i]:
+   %        pylab.text(X[i,0]+0.2, X[i,1], '%d' % sample['sample2'][i], ha='center', va='center', size=10)
+   % pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-1,11])
+   % pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-1,21])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model (for binary outcome)}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/a6f3e6d63b.pdf}}    
+   \end{center}
+   The entire sample (observed).
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Binary response}
+
+   \begin{block}
+   {Example (continued)}
+
+   \begin{itemize}
+   \item We know
+     $$
+     \begin{aligned}
+     \widehat{p}_{\text{treatment}} &= 82 \% \\
+     \text{SE($\widehat{p}_{\text{treatment}}$)} &= \sqrt{\frac{.82 \times .18}{100}} = 3.8\% \\
+     \widehat{p}_{\text{standard}} &= 82 \% \\
+     \text{SE($\widehat{p}_{\text{standard}}$)} &= \sqrt{\frac{.66 \times .34}{100}} = 4.7\% \\
+     \end{aligned}
+     $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Binary response}
+
+   \begin{block}
+   {Example (continued)}
+
+   \begin{itemize}
+
+   \item Therefore,
+     $$
+     \text{SE($\widehat{p}_{\text{treatment}} - \widehat{p}_{\text{standard}}$)}
+      = \sqrt{(3.8\%)^2+(4.7\%)^2} = 6.1\%
+     $$
+     and
+     $$
+     z = \frac{82-66}{6.1} = 2.6
+     $$
+     \item The one-sided $P$-value is .5\%, when we test
+     $H_0: {\color{green} {p}_{\text{treatment}}} \geq {\color{red} {p}_{\text{standard}}}.$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
