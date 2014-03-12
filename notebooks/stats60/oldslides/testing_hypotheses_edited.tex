@@ -1,0 +1,1264 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphics}
+   \usepackage{amsmath,eepic,epic}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 60: Introduction to Statistical Methods}
+   \subtitle{Chapter 26: Tests of Significance} 
+   \author{}% {Jonathan Taylor \\
+   %Department of Statistics \\
+   %Stanford University
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Online gaming}
+   \begin{itemize}
+   \item If you play online poker or roulette, how do you know it's fair?
+
+   \item I placed 10 bets on {\color{red} RED} on
+   \href{http://www.roulette4fun.com/roulette-games/classic-roulette}{http://www.roulette4fun.com/roulette-games/classic-roulette}.
+
+   \item These are the results: [0,0,1,0,1,0,0,1,0,1].
+
+   \item Is the game fair?
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+   \item I {\em observed} 4 successes.
+   \item If the roulette wheel is fair,
+   I would expect to see $10 \times 18/ 38=4.7$ successes, give or take
+   $\sqrt{10} \times \sqrt{18/38 \times 20/38}=1.4$.
+
+   \item In standardized units, my observed 4 successes converts to
+   $$
+   \frac{{\color{orange} 4} - {\color{blue} 4.7}}{{\color{blue} 1.4}} = {\color{orange} -0.5}
+   $$
+
+   \item This seems reasonable, it is not very large relative to 1 and it could
+   be just a chance error. After all, chance errors are typically size 1 in standardized units.
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+   \item I placed 10 more identical bets, with results
+   [1,0,1,1,1,1,0,1,0,0]. So, in 20 bets, I have observed 10 successes.
+   \item If the roulette game is fair, I would expect
+   to see $20 \times 18/ 38=9.5$  successes, give or take
+   $\sqrt{20} \times \sqrt{18/38 \times 20/38}=2.2$.
+
+   \item In standardized units, my observed 10 successes converts to
+   $$
+   \frac{{\color{orange} 10} - {\color{blue} 9.5}}{{\color{blue} 2.3}} = {\color{orange} 0.2}
+   $$
+
+   \item Again, this seems reasonable, it is not very large relative to 1 and it could
+   be just a chance error. After all, chance errors are typically size 1 in standardized units.
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {What can I conclude?}
+   \begin{itemize}
+   \item Based on betting on {\color{red} RED}, I cannot conclude that the roulette
+   wheel is rigged.
+
+   \item It is possible that some other bets might not have matched the expected number of
+   successes as well. I can only draw a conclusion based on my 20 bets on {\color{red} RED}.
+
+   \item In statistical terms, the statement ``the roulette game is rigged'' is called
+   a {\em hypothesis}. In this case, we call it the {\em alternative hypothesis}.
+
+   \item Alternative to what? It is an alternative to the {\em null hypothesis} which is
+   ``the roulette game is fair.''
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Null and alternative hypotheses}
+   \begin{itemize}
+
+   \item The naming of the hypotheses corresponds to an ``innocent until proven guilty'' approach.
+
+   \item Since our observations (in standardized units) seem attributable to chance
+   variation, we decided we cannot declare the null hypothesis to be false. Or,
+   we cannot reject the null hypothesis.
+
+   \item In
+   legalese, ``there is reasonable doubt to the guilt of the roulette game so we do not convict''.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {A different scenario}
+   \begin{itemize}
+
+   \item What if the second 10 results were [0,0,0,0,0,0,0,0,0,0]? Then,
+   we would have observed only 4 successes in 20 draws from our 0-1 box.
+
+   \item In standardized units, this 4 converts to
+   $$
+   \frac{{\color{orange} 4} - {\color{blue} 9.5}}{{\color{blue} 2.3}} = {\color{orange} -2.5}
+   $$
+
+   \item This would be a little suspect \dots
+
+   \item In fact, if the roulette wheel were fair, there is only a 1.2\% chance
+   that I would have had so few successes in 20 bets.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(-4,-2.25,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{What are the chances?}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/6e16e95105.pdf}}    
+   \end{center}
+   Continuity correction yields $z=-2.25$, area is 1.2\%.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {$P$-values}
+   \begin{itemize}
+
+   \item The chances we computed are the chances, if the roulette game was fair, that we would observe a standardized less than our observed standardized value of {\color{orange} -2.5}.
+
+   \item In general, if we test a null hypothesis with
+   some {\color{orange} observed data} or {\color{orange} observed test statistic}, the {\color{orange} $P$-value} is
+   the chance, assuming the null hypothesis is true, that
+   we would observe such an extreme test statistic.
+
+   \item In this test, we call the {\color{orange} observed test statistic}
+   a {\color{orange} $z$-statistic} or {\color{orange} $z$-score}.
+   \item These tests are called {\em \color{blue} $z$ tests}.
+   \item Why color the {\color{orange} $P$-value} orange? Because
+   it is random \dots
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {$P$-values}
+   \begin{itemize}
+
+   \item {\bf \color{red} The P-value is NOT the chances
+   that the null hypothesis is correct!}
+
+   \item Why not?
+   \begin{itemize}
+   \item The online roulette game is fair or it is not. The null
+   hypothesis is true or it is false.
+   \item If the {\color{orange} $P$-value} were the chances
+    the null hypothesis is correct, these chances would be {\color{orange} random} \dots
+   \end{itemize}
+
+   \item There is a methodology, called Bayesian statistics in which
+   one {\em can} compute the chances the null hypothesis is correct \dots
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Chances the roulette wheel is fair}
+   \begin{itemize}
+
+   \item Suppose we declare, before seeing data: ``the probability
+   the success rate on {\color{red} RED} is 18/38 is 70\%, and the probability
+   the success rate on {\color{red} RED} is 12/38 is 30\%''.
+
+   \item Call these two hypotheses $H_0, H_1$ and we have just said
+   $P({\color{orange} \text{$H_0$ is true}})=0.7, P({\color{orange} \text{$H_1$ is true}})=0.3$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Chances the roulette wheel is fair}
+   \begin{itemize}
+
+   \item Suppose now, we observe 4 success from 20 bets but we
+   do not know whether they were from the fair game, $H_0$ or
+   the unfair game $H_1$.
+
+   \item Bayes' rule says
+   $$
+   \begin{aligned}
+   \lefteqn{P(\text{$H_0$ is true} | \text{4 out of 20 successes})} \\
+    &  \qquad =
+   \frac{.7 \times \binom{20}{4} (\frac{18}{38})^4 (\frac{20}{38})^{16}}{.7 \times \binom{20}{4} (\frac{18}{38})^4 (\frac{20}{38})^{16} + .3 \times \binom{20}{4} (\frac{12}{38})^4 (\frac{26}{38})^{16}} \\
+   & \qquad = 15\%.
+   \end{aligned}
+   $$
+   \item Are the chances above {\color{blue} not random} or {\color{orange} random}?
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {A second testing scenario}
+   \begin{itemize}
+
+   \item Suppose now we want to see the efficacy of a
+   new drug on blood pressure.
+
+   \item Our study design is: we will treat
+   a large patient population with the drug and measure their
+   blood pressure before and after taking the drug.
+
+   \item One way to conclude that the drug is effective if the blood pressure has decreased. That is,
+   if the average difference is negative.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Setting up the test}
+   \begin{itemize}
+
+   \item We could set this up as drawing from a box of {\em differences
+   in blood pressure}.
+
+   \item The {\em null hypothesis}, $H_0$ is: ``the average difference is zero.''
+
+   \item The {\em alternative hypothesis}, $H_a$, is: ``the average difference is less than zero.''
+
+   \item Sometimes, people will test the alternative, $H_a$: ``the
+   average difference is not zero.''
+
+   \item We test the null with observed data by estimating
+    the average difference and converting to standardized units.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import random
+   % X = np.mgrid[0:1:10j,0:1:5j].reshape((2,50)) + np.random.sample((2,50)) * 0.05
+   % X = X.T
+   % sample = [random.randint(-15,0) for _  in range(50)]
+   % for i in range(50):
+   %     pylab.text(X[i,0], X[i,1], '%d' % sample[i])
+   % 
+   %     pylab.gca().set_xticks([]);    pylab.gca().set_xlim([-0.1,1.1])
+   %     pylab.gca().set_yticks([]);    pylab.gca().set_ylim([-0.1,1.1])
+   % pylab.title("average(sample)=-7.4, SD(sample)=4.8") # % (np.mean(sample), np.std(sample)))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Sample of blood pressures}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/3e7e808490.pdf}}    
+   \end{center}
+   Sample of 50
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Evaluating  the test}
+   \begin{itemize}
+
+   \item Our observed average is ${-\color{orange} 7.4}$. We estimate its SE
+   to be ${\color{orange} 4.8 / \sqrt{50}=0.7}$.
+
+    \item In standardized units, our observed average converts to
+    $$
+    \frac{{\color{orange}-7.4} - {\color{blue} 0}}{\color{orange} 0.7} \approx - 10
+    $$
+
+   \item The {\color{orange} $P$-value} is 0: there is virtually no chance
+   a standard normal would ever be so small. We reject the null hypothesis $H_0$
+   and conclude $H_a$: ``the average difference is negative.''
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+
+   \item Suppose that our null hypothesis was different. We might
+   have begun with the null hypothesis $H_0$: ``the average decrease in
+   blood pressure will be 7 mm Hg'' with alternative $H_a$: ``the
+   average decrease in blood pressure is not 7mm Hg''.
+
+    \item How do we test this hypothesis?
+
+    \item Well, under this null hypothesis our observed average converts to
+    $$
+    \frac{{\color{orange}-7.4} - ({\color{blue} -7})}{\color{orange} 0.7} \approx -0.6
+    $$
+
+    \item This test is {\em two-sided}: we did not say greater
+    than or larger than \dots
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(-4,-.6,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % x2 = np.linspace(.6,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{What are the chances?}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9ed4b03716.pdf}}    
+   \end{center}
+   Area is 55\%, we cannot reject $H_0: \text{average(difference)}=-7$.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {How small should the chances be?}
+   \begin{itemize}
+
+   \item In our examples so far, it has been fairly clear
+   which of the null or alternative is more believable.
+
+   \item In practice, we must decide a threshold at which to
+   reject $H_0$.
+
+   \item A common choice is to use a threshold of 5\%. We call this
+   threshold the {\em level} or {\em size} of the test.
+
+   \item The book declares a {\em \color{orange} $P$-value} of $5\%$ or less to be ``significant'',
+   $1\%$ or less to be ``highly significant.''
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Rejection rule}
+   \begin{itemize}
+
+   \item Knowing the null and alternative hypotheses and the size of the test,
+   we can define a {\em \color{blue} rejection rule}.
+
+   \item For example, if the size is 5\%, and
+   $$
+   \begin{aligned}
+     H_0 &= \text{average difference is 0 mm Hg} \\
+     H_a &= \text{average difference is negative} \\
+   \end{aligned}
+   $$
+   \item Then, we reject $H_0$ if our $z$ statistic is
+   less than {\color{blue} -1.65}.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(-4,-1.65,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{One sided test}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/73222db9d8.pdf}}    
+   \end{center}
+   {\color{blue} 5\% rejection rule} when alternative is negative \dots
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+
+   \item Suppose the alternative is now $H_a$: ``the average difference is not 0mm Hg''.
+
+   \item Do we reject $H_0$:``the average difference is 0mm Hg''?
+
+    \item In standardized units, our observed average converts to
+    $$
+    \frac{{\color{orange}-7.4} - {\color{blue} 0}}{\color{orange} 0.7} \approx -10
+    $$
+
+   \item Now, -10 is extremely unlikely under $H_0$ but it is likely
+   for values some values of the average difference under $H_a$.
+
+   \item We reject this $H_0$ when the $z$-score is large in absolute value.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % 
+   % x2 = np.linspace(2,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % x2 = np.linspace(-4,-2,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % pylab.plot(x,y*100, linewidth=2)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Two sided test}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/bbd6d849ef.pdf}}    
+   \end{center}
+   {\color{blue} 5\% rejection rule} when alternative is positive or negative \dots
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Example (continued)}
+   \begin{itemize}
+
+   \item Suppose the alternative is now $H_a$: ``the average difference is positive''.
+   \item Do we reject $H_0$:``the average difference is 0mm Hg''?
+
+    \item In standardized units, our observed average converts to
+    $$
+    \frac{{\color{orange}-7.4} - {\color{blue} 0}}{\color{orange} 0.7} \approx -10
+    $$
+
+   \item While -10 is extremely unlikely under $H_0$ it is even more
+   unlikely under $H_a$.
+
+   \item It seems reasonable to conclude that neither $H_0$ nor
+   $H_a$ is true.
+
+   \item But, to conclude $H_a$ is true, we should only reject this $H_0$ when the $z$-score is positive \dots
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(1.65,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{One sided test}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/87f9fdb9ee.pdf}}    
+   \end{center}
+   {\color{blue} 5\% rejection rule} when alternative is positive \dots
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {One-sided vs. two-sided}
+   \begin{itemize}
+
+   \item If we want to conclude a one-sided alternative like
+     $H_a$:``the average difference in blood pressure is less than -7 mm Hg''.
+   \item Then, we can take the null hypothesis to be
+   $H_0$:``the average difference in blood pressure is greater than or equal to -7 mm Hg''.
+   We reject for $z$-scores that are negative and large
+   in absolute value.
+
+   \item On the other hand, if we want to conclude a two-sided
+   alternative like $H_a$:``the average difference in blood pressure is
+    not -7 mm Hg''.
+
+   \item Then, we can take the null hypothesis to be
+   $H_0$:``the average difference
+   in blood pressure is equal to -7 mm Hg''. We reject for large $z$-scores
+   in absolute value.
+
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Normal approximation}
+
+    \begin{block}
+     {Normal approximation and hypothesis tests}
+     \begin{itemize}
+     \item If a normal approximation holds
+       for ${\color{orange} \widehat{\theta}}$
+       then we can test the null hypothesis $H_0: {\color{blue} \theta=\theta_0}$ against $H_a: {\color{blue} \theta \neq \theta_0}$.
+     \item For instance, our first null hypothesis was $\theta_0=0$. In the
+     second, $\theta_0=-7$.
+
+     \item The test statistic, called a {\color{orange} $z$ score}
+     for testing $H_0:{\color{blue} \theta=\theta_0}$
+     is
+      $$
+      {\color{orange} z} = \frac{{\color{orange} \widehat{\theta}} - {\color{blue} \theta_0}}{{\color{blue}\text{SE}({\color{orange} \widehat{\theta}})}}  \approx \frac{{\color{orange} \widehat{\theta}} - {\color{blue} \theta_0}}{{\color{orange}\widehat{\text{SE}({ \widehat{\theta}})}}}
+      $$
+
+     \item We call ${\color{orange} z}$ a $Z$-statistic or a $Z$-score.
+     \item If $H_0$ is true, then ${\color{orange} z}$ follows the standard normal curve.
+
+     \item If $H_0$ is not true, then ${\color{orange} z}$ does not usually follow the standard normal curve. If it does, you have a very poor test \dots
+     \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Normal approximation}
+
+    \begin{block}
+     {Normal approximation and hypothesis tests}
+     \begin{itemize}
+     \item If $H_0$ is not true, then ${\color{orange} z}$ does not usually follow the standard normal curve. If it does, you have a very poor test \dots
+
+     \item It may follow a normal curve with mean $\neq 0$.
+
+     \item The logic of the hypothesis test is as follows: if $H_0$ is true, then
+     our observed test statistic should be a ``typical value'' under $H_0$.
+
+     \item The {\color{orange} $P$-value} depends on what $H_a$ is.
+
+     \item It is often easier to use the rejection rule instead
+     of the $P$-value.
+
+     \item For null hypotheses like $H_0:{\color{blue} \theta \leq \theta_0}$ and
+     $H_0:{\color{blue} \theta \geq \theta_0}$ we use the rejection rules with
+     the {\em \color{orange} same  $z$-score} \dots
+
+     \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(-4,-1.65,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{One sided test}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/73222db9d8.pdf}}    
+   \end{center}
+   {\color{blue} 5\% rejection rule} for $H_a: \theta < \theta_0, H_0:\theta \geq \theta_0$
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(1.65,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{One sided test}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/87f9fdb9ee.pdf}}    
+   \end{center}
+   {\color{blue} 5\% rejection rule} for $H_a: \theta > \theta_0, H_0:\theta \leq \theta_0$
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % 
+   % x2 = np.linspace(2,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % x2 = np.linspace(-4,-2,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % pylab.plot(x,y*100, linewidth=2)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Two sided test}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/bbd6d849ef.pdf}}    
+   \end{center}
+   {\color{blue} 5\% rejection rule} for $H_a: \theta \neq \theta_0, H_0: \theta = \theta_0$
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Testing hypotheses}
+
+   \begin{block}
+   {Relation between hypothesis tests and confidence intervals}
+   \begin{itemize}
+
+   \item Which values are reasonable?
+
+
+   \item Well, -7.4 is certainly a reasonable value if the true average
+   difference were -7.4 because our $z$ score would be 0.
+
+   \item Hence, we would not reject $H_0$:``the average difference is -7.4'' if we observed a sample average of -7.4
+
+    \item The set of all values $\theta$ we would not reject $H_0$: ``the average difference is $\theta$'' at level 5\% is essentially the standard 95\% confidence interval!
+
+    \item Therefore, one can test $H_0:$``the average difference is 0'' by
+    checking to see whether 0 is in the confidence interval.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Back to roulette}
+
+   \begin{block}
+   {Testing fairness via a confidence interval}
+   \begin{itemize}
+
+   \item A 95\% confidence for the true {\color{red} RED} success rate
+   (fair or not)
+   based on our first 10 bets is
+   $$
+   {\color{orange} 0.4 \pm \sqrt{0.4 \times 0.6} / {\sqrt{10}}} =
+   {\color{orange} 0.4 \pm 0.15}
+   $$
+   (This assumes the online roulette game is doing independent trials,
+    thought not necessarily fair trials)
+
+   \item The success rate for {\color{red} RED} in the fair model is
+   ${\color{blue} 18/38 \approx 0.47}$.
+
+    \item 0.47 is within our 95\% confidence interval. Therefore, we would
+    not reject $H_0$:``the roulette table is fair'' at level 5\%.
+
+    \item {\bf Note:} In this example, we only have 10 trials --
+    to apply this logic we should have enough trials so the normal
+    approximation holds.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Student's $T$}
+
+   \begin{block}
+   {Tests and confidence intervals for small samples}
+   \begin{itemize}
+
+   \item Our tests (and confidence intervals) have so far
+   relied on normal approximations  (i.e. we have used A-104 to compute
+   all chances).
+
+   \item If the sample size is small, the normal approximations may
+   not be very good.
+
+   \item If the sample size is small, we can sometimes get
+   good confidence intervals using a $T$ statistic.
+
+   \item The formula for the $T$ statistic is almost identical
+   to the $z$ statistic, it is the {\em chances} that can be quite different.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Student's $T$}
+
+   \begin{block}
+   {Tests and confidence intervals for small samples}
+   \begin{itemize}
+
+   \item Suppose the Gauss model holds
+     $$
+     {\color{orange} \text{measurement}} = {\color{blue} \text{true value}} + {\color{orange} \text{chance error}}
+     $$
+   \item {\bf And, the histogram of the error box is not too different
+   from a normal probability histogram or curve}
+
+   \item Then, there are very good confidence intervals
+   even for very small samples \dots
+
+   \item If the histogram of the error box is exactly
+   a normal probability histogram, then these tests and confidence
+   intervals are {\em exact}.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Student's $T$}
+
+   \begin{block}
+     {Example}
+     \begin{itemize}
+     \item Suppose we observed only 5 blood pressure changes: [-4,-6,-8,-2,-1].
+     \item The average is -4.2 mm Hg, and the SD of the list is 2.6 mm Hg.
+     \item Our usual $z$ score to test $H_0$: average difference $\geq 0$
+     against $H_a$: average difference $<0$
+     $$
+     {\color{orange} z = \frac{-4.2}{2.6 / \sqrt{5}} \approx -3.7}
+     $$
+     \item The $T$ statistic replaces the SD of the list with SD$^+$ of the list
+     which is 2.9 mm Hg. The $T$ statistic is
+     $$
+     {\color{orange} T = \frac{-4.2}{2.9 / \sqrt{5}} \approx -3.3}
+     $$
+     \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Student's $T$}
+
+   \begin{block}
+   {What's different about the $T$ statistic?}
+   \begin{itemize}
+
+     \item It uses ${\color{orange} \text{SD}^+}$ instead
+     of ${\color{orange} \text{SD}}$.
+     \item Why does it use ${\color{orange} \text{SD}^+}$?
+       \item     Because for small samples,
+     it is a better estimate of ${\color{blue} \text{SD(box)}}$
+     than ${\color{orange} \text{SD}}$.
+
+   \item Unfortunately, though, the $T$ statistic does not follow the
+   normal curve.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Student's $T$}
+
+   \begin{block}
+   {Computing the chances for the $T$ test}
+   \begin{itemize}
+
+   \item It {\em almost} follows the normal curve. For large
+     samples, it gets closer and closer.
+
+   \item For each sample size, there is a different curve, or
+   probability histogram.
+
+   \item These curves are indexed by what we call {\em degrees of freedom}.
+
+   \item In this example, the degrees of freedom are $\# \text{sample}-1$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % import scipy.stats
+   % 
+   % df = 4
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2, label='Normal')
+   % pylab.plot(x,scipy.stats.t.pdf(x, df)*100, linewidth=2, label=r'$T$, df=4')
+   % 
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % pylab.legend()
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Student's $T$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/42591bcc28.pdf}}    
+   \end{center}
+   Comparison with normal curve, degrees of freedom = 4
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % import scipy.stats
+   % 
+   % df = 4
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2, label='Normal')
+   % pylab.plot(x,scipy.stats.t.pdf(x, df)*100, linewidth=2, label=r'$T$, df=4')
+   % 
+   % x2 = np.linspace(2,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % x2 = np.linspace(-4,-2,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % # The t region
+   % 
+   % x2 = np.linspace(scipy.stats.t.isf(0.025,df),4, 101)
+   % y2 = scipy.stats.t.pdf(x2, df)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='gray', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % 
+   % x2 = np.linspace(-4,-scipy.stats.t.isf(0.025,df), 101)
+   % y2 = scipy.stats.t.pdf(x2, df)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='gray', hatch='\\', alpha=0.5)
+   % 
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % pylab.legend()
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Student's $T$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/57599c5280.pdf}}    
+   \end{center}
+   Comparison of two-sided {\color{blue} 5\% rejection rule}, df=4
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % import scipy.stats
+   % 
+   % df = 20
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2, label='Normal')
+   % pylab.plot(x,scipy.stats.t.pdf(x, df)*100, linewidth=2, label=r'$T$, df=20')
+   % 
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % pylab.legend()
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Student's $T$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9bcfab42cd.pdf}}    
+   \end{center}
+   Comparison with normal curve, degrees of freedom = 20
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % import pylab, numpy as np
+   % import scipy.stats
+   % 
+   % df = 20
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2, label='Normal')
+   % pylab.plot(x,scipy.stats.t.pdf(x, df)*100, linewidth=2, label=r'$T$, df=20')
+   % 
+   % x2 = np.linspace(2,4,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % x2 = np.linspace(-4,-2,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='red', hatch='\\', alpha=0.5)
+   % 
+   % # The t region
+   % 
+   % x2 = np.linspace(scipy.stats.t.isf(0.025,df),4, 101)
+   % y2 = scipy.stats.t.pdf(x2, df)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='gray', hatch='\\', alpha=0.5)
+   % 
+   % 
+   % 
+   % x2 = np.linspace(-4,-scipy.stats.t.isf(0.025,df), 101)
+   % y2 = scipy.stats.t.pdf(x2, df)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='gray', hatch='\\', alpha=0.5)
+   % 
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % pylab.legend()
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Student's $T$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/96c10c598f.pdf}}    
+   \end{center}
+   Comparison of two-sided {\color{blue} 5\% rejection rule}, df=20
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

@@ -1,0 +1,752 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphics}
+   \usepackage{amsmath,eepic,epic}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 60: Introduction to Statistical Methods}
+   \subtitle{Chapters 16 \& 17: Box models, average and standard error} 
+   \author{}% {Jonathan Taylor \\
+   %Department of Statistics \\
+   %Stanford University
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % tt = range(1,37) + ['0', '00']
+   % black = [2,4,6,8,10,11,13,15,17,19,20,22,24,26,29,31,33,35]
+   % red = sorted(set(range(1,37)).difference(black))
+   % black = list(np.array(black)-1)
+   % red = list(np.array(red)-1)
+   % green = [36,37]
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % pylab.scatter(X[:38][black],Y[:38][black],s=500, c='gray', alpha=0.8)
+   % pylab.scatter(X[:38][red],Y[:38][red],s=500, c='red', alpha=0.5)
+   % pylab.scatter(X[:38][green],Y[:38][green],s=500, c='green', alpha=0.5)
+   % t = range(1,37) + ['0', '00']
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t, color='black', ha='center', va='center')
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Roulette}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c1876695b2.pdf}}    
+   \end{center}
+   Possible outcomes: balls numbered 1 to 36, plus [0, 00].
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % ts = range(1,37) + ['0', '00']
+   % black = [2,4,6,8,10,11,13,15,17,19,20,22,24,26,29,31,33,35]
+   % red = sorted(set(range(1,37)).difference(black))
+   % black = list(np.array(black)-1)
+   % red = list(np.array(red)-1)
+   % tt = [('F', 'yellow')] * 38
+   % for r in red:
+   %     tt[r] = ('S', 'pink')
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % g = np.array([t[1] == 'pink' for t in tt])
+   % pylab.scatter(X[:38][g],Y[:38][g],s=500, c='pink', alpha=0.5)
+   % pylab.scatter(X[:38][~g],Y[:38][~g],s=500, c='yellow', alpha=0.5)
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t[0], color='black', ha='center', va='center')
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Roulette}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/82ff703e2a.pdf}}    
+   \end{center}
+   Betting on {\color{red} RED}: 18 balls are success.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % ts = range(1,37) + ['0', '00']
+   % black = [2,4,6,8,10,11,13,15,17,19,20,22,24,26,29,31,33,35]
+   % red = sorted(set(range(1,37)).difference(black))
+   % black = list(np.array(black)-1)
+   % red = list(np.array(red)-1)
+   % tt = [('-10\$', 'yellow')] * 38
+   % for r in red:
+   %     tt[r] = ('+10\$', 'pink')
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % g = np.array([t[1] == 'pink' for t in tt])
+   % pylab.scatter(X[:38][g],Y[:38][g],s=700, c='red')
+   % pylab.scatter(X[:38][~g],Y[:38][~g],s=700, c='yellow', alpha=0.5)
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t[0], color='black', ha='center', va='center',
+   %                fontsize=10)
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model for winnings}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/7b7975662f.pdf}}    
+   \end{center}
+   Betting 10\$ on {\color{red} RED}: win 10\$ with probability 9/19.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % ts = range(1,37) + ['0', '00']
+   % black = [2,4,6,8,10,11,13,15,17,19,20,22,24,26,29,31,33,35]
+   % red = sorted(set(range(1,37)).difference(black))
+   % black = list(np.array(black)-1)
+   % red = list(np.array(red)-1)
+   % tt = [('-10\$', 'yellow')] * 38
+   % for r in red:
+   %     tt[r] = ('+10\$', 'pink')
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % g = np.array([t[1] == 'pink' for t in tt])
+   % pylab.scatter(X[:38][g],Y[:38][g],s=700, c='pink', alpha=0.5)
+   % pylab.scatter(X[:38][~g],Y[:38][~g],s=700, c='yellow')
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t[0], color='black', ha='center', va='center',
+   %                fontsize=10)
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model for winnings}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/83f92d2dda.pdf}}    
+   \end{center}
+   Betting 10\$ on {\color{red} RED}: lose 10\$ with probability 10/19.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{The law of averages}
+
+   \begin{block}
+   {Example}
+   \begin{itemize}
+   \item Suppose we start with 100\$ in
+   a Las Vegas casino and bet 10 \$ on {\color{red} RED} 100 times.
+   \item If the ball lands  {\color{red} RED} we are up 10 \$. If not,
+   we are down 10 \$.
+   \item About how much money should we have after 100 bets?
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % initial = 100
+   % 
+   % results = []
+   % n = 100
+   % for _ in range(20000):
+   %     draws = np.random.binomial(n, 18/38.)
+   %     results.append(initial + 10 * draws - 10 * (n - draws))
+   % 
+   % pylab.hist(results, bins=10)
+   % results = np.array(results)
+   % pylab.title("average=%d, SD=%d" % (int(results.mean()), int(results.std())))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Betting on {\color{red} RED} 100 times, starting with 100\$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/fec9bb4496.pdf}}    
+   \end{center}
+   Histogram based on 20000 simulated results.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % initial = 100
+   % 
+   % results = []
+   % n = 1000
+   % for _ in range(20000):
+   %     draws = np.random.binomial(n, 18/38.)
+   %     results.append(initial + 10 * draws - 10 * (n - draws))
+   % 
+   % pylab.hist(results, bins=10)
+   % results = np.array(results)
+   % pylab.title("average=%d, SD=%d" % (int(results.mean()), int(results.std())))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Betting on {\color{red} RED} 1000 times, starting with 100\$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/dbf24cda6f.pdf}}    
+   \end{center}
+   Histogram based on 20000 simulated results.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{The law of averages}
+
+   \begin{block}
+   {Average winnings}
+   \begin{itemize}
+   \item There is 18/38 chance of winning 10\$, and 20/38 chance of losing 10\$.
+   \item On average, each bet we ``gain''
+   $$
+   \frac{18}{38} \times 10\$ + \frac{20}{38} \times (-10\$) = -\frac{1}{19} \times 10\$ \approx -0.52\$
+   $$
+   \item This is the average of the 38 outcomes in our ``box model''.
+   \item Our average winnings after 100 bets is approximately -52\$ so
+   we should finish with about 48 \$.
+   \item Our average winnings after 1000 bets is approximately -520\$
+   so we should finish about 420\$ in debt.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard deviation}
+
+   \begin{block}
+   {Average when drawing from a box}
+   \begin{itemize}
+   \item Draw a ticket (with replacement) from a box of balls with values
+   assigned to them
+   (i.e. 10\$, -10\$).
+   \item Repeat this process $n$ times and compute the
+   sum of all the results, calling this the {\bf sum of draws}.
+   \item On average, the {\bf sum of draws} should be
+   $$
+   n \times \text{average(values in the box)}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard deviation}
+
+   \begin{block}
+   {Average when drawing from a box}
+   \begin{itemize}
+     \item Formula:
+   $$
+   \begin{aligned}
+     \text{average({\bf sum of draws})}
+     &= n \times \text{average(values in the box)}
+   \end{aligned}
+   $$
+   \item We also call the average the expected value
+     $$
+     \text{expected({\bf sum of draws})} = \text{average({\bf sum of draws})}
+     $$
+   \item Example: when betting {\color{red} RED} on roulette, the average
+   {\bf sum of 100 bet results} is -52\$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard deviation}
+
+   \begin{block}
+   {Chance error}
+   \begin{itemize}
+   \item Of course, we don't always end up with 48\$ after one hundred bets.
+   \item I simulated the entire experiment 20000 times and recorded the results
+   in {\bf simulation results},
+   a reasonable guess for how close to 48\$ we would be
+   $$
+   \text{SD({\bf simulation results})}
+   $$
+   \item It turns out that this is $\approx 100 \$ $.
+
+   \item Even though, on average, we should have 48\$ after 100 bets, our winnings
+   can fluctuate on the order of 100\$.
+
+   \item Even though, on average, we should have -420\$, our winnings
+   can fluctuate on the order of 300\$.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard deviation}
+
+   \begin{block}
+   {Chance error}
+   \begin{itemize}
+   \item We define the {\em chance error} of the experiment by
+   $$
+   \text{{\bf sum of draws}} = \text{expected({\bf sum of draws})} + \text{chance error}.
+   $$
+   \item Example:
+     \begin{itemize}
+     \item We are going to flip a fair coin 100 times and record the number of heads.
+
+     \item After 100 flips we observe 56 heads.
+     \item The chance error is 6 because the expected number of heads is 50.
+     \end{itemize}
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard error}
+
+   \begin{block}
+   {Square root rule}
+   \begin{itemize}
+   \item Draw a ticket (with replacement) from a box of balls with values
+   assigned to them
+   (i.e. 10\$, -10\$).
+   \item Repeat this process $n$ times and compute the {\bf sum of draws}.
+   \item The {\bf sum of draws} should be near the
+   average but likely to be off by
+   $$
+   \text{SE({\bf sum of draws})} = \sqrt{n} \times \text{SD}(\text{values in the box})
+   $$
+   \item We call this the {\em standard error}. It measures the typical size of
+   {\em chance error}.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard error}
+
+   \begin{block}
+   {Difference between SD and SE}
+   \begin{description}
+   \item[SD is for data] It is
+     a function that take a list of numbers
+   and returns a number.
+
+   \item[SE is for chance] It takes a chance process like drawing 10 balls
+     from a box of numbers and returns a number.
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard error}
+
+   \begin{block}
+   {Short cut}
+   \begin{itemize}
+   \item Suppose there are only two values on the tickets, say, $V_1, V_2$
+   with proportion $p$ having value $V_1$.
+   \item Then
+   $$
+   \text{SD(values in the box)} = |V_1-V_2| \times \sqrt{p \times (1-p)}
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Average and standard error}
+
+   \begin{block}
+   {Example}
+   \begin{itemize}
+   \item In our {\color{red} RED} roulette example, $V_1=10 \$, V_2=-10\$ $ and $p=18/38$.
+   \item The shortcut says that
+   $$
+   \text{SD(values in the box)} = 20 \$ \times \sqrt{\frac{18}{38} \times \frac{20}{38}} \approx 10\$.
+   $$
+   \item The square root rule says that
+   $$
+   \text{SE(sum of 100 bet results)} = \sqrt{100} \times 10\$ \approx 100\$.
+   $$
+
+   \item The square root rule says that
+   $$
+   \text{SE(sum of 1000 bet results)} = \sqrt{1000} \times 10\$ \approx 300\$.
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % ts = range(1,37) + ['0', '00']
+   % success = [5]
+   % tt = [('F', 'yellow')] * 38
+   % for r in success:
+   %     tt[r] = ('S', 'pink')
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % g = np.array([t[1] == 'pink' for t in tt])
+   % pylab.scatter(X[:38][g],Y[:38][g],s=500, c='pink', alpha=0.5)
+   % pylab.scatter(X[:38][~g],Y[:38][~g],s=500, c='yellow', alpha=0.5)
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t[0], color='black', ha='center', va='center')
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Roulette}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/4745c33004.pdf}}    
+   \end{center}
+   Betting on {\color{red} 5}: 1 balls is a success.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % ts = range(1,37) + ['0', '00']
+   % success = [5]
+   % tt = [('-10\$', 'yellow')] * 38
+   % for r in success:
+   %     tt[r] = ('+350\$', 'pink')
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % g = np.array([t[1] == 'pink' for t in tt])
+   % pylab.scatter(X[:38][g],Y[:38][g],s=700, c='red')
+   % pylab.scatter(X[:38][~g],Y[:38][~g],s=700, c='yellow', alpha=0.5)
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t[0], color='black', ha='center', va='center',
+   %                fontsize=10)
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model for winnings}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/db52ca53b5.pdf}}    
+   \end{center}
+   Betting 10\$ on {\color{red} 5}: win 350\$ with probability 1/38
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % dx = 0.02
+   % X, Y = np.mgrid[0.2:0.8:5j,0:1:8j]
+   % X += np.random.uniform(0,1,X.shape) * dx - dx / 2
+   % Y += np.random.uniform(0,1,Y.shape) * dx - dx / 2
+   % ts = range(1,37) + ['0', '00']
+   % success = [5]
+   % tt = [('-10\$', 'yellow')] * 38
+   % for r in success:
+   %     tt[r] = ('+350\$', 'pink')
+   % #np.random.shuffle(tt)
+   % X.shape = -1; Y.shape = -1
+   % g = np.array([t[1] == 'pink' for t in tt])
+   % pylab.scatter(X[:38][g],Y[:38][g],s=700, c='pink', alpha=0.5)
+   % pylab.scatter(X[:38][~g],Y[:38][~g],s=700, c='yellow')
+   % for i, t in enumerate(tt):
+   %     pylab.text(X[i], Y[i], t[0], color='black', ha='center', va='center',
+   %                fontsize=10)
+   % 
+   % pylab.gca().set_xticks([])
+   % pylab.gca().set_yticks([])
+   % pylab.gca().set_xlim([X.min()-0.1,X.max()+0.1])
+   % pylab.gca().set_ylim([Y.min()-0.1,Y.max()+0.2])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Box model for winnings}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/04c4f31685.pdf}}    
+   \end{center}
+   Betting 10\$ on {\color{red} 5}: lose 10\$ with probability 37/38
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % initial = 100
+   % 
+   % results = []
+   % n = 10
+   % for _ in range(20000):
+   %     draws = np.random.binomial(n, 1/38.)
+   %     results.append(initial + 350 * draws - 10 * (n - draws))
+   % 
+   % pylab.hist(results, bins=10)
+   % results = np.array(results)
+   % pylab.title("average=%d, SD=%d" % (int(results.mean()), int(results.std())))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Betting on {\color{red} 5} 10 times, starting with 100\$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9c8270d0c4.pdf}}    
+   \end{center}
+   Histogram based on 20000 simulated results.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % initial = 100
+   % 
+   % results = []
+   % n = 100
+   % for _ in range(20000):
+   %     draws = np.random.binomial(n, 1/38.)
+   %     results.append(initial + 350 * draws - 10 * (n - draws))
+   % 
+   % pylab.hist(results, bins=10)
+   % results = np.array(results)
+   % pylab.title("average=%d, SD=%d" % (int(results.mean()), int(results.std())))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Betting on {\color{red} 5} 100 times, starting with 100\$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/4a4b6efb9b.pdf}}    
+   \end{center}
+   Histogram based on 20000 simulated results.
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % initial = 100
+   % 
+   % results = []
+   % n = 1000
+   % for _ in range(20000):
+   %     draws = np.random.binomial(n, 1/38.)
+   %     results.append(initial + 350 * draws - 10 * (n - draws))
+   % 
+   % pylab.hist(results, bins=10)
+   % results = np.array(results)
+   % pylab.title("average=%d, SD=%d" % (int(results.mean()), int(results.std())))
+   % 
+
+
+   \begin{frame}
+   \frametitle{Betting on {\color{red} 5} 1000 times, starting with 100\$}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/885e7e7cb2.pdf}}    
+   \end{center}
+   Histogram based on 20000 simulated results.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}

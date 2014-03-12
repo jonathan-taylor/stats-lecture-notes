@@ -24,7 +24,7 @@ from IPython.nbformat.current import reads, NotebookNode
 
 def run_notebook(nb):
     km = KernelManager()
-    km.start_kernel(extra_arguments=['--profile', 'stats'], stderr=sys.stderr)# open(os.devnull, 'w'))
+    km.start_kernel(extra_arguments=['--profile', 'stats'], stderr=open(os.devnull, 'w'))
     try:
         kc = km.client()
     except AttributeError:
@@ -36,6 +36,9 @@ def run_notebook(nb):
     shell.execute("pass")
     shell.get_msg()
     
+    shell.execute("datadir = '%s'" % os.path.abspath(os.path.join( \
+                os.path.abspath(os.path.dirname(__file__)), '..', 'data')))
+
     cells = 0
     failures = 0
     for ws in nb.worksheets:
