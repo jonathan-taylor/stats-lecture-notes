@@ -160,3 +160,5 @@ Topics
 * Penalized regression (`slides <notebooks/Penalized%20regression.slides.html>`_, `html <notebooks/Penalized%20regression.html>`_, `pdf <notebooks/Penalized%20regression.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Penalized%20regression.ipynb>`_)
 
 * Logistic (`slides <notebooks/Logistic.slides.html>`_, `html <notebooks/Logistic.html>`_, `pdf <notebooks/Logistic.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Logistic.ipynb>`_)
+
+* Poisson (`slides <notebooks/Poisson.slides.html>`_, `html <notebooks/Poisson.html>`_, `pdf <notebooks/Poisson.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Poisson.ipynb>`_)
