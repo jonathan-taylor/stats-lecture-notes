@@ -1,0 +1,960 @@
+   \documentclass[handout]{beamer}
+
+
+
+   \mode<presentation>
+   {
+     \usetheme{PaloAlto}
+   \setbeamertemplate{footline}[page number]
+
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+
+
+     \setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+     \setbeamercolor*{block title alerted}{use=alerted text,fg=alerted text.fg,bg=alerted text.fg!20!bg}
+     \setbeamercolor*{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+
+
+     \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+     \setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!50!bg}
+     \setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+     % or ...
+
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{\resizebox{!}{1.5cm}{\href{\basename{R}}{\includegraphics{image}}}}
+   }
+
+   \mode<handout>
+   {
+     \usetheme{PaloAlto}
+     \usecolortheme{default}
+     \setbeamercolor{sidebar}{bg=white, fg=black}
+     \setbeamercolor{frametitle}{bg=white, fg=black}
+     % or ...
+     \setbeamercolor{logo}{bg=white}
+     \setbeamercolor{block body}{parent=normal text,bg=white}
+     \setbeamercolor{author in sidebar}{fg=black}
+     \setbeamercolor{title in sidebar}{fg=black}
+     \setbeamercovered{transparent}
+     % or whatever (possibly just delete it)
+     \logo{}
+   }
+
+   \usepackage{epsdice}
+   \usepackage[latin1]{inputenc}
+   \usepackage{graphics}
+   \usepackage{amsmath,eepic,epic}
+
+   \newcommand{\figslide}[3]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{2.7in}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\fighslide}[4]{
+   \begin{frame}
+   \frametitle{#1}
+     \begin{center}
+     \resizebox{!}{#4}{\includegraphics{#2}}    
+     \end{center}
+   {#3}
+   \end{frame}
+   }
+
+   \newcommand{\figwref}[1]{
+   \href{#1}{\tiny \tt #1}}
+
+   \newcommand{\B}[1]{\beta_{#1}}
+   \newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+   \newcommand{\V}{\text{Var}}
+   \newcommand{\Cov}{\text{Cov}}
+   \newcommand{\Vh}{\widehat{\V}}
+   \newcommand{\s}{\sigma}
+   \newcommand{\sh}{\widehat{\sigma}}
+
+   \newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+   \newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+   \newcommand{\Ee}{\mathbb{E}}
+   \newcommand{\Pp}{\mathbb{P}}
+   \newcommand{\real}{\mathbb{R}}
+   \newcommand{\Ybar}{\overline{Y}}
+   \newcommand{\Yh}{\widehat{Y}}
+   \newcommand{\Xbar}{\overline{X}}
+   \newcommand{\Tr}{\text{Tr}}
+
+
+   \newcommand{\model}{{\cal M}}
+
+   \newcommand{\figvskip}{-0.7in}
+   \newcommand{\fighskip}{-0.3in}
+   \newcommand{\figheight}{3.5in}
+
+   \newcommand{\Rcode}[1]{{\bf \tt #1 }}
+   \newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+   \newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+   \newcommand{\RR}{{\tt R} \;}
+   \newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+   \newcommand{\dataname}[1]{\basename{data/#1}}
+   \newcommand{\Rname}[1]{\basename{R/#1}}
+
+   \newcommand{\mycolor}[1]{{\color{blue} #1}}
+   \newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+   \newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+   \newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+   \newcommand{\X}{\pmb{X}}
+   \newcommand{\Y}{\pmb{Y}}
+   \newcommand{\be}{\pmb{varepsilon}}
+   \newcommand{\logit}{\text{logit}}
+
+
+   \title{Statistics 60: Introduction to Statistical Methods}
+   \subtitle{Review of some key concepts, part I} 
+   \author{}% {Jonathan Taylor \\
+   %Department of Statistics \\
+   %Stanford University
+   %}
+
+
+   \begin{document}
+
+   \begin{frame}
+   \titlepage
+   \end{frame}
+
+   \part{Descriptive statistics}
+   \frame{\partpage}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import pylab
+   % bins = [0,20,55,75,100]
+   % count = [29,52,13,6]
+   % PL_density(count, bins)
+   % pylab.gca().set_xlim([0,100])
+   % pylab.gca().set_ylim([0,2.])
+   % pylab.gca().set_ylabel('Percent per year')
+   % pylab.gca().set_xlabel('Age (years)')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Histogram}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/2733107db9.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Numeric summaries of a data set / histogram}
+
+   \begin{block}
+   {Examples}
+   \begin{itemize}
+   \item Average:    $\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$.
+
+     \item Standard deviation: $\text{SD}(X)=\sqrt{\frac{1}{n}\sum_{i=1}^n (X_i-\bar{X})^2}.$
+
+       \item The {\em median} of a histogram is the number with half the area to
+   the left and half the area to the right.
+
+     \item The {\em first quartile} is the 25th percentile; the {\em third quartile} is the 75th percentile.
+
+     \item The {\em inter-quartile range} is the difference between
+     the third and first quartiles.
+
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{The normal curve}
+
+   \begin{block}
+   {Rules of thumb for SD}
+   \begin{itemize}
+   \item The area under the normal curve between -1 and +1 is about $68\%$.
+   \item The area under the normal curve between -2 and +2 is about $95\%$.
+   \item The area under the normal curve between -3 and +3 is about $99.7\%$.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{The normal table: A-104}
+
+   \begin{block}
+   {Sample rows of the table look like}
+   \begin{tabular}{rrr}
+   $z$ & Height & Area \\ \hline
+   0.70 & 31.23 & 51.61 \\
+   1.00 & 24.20 & 68.27 \\
+   2.00 & 5.40 & 95.45 \\
+   \end{tabular}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % pylab.bar([-0.75,0.65], [31.23,31.23], width=0.1, color='red')
+   % pylab.plot(x,y*100, linewidth=2)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Using table A-104}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/5a118e8784.pdf}}    
+   \end{center}
+   The height at  $z= \pm 0.7$ is $31.23\%$ (per standardized unit)
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import pylab, numpy as np
+   % x = np.linspace(-4,4,101)
+   % y = np.exp(-x**2/2) / np.sqrt(2*np.pi)
+   % x2 = np.linspace(-0.7,0.7,101)
+   % y2 = np.exp(-x2**2/2) / np.sqrt(2*np.pi)
+   % pylab.plot(x,y*100, linewidth=2)
+   % xf, yf = pylab.poly_between(x2, 0*x2, y2*100)
+   % pylab.fill(xf, yf, facecolor='r', hatch='\\', alpha=0.5)
+   % pylab.gca().set_xlabel('standardized units')
+   % pylab.gca().set_ylabel('% per standardized unit')
+   % #pylab.gca().set_xlim([-2,4])
+   % #pylab.gca().set_yticks([])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Using table A-104}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/92f14628eb.pdf}}    
+   \end{center}
+   The area between $z=-0.7$ and $z=0.7$ is $51.61\%$
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Measurement}
+
+   \begin{block}
+   {Measurement model}
+
+   \begin{itemize}
+   \item    $
+   \text{individual measurement} = \text{exact value} + \text{bias} + \text{chance error}
+   $
+
+
+   \item  $
+   M = \mu + B + \epsilon
+   $
+   \end{itemize}
+
+   \end{block}
+
+   \begin{block}
+     {Concepts}
+     \begin{itemize}
+     \item Treatment and control group.
+       \item Randomized controlled experiment.
+         \item Observational study.
+           \item Double blind studies.
+             \item Confounding.
+     \end{itemize}
+   \end{block}
+   \end{frame}
+
+   \part{Correlation and regression}
+   \frame{\partpage}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % 
+
+
+   \begin{frame}
+   \frametitle{Correlation \& scatterplots}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/a84b90b10a.pdf}}    
+   \end{center}
+   Correlation: a measure of {\em association}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correlation}
+
+   \begin{block}
+   {Conceptual definition}
+
+   \begin{itemize}
+   \item A numerical summary of a scatterplot, i.e. a pair of lists.
+
+   \item    If there is a strong association between two variables, then
+   knowing one helps a lot in predicting the other. But when
+   there is a weak association, information about one variable
+   does not help much in guessing the other.
+
+   \item The {\em correlation coefficient}, $r$ is a measure of the strength of this association.
+
+   \item $r=+1$ if the variables are perfectly positively associated.
+
+   \item $r=-1$ if the variables are perfectly negatively associated.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Correlation}
+
+   \begin{block}
+   {Computing $r$, the correlation coefficient}
+
+   \begin{itemize}
+   \item Given two lists, $X, Y$, convert them
+   each to standardized units. Call these new lists $Z_X, Z_Y$.
+
+   \item Make a new list $Z_{XY}$ whose entries are the products
+   of the entries of $Z_X, Z_Y$.
+   \item Then,
+   $$
+   r = \text{average}(Z_{XY}).
+   $$
+   \item Another way,
+   $$
+   r = \frac{\text{average(products $X, Y$)} - \text{average}(X) \times \text{average}(Y)}{\text{SD}(X) \times \text{SD}(Y)}.
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % pylab.title("r=%0.2f" % np.corrcoef([D,M])[0,1])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Correlation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/5b695bd691.pdf}}    
+   \end{center}
+   Correlation is symmetric
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(D, M, c='red')
+   % pylab.gca().set_ylabel("Mother's height (inches)")
+   % pylab.gca().set_xlabel("Daughter's height (inches)")
+   % pylab.title("r=%0.2f" % np.corrcoef([D,M])[0,1])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Correlation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e7bd5169f6.pdf}}    
+   \end{center}
+   Correlation is symmetric
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(D, M, c='red')
+   % pylab.gca().set_ylabel("Mother's height (inches)")
+   % pylab.gca().set_xlabel("Daughter's height (inches)")
+   % pylab.title("r=%0.2f" % np.corrcoef([D,M])[0,1])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Correlation}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/e7bd5169f6.pdf}}    
+   \end{center}
+   Correlation is not causation
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Regression line}
+   \begin{itemize}
+   \item    The best fitting regression line
+   passes through
+   the point of averages and has slope
+   $$
+   \text{slope} = r(X,Y) \times \frac{SD(Y)}{SD(X)}.
+   $$
+   \item The intercept is
+   $$
+   \text{intercept} = \bar{Y} - \text{slope} \times \bar{X}.
+   $$
+   \end{itemize}
+
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(8.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import matplotlib.mlab as ML
+   % H = ML.csv2rec('%s/pearson_lee.csv' % datadir)
+   % M = H['mother']
+   % D = H['daughter']
+   % pylab.scatter(M, D, c='red')
+   % pylab.gca().set_xlabel("Mother's height (inches)")
+   % pylab.gca().set_ylabel("Daughter's height (inches)")
+   % Dbar = D.mean(); Dsd = np.sqrt(((D - Dbar)**2).mean())
+   % Mbar = M.mean(); Msd = np.sqrt(((M - Mbar)**2).mean())
+   % r = np.corrcoef([M, D])[0,1]
+   % 
+   % xf, yf = pylab.poly_between([67.5,68.5], [50,50], [75, 75])
+   % g = (M < 68.5) * (M >= 67.5)
+   % pylab.fill(xf, yf, facecolor='blue', alpha=0.4, hatch='/', label='_nolegend_')
+   % 
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'b-', linewidth=3, label='SD line')
+   % pylab.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
+   %            [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], '-', linewidth=3, label='regression', color='black')
+   % pylab.legend(['SD line', 'regression'])
+   % 
+   % def error(a,b):
+   %     F = a*M+b
+   %     return np.sqrt(np.sum((D-F)**2))
+   % 
+   % slope_SD = D.std() / M.std()
+   % intercept_SD = D.mean() - slope_SD * M.mean()
+   % 
+   % slope_r = np.corrcoef([D,M])[0,1] * D.std() / M.std()
+   % intercept_r = D.mean() - slope_r * M.mean()
+   % 
+   % pylab.title('Error(SD line)=%0.1f, Error(regression)=%0.1f' %
+   %             (error(slope_SD, intercept_SD),
+   %             error(slope_r, intercept_r)))
+   % s = pylab.scatter([68],D[g].mean(), s=130, c='black', marker='^')
+   % 
+
+
+   \begin{frame}
+   \frametitle{Regression}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/9d92f9b490.pdf}}    
+   \end{center}
+   The regression line is closer to the mean of 68 in group.
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Working with regressions}
+   The following quantities are enough to do all
+   regression problems
+   \begin{itemize}
+   \item $\text{average}(X), \text{SD}(X)$
+   \item $\text{average}(X), \text{SD}(Y)$
+   \item $r(X,Y)$
+   \end{itemize}
+   \end{block}
+
+   \begin{block}
+   {Example}
+   It is believed that the more alcohol there is in a person's blood
+   stream, the slower is that person's reaction times.
+   An experiment with 10 subjects yields
+   \begin{itemize}
+   \item average amount of alcohol in blood $0.14\%$ with SD $0.04\%$
+   \item average reaction time 0.42 seconds, SD 0.1 seconds
+   \item correlation coefficient 0.8
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question a)}
+   \begin{description}
+   \item[Q] Predict the reaction time of a person with an amount
+   of alcohol of 0.22\%.
+   \item[A1] One way is to first compute the slope, intercept
+   $$
+   \begin{aligned}
+   \text{slope} &= \frac{0.8 \times 0.1}{0.04} = 2.0 \frac{\text{seconds}}{\%}     \\
+   \text{intercept} &= 0.42 - 2. \times 0.14 = 0.14 \, \text{seconds}
+   \end{aligned}
+   $$
+   So, the predicted time is
+   $$
+   2 \times 0.22 + 0.14 = 0.58 \, \text{seconds}
+   $$
+   \item[A2]
+   $$
+   0.42 + (0.22 - 0.14) \times 2. = 0.58 \, \text{seconds}
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question b)}
+   \begin{description}
+   \item[Q] Find the regression line for regressing
+   reaction time on alcohol level.
+   \item[A] From part A1 on previous slide:
+   the predicted reaction time as a function of alcohol level is
+   $$
+   0.14 + 2. \times \text{alcohol level in \%}
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question c)}
+   \begin{description}
+   \item[Q] Predict the reaction time of a person
+   whose alcohol level is at the 20th percentile. What percentile
+   does that correspond to in reaction time?
+   \item[A] The 20th percentile of blood alcohol is (using normal approximation)
+   $$
+   \begin{aligned}
+   \lefteqn{0.14 + 0.04 \times \text{20th percentile of normal}} \\
+   & \qquad = 0.14 + 0.04 \times (-0.84) \\
+   & \qquad = 0.11
+   \end{aligned}
+   $$
+   So, we predict a reaction time of
+   $$
+   0.14 + 2 \times 0.11 = 0.36
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Question c) continued}
+
+   This is $(0.36-0.42)/0.1=-0.6$ in standardized units, so
+   it corresponds to roughly the 30th percentile (from A-104)
+   \end{block}
+
+   \begin{block}
+   {Question d)}
+   \begin{description}
+   \item[Q]    Predict the amount of alcohol a person has in
+   her bloodstream if the reaction time is 0.37 seconds.
+   \item[A] Using the A2 form from part a), we predict
+   $$
+   0.14 + 0.8 \times \frac{0.04}{0.1} (0.37-0.42) = 0.124 \%
+   $$
+   \end{description}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Regression fallacy}
+
+   \begin{itemize}
+   \item    Note that someone in the 20th percentile of alcohol
+   level had predicted 30th percentile in reaction time.
+   \item This is a general phenomenon, Galton referred to it as
+   ``regression to mediocrity.''
+   \end{itemize}
+
+   \end{block}
+
+   \begin{block}
+   {Test-retest version of regression fallacy}
+   In a test-retest situation, usually the bottom
+   group on the first test will show some improvement,
+   and the top group will fall back.
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {\text{r.m.s.} of regression}
+   \begin{itemize}
+   \item Regression line is chosen to minimize
+   the r.m.s. of the residuals of all ines
+   $$
+   \begin{aligned}
+   \text{r.m.s.}(\text{regression $Y$ on $X$}) &= \text{r.m.s.(residuals)} \\
+   &= \sqrt{\text{average}(\text{residuals}^2)} \\
+   \end{aligned}
+   $$
+   \item This r.m.s. is always less than the SD of
+   the dependent variable ($Y$) alone
+   $$
+   \text{r.m.s.}(\text{regression $Y$ on $X$}) = \sqrt{1-r^2} \times \text{SD}(Y)
+   $$
+   \item Useful if data cloud is {\em football shaped}.
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Example: using regression r.m.s. in vertical strips}
+   \begin{itemize}
+   \item Given the following
+     $$
+     \begin{aligned}
+       \text{average(mother)} &= 62.4\\
+       \text{SD(mother)} &= 2.3 \\
+       \text{average(daughter)} &= 63.8 \\
+       \text{SD(daughter)} &= 2.6 \\
+       \text{r(mother, daughter)} &= 0.49
+     \end{aligned}
+     $$
+   Of mothers of height 66in, what percentage
+   of their daughters will have height above 67in?
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Regression}
+
+   \begin{block}
+   {Answer}
+   \begin{itemize}
+   \item Slope of regression line is
+   $$
+   \text{slope} = 0.49 \times \frac{2.6}{2.3} = 0.54
+   $$
+   \item The average height of daughters of
+   mothers of height 66in is
+   $$
+   63.8 + 0.54 \times (66 - 62.4) = 65.7
+   $$
+
+   \item The SD is taken to be r.m.s. of regression
+   $$
+   0.87 \times 2.6 = 2.3.
+   $$
+
+
+     \item 67 in corresponds to $(67-65.7)/2.3=0.6$ standardized units.
+
+     \item From A-104, the percentage is roughly 27\%.
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   \part{Probability}
+   \frame{\partpage}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Probability}
+
+   \begin{block}
+   {Multiplication rule}
+   \begin{itemize}
+   \item $$P(A \cap B) = P(B|A) \times P(A).
+    $$
+   \item Independence: two events $A$ and $B$ are independent if
+   $$P(A \cap B) = P(B) \times P(A).$$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Probability}
+
+     \begin{block}
+   {Addition rule}
+   \begin{itemize}
+   \item    If the events $E_1, E_2$ are mutually exclusive, then
+   $$
+   P(\text{$E_1$ or $E_2$}) = P(E_1) + P(E_2).
+   $$
+   \item This rule works for more than two: if $[E_1, \dots, E_n]$
+     are mutually exclusive, then
+   $$
+   P(\text{$E_1$ or $E_2$ or \dots or $E_n$}) = \sum_{i=1}^n P(E_i).
+   $$
+   \item If not mutually exclusive
+   $$
+   P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1 \cap E_2)
+   $$
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %CODE
+       % from matplotlib import rc
+   % import pylab, numpy as np, sys
+   % np.random.seed(0);import random; random.seed(0)
+   % sys.path.append('/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH')
+   % f=pylab.gcf(); f.set_size_inches(6.0,6.0)
+   % datadir ='/private/var/folders/dq/4_9bwd013ln6vvf_q110mwrh0000gn/T/tmpi2YQNH/data'
+   % import numpy as np, pylab, matplotlib
+   % 
+   % import matplotlib
+   % 
+   % rc('text', usetex=True)
+   % 
+   % cir = matplotlib.patches.Circle
+   % 
+   % a = pylab.gca()
+   % # add a circle
+   % E1 = cir((0.5,0.5), 0.4,ec="black", facecolor='yellow',lw=2, alpha=0.4)
+   % E2 = cir((0.2,0.2), 0.4,ec="black", facecolor='blue',lw=2, alpha=0.4)
+   % a.add_patch(E1)
+   % a.add_patch(E2)
+   % a.set_xticks([])
+   % a.set_yticks([])
+   % a.set_xlim([-0.3,1])
+   % a.set_ylim([-0.3,1])
+   % 
+
+
+   \begin{frame}
+   \frametitle{Non-mutually exclusive events}
+   \begin{center}
+   \resizebox{!}{2.7in}{\includegraphics{./images/inline/c1b6d1a77a.pdf}}    
+   \end{center}
+
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Probability}
+
+   \begin{block}
+   {What are the chances the sum will be greater than or equal to 7?}
+   \begin{table}
+     \centering
+   \begin{tabular}{cccccc}
+   \epsdice{1} \, \epsdice[black]{1} & \epsdice{1} \, \epsdice[black]{2} & \epsdice{1} \, \epsdice[black]{3} & \epsdice{1} \, \epsdice[black]{4} & \epsdice{1} \, \epsdice[black]{5} & {\color{red} \fbox{\epsdice{1} \, \epsdice[black]{6}}} \\
+   \epsdice{2} \, \epsdice[black]{1} & \epsdice{2} \, \epsdice[black]{2} & \epsdice{2} \, \epsdice[black]{3} & \epsdice{2} \, \epsdice[black]{4} & {\color{red} \fbox{\epsdice{2} \, \epsdice[black]{5}}} & {\color{red} \fbox{\epsdice{2} \, \epsdice[black]{6}}} \\
+   \epsdice{3} \, \epsdice[black]{1} & \epsdice{3} \, \epsdice[black]{2} & \epsdice{3} \, \epsdice[black]{3} & {\color{red} \fbox{\epsdice{3} \, \epsdice[black]{4}}} & {\color{red} \fbox{\epsdice{3} \, \epsdice[black]{5}}} & {\color{red} \fbox{\epsdice{3} \, \epsdice[black]{6}}} \\
+   \epsdice{4} \, \epsdice[black]{1} & \epsdice{4} \, \epsdice[black]{2} & {\color{red} \fbox{\epsdice{4} \, \epsdice[black]{3}}} & {\color{red} \fbox{\epsdice{4} \, \epsdice[black]{4}}} & {\color{red} \fbox{\epsdice{4} \, \epsdice[black]{5}}} & {\color{red} \fbox{\epsdice{4} \, \epsdice[black]{6}}} \\
+   \epsdice{5} \, \epsdice[black]{1} & {\color{red} \fbox{\epsdice{5} \, \epsdice[black]{2}}} & {\color{red} \fbox{\epsdice{5} \, \epsdice[black]{3}}} & {\color{red} \fbox{\epsdice{5} \, \epsdice[black]{4}}} & {\color{red} \fbox{\epsdice{5} \, \epsdice[black]{5}}} & {\color{red} \fbox{\epsdice{5} \, \epsdice[black]{6}}} \\
+   {\color{red} \fbox{\epsdice{6} \, \epsdice[black]{1}}} & {\color{red} \fbox{\epsdice{6} \, \epsdice[black]{2}}} & {\color{red} \fbox{\epsdice{6} \, \epsdice[black]{3}}} & {\color{red} \fbox{\epsdice{6} \, \epsdice[black]{4}}} & {\color{red} \fbox{\epsdice{6} \, \epsdice[black]{5}}} & {\color{red} \fbox{\epsdice{6} \, \epsdice[black]{6}}} \\
+   \end{tabular}
+   \end{table}
+   There are 21 outcomes whose sum is greater than or equal to 7. Therefore, the chances are $\frac{21}{36}=\frac{7}{12}$.
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Probability}
+
+   \begin{block}
+   {Complement of an event}
+   \begin{itemize}
+   \item Formally, the ``opposite'' rule is the rule
+   of {\em complements}.
+   \item We write the complement of an event $E$ as $E^c$
+   $$
+   P(\text{not} \, E) = P(E^c).
+   $$
+   \item The rule of {\em complements} says
+   $$
+   P(E^c) = 1 - P(E)
+   $$
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Probability}
+
+   \begin{block}
+   {Bayes' theorem}
+   \begin{itemize}
+   \item Given two events $A$ and $B$
+   $$
+   \begin{aligned}
+   P(A|B) &= \frac{P(B \, \text{and} \,  A)}{P(B)} \\
+   &= \frac{P(B|A)\times P(A)}{P(B)} \\
+   &= \frac{P(B|A) \times P(A)}{P(B|A) \times P(A) + P(B|A^c) \times P(A^c)     } \\
+   \end{aligned}
+   $$
+   \item A consequence of the multiplication rule \dots
+
+   \end{itemize}
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Binomial formula}
+
+   \begin{block}
+   {Drawing $k$ balls out of $n$, ignoring order}
+
+   The number of ways of drawing $k$ balls without replacement (ignoring order)
+   from $n$ is
+   $$
+   \binom{n}{k} = \frac{n!}{k! \times (n-k)!}
+   $$
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} \frametitle{Binomial formula}
+
+   \begin{block}
+   {Example}
+
+   \begin{description}
+   \item[Q]    When flipping a coin 10 times, how many outcomes are there
+   with 7 heads?
+
+   \item[A] We can represent this as drawing 7 out of a possible
+   10 slots for the heads, without order. There are
+   $$
+   \binom{10}{7} = \frac{10 \times 9 \times 8}{3 \times 2 \times 1} = 120 \
+   \text{outcomes}   $$
+   \end{description}
+
+   \end{block}
+
+   \begin{block}
+   {Binomial formula for computing probabilities}
+   When performing $n$ independent trials, each
+   with probability of success $p$, the probability
+   of observing exactly $k$ successes is
+   $$
+   \binom{n}{ k} { p^k} {(1-p)^ {n-k}}
+   $$
+   \end{block}
+   \end{frame}
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{frame} 
+
+   \end{frame}
+
+   \end{document}
