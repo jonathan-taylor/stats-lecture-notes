@@ -3,7 +3,7 @@ import os, glob, shutil
 def build_nbook(nbook, build_pdf=True):
     nbook_dir = os.path.abspath(os.path.split(nbook)[0])
     shutil.copy2('stats191_article.tplx', nbook_dir)
-    shutil.copy2('slides_reveal2.tpl', nbook_dir)
+    shutil.copy2('stats191_slides.tplx', nbook_dir)
     cmd = '''
 cd %s; 
 ipython nbconvert --to=slides "%s" --template=./stats191_slides.tplx;
