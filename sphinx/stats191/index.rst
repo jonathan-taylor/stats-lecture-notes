@@ -33,7 +33,7 @@ Instructor & TAs
   * `Email <https://stanfordwho.stanford.edu/auth/lookup?search=David%20Walsh>`_
   * Office hours: Th 4:00-6:00
 
-* Final exam: Following the Stanford `calendar <http://studentaffairs.stanford.edu/registrar/students/winter-exams>`_: Thursday, March 20 @ 3:30PM
+* Final exam: Following the Stanford `calendar <http://studentaffairs.stanford.edu/registrar/students/winter-exams>`_: Thursday, March 20 @ 3:30PM-6:30 PM, Mudd Chemistry Building LEC.
 
 *******************
 Schedule & Location
@@ -102,13 +102,13 @@ Assignments
 
 * Assignment 1 (`html <notebooks/Assignment1.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment1.ipynb>`_). Solution (`html <notebooks/Solution1.html>`_).
 
-* Assignment 2 (`html <notebooks/Assignment2.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment2.ipynb>`_) Solution (`html <notebooks/Solution2.html>`_).
+* Assignment 2 (`html <notebooks/Assignment2.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment2.ipynb>`_). Solution (`html <notebooks/Solution2.html>`_).
 
-* Assignment 3 (`html <notebooks/Assignment3.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment3.ipynb>`_) Solution (`html <notebooks/Solution3.html>`_).
+* Assignment 3 (`html <notebooks/Assignment3.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment3.ipynb>`_). Solution (`html <notebooks/Solution3.html>`_).
 
-* Assignment 4 (`html <notebooks/Assignment4.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment4.ipynb>`_) 
+* Assignment 4 (`html <notebooks/Assignment4.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment4.ipynb>`_).  Solution (`html <notebooks/Solution4.html>`_).
 
-* Assignment 5 (`html <notebooks/Assignment5.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment5.ipynb>`_) 
+* Assignment 5 (`html <notebooks/Assignment5.html>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Assignment5.ipynb>`_). Solution (`html <notebooks/Solution5.html>`_).
 
 
 Project
@@ -120,7 +120,11 @@ what is needed for your project. It is due March 14, 2014.
 Practice exam
 -------------
 
-You can find a practice exam `here <practice_exam.pdf>`_. 
+You can find a practice exam `here <practice_exam.pdf>`_. Here
+are `practice solutions <practice_soln.pdf>`_.
+
+Here is a 2nd `practice exam <practice_exam2.pdf>`_
+with `solutions <practice_soln2.pdf>`_.
 
 .. ******
 .. Slides
@@ -162,3 +166,5 @@ Topics
 * Logistic (`slides <notebooks/Logistic.slides.html>`_, `html <notebooks/Logistic.html>`_, `pdf <notebooks/Logistic.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Logistic.ipynb>`_)
 
 * Poisson (`slides <notebooks/Poisson.slides.html>`_, `html <notebooks/Poisson.html>`_, `pdf <notebooks/Poisson.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Poisson.ipynb>`_)
+
+* Final Review (`slides <notebooks/Final%20Review.slides.html>`_, `html <notebooks/Final%20Review.html>`_, `pdf <notebooks/Final%20Review.pdf>`_, `ipynb <http://nbviewer.ipython.org/url/www.stanford.edu/class/stats191/notebooks/Final%20Review.ipynb>`_)
