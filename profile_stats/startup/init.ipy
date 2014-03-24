@@ -1,3 +1,5 @@
 import numpy as np
 %pylab inline
 %load_ext rmagic
+
+from ipy_table import make_table, apply_theme
