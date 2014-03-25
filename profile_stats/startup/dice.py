@@ -203,6 +203,10 @@ class dice_example(object):
         self.nsuccess = 0
         self.outcome = None
 
+    def reset(self):
+        self.outcome = None
+        self.ntrial = 0
+
     def trial(self):
         """
         Run a trial, incrementint success counter and updating
@@ -221,5 +225,8 @@ class dice_example(object):
                           success=self.success,
                           alpha=self.alpha)
         if self.ntrial > 0:
-            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.nsuccess, self.ntrial, self.nsuccess*100./self.ntrial))
+            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.nsuccess, self.ntrial, self.nsuccess*100./self.ntrial)
         return base
+
+sum_to_seven = dice_example()
+sum_geq_eight = dice_example(testfn = lambda i, j : i+j >= 8)
