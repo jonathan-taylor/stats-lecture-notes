@@ -1,4 +1,5 @@
-import urllib, itertools
+import itertools
+from pkg_resources import resource_stream
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,8 +12,8 @@ _dice_arrays = {}
 
 def die(digit, size=(150,150)):
     """
-    Download die image, if needed, from website and return
-    data as an RGBA array, resized to `size`.
+    Load in die from GIF file, returning
+    as an RGBA array, resized to `size`.
 
     Parameters
     ----------
@@ -31,8 +32,7 @@ def die(digit, size=(150,150)):
 
     """
     if digit not in _dice_arrays:
-        tmpfile = urllib.urlretrieve('http://statweb.stanford.edu/~jtaylo/epsdice/die%d.gif' % digit)
-        img = PIL.Image.open(tmpfile[0])
+        img = PIL.Image.open(resource_stream('stats_lectures', 'data/die%d.gif' % digit))
         _dice_arrays[digit] = img.crop((156,133,440,416))
     return np.array(_dice_arrays[digit].resize(size).convert('RGBA'))
 

@@ -3,3 +3,8 @@ import numpy as np
 %load_ext rmagic
 
 from ipy_table import make_table, apply_theme
+
+from __future__ import print_function
+from pkg_resources import resource_stream
+
+from stats_lectures.api import *
