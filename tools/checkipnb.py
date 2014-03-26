@@ -24,7 +24,7 @@ from IPython.nbformat.current import reads, NotebookNode
 
 def run_notebook(nb):
     km = KernelManager()
-    km.start_kernel(extra_arguments=['--profile', 'stats'], stderr=open(os.devnull, 'w'))
+    km.start_kernel(extra_arguments=['--profile', 'stats'])#, stderr=open(os.devnull, 'w'))
     try:
         kc = km.client()
     except AttributeError:
@@ -47,7 +47,9 @@ def run_notebook(nb):
                 continue
             shell.execute(cell.input)
             # wait for finish, maximum 20s
-            reply = shell.get_msg(timeout=20)['content']
+            msg = shell.get_msg(timeout=20)
+
+            reply = msg['content']
             if reply['status'] == 'error':
                 failures += 1
                 print "\nFAILURE:"
@@ -57,8 +59,8 @@ def run_notebook(nb):
                 print '\n'.join(reply['traceback'])
             cells += 1
             sys.stdout.write('.')
+            stop
 
-    print
     print "ran notebook %s" % nb.metadata.name
     print "    ran %3i cells" % cells
     if failures:

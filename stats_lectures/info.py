@@ -68,4 +68,5 @@ VERSION             = __version__
 STATUS              = 'alpha'
 PROVIDES            = ["stats_lectures"]
 REQUIRES            = ["numpy (>=%s)" % NUMPY_MIN_VERSION,
-                       "scipy (>=%s)" % SCIPY_MIN_VERSION]
+                       "scipy (>=%s)" % SCIPY_MIN_VERSION,
+                       'ystockquote']

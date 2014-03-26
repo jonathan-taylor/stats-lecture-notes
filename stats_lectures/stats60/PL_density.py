@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 import numpy as np, scipy.stats
 ndist = scipy.stats.norm
+import scipy.interpolate
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.path as path

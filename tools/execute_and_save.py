@@ -23,43 +23,35 @@ from IPython.nbformat.current import reads, writes, NotebookNode
 
 def run_cell(kc, cell):
     shell = kc.shell_channel
+    iopub = kc.iopub_channel
+    outputs = []
 
     shell.execute(cell.input)
     # wait for finish, maximum 20s
-    shell.get_msg(timeout=5)
-    outs = []
+    try:
+        shell.get_msg(timeout=10)
+    except Empty:
+        return outputs
 
     failures = 0
+    messages = 0
     while True:
         try:
-            msg = shell.get_msg(timeout=5)['content']
+            reply = iopub.get_msg(timeout=0.2)
+            messages += 1
         except Empty:
             break
-        msg_type = msg['msg_type']
-
-        if msg['status'] == 'error':
-            failures += 1
-            print "\nFAILURE:"
-            print cell.input
-            print '-----'
-            print "raised:"
-            print '\n'.join(msg['traceback'])
-        else:
-            print 'here'
+        content = reply['content']
+        msg_type = reply['msg_type']
 
         if msg_type in ('status', 'pyin'):
-            print 'pyin'
             continue
         elif msg_type == 'clear_output':
-            print 'clear'
-            outs = []
+            outputs = []
             continue
             
-        content = msg['content']
-        # print msg_type, content
         out = NotebookNode(output_type=msg_type)
         
-        print msg
         if msg_type == 'stream':
             out.stream = content['name']
             out.text = content['data']
@@ -78,13 +70,13 @@ def run_cell(kc, cell):
         else:
             print "unhandled iopub msg:", msg_type
         
-        outs.append(out)
-    return outs
+        outputs.append(out)
+    return outputs
     
 
 def execute_notebook(nb):
     km = KernelManager()
-    km.start_kernel(extra_arguments=['--pylab=inline'], stderr=open(os.devnull, 'w'))
+    km.start_kernel(extra_arguments=['--pylab=inline', '--profile=stats'], stderr=open(os.devnull, 'w'))
     try:
         kc = km.client()
     except AttributeError:
@@ -116,7 +108,6 @@ def execute_notebook(nb):
             
             sys.stdout.write('.')
             cell.outputs = outs
-            print cell.outputs
             prompt_number += 1
     km.shutdown_kernel()
     del km
