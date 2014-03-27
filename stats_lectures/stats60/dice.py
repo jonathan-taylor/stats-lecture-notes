@@ -225,7 +225,7 @@ class dice_example(example):
                           success=self.success,
                           alpha=self.alpha)
         if self.ntrial > 0:
-            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.nsuccess, self.ntrial, self.mean)
+            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.total, self.ntrial, 100*self.mean)
         return base
 
 sum_to_seven = dice_example()
