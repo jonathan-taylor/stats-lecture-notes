@@ -90,6 +90,7 @@ class monty_hall_example(example):
         self.numeric_outcome = self.final == self.car
 
         self.total += self.numeric_outcome
+        self.total2 += self.numeric_outcome**2
         self.ntrial += 1
 
         if numeric:

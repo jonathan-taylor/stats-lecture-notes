@@ -198,6 +198,7 @@ class roulette_example(example):
         else:
             self.numeric_outcome = 0
         self.total += self.numeric_outcome
+        self.total2 += self.numeric_outcome**2
         self.ntrial += 1
         if not numeric:
             return self.outcome
