@@ -186,8 +186,9 @@ def dice_trial(testfn = lambda i,j : (i+j)==7,
             colors[(iout,jout)] = failure
 
     return dice_table(colors, alpha=alpha)
+from .examples import example
 
-class dice_example(object):
+class dice_example(example):
 
     def __init__(self, testfn = lambda i,j : (i+j)==7,
                  color="#0000aa", alpha=0.5,
@@ -200,22 +201,21 @@ class dice_example(object):
         self.testfn = testfn
 
         self.ntrial = 0
-        self.nsuccess = 0
+        self.total = 0
         self.outcome = None
 
-    def reset(self):
-        self.outcome = None
-        self.ntrial = 0
-
-    def trial(self):
+    def trial(self, numeric=False):
         """
         Run a trial, incrementint success counter and updating
         html output
         """
         self.outcome = tuple(np.random.random_integers(1,6,size=(2,)))
-        self.nsuccess += self.testfn(*self.outcome)
+        self.numeric_outcome = self.testfn(*self.outcome)
+        self.total += self.numeric_outcome
         self.ntrial += 1
-        return self
+        if not numeric:
+            return self.outcome
+        return self.numeric_outcome
 
     def _repr_html_(self):
         base = dice_trial(testfn=self.testfn,
@@ -225,7 +225,7 @@ class dice_example(object):
                           success=self.success,
                           alpha=self.alpha)
         if self.ntrial > 0:
-            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.nsuccess, self.ntrial, self.nsuccess*100./self.ntrial)
+            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.nsuccess, self.ntrial, self.mean)
         return base
 
 sum_to_seven = dice_example()
