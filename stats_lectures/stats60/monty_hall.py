@@ -1,10 +1,11 @@
 from base64 import encodestring
 from pkg_resources import resource_stream
+from itertools import product
 
 import numpy as np
 from IPython.core.display import HTML
 
-from examples import example
+from .examples import example
 
 height, width = 120, 120
 host_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
@@ -73,6 +74,28 @@ class monty_hall_example(example):
         self.rule = rule
         self.reset()
 
+    @property
+    def sample_space(self):
+        return [(prize, student, host, 
+                 self.rule(student-1, host-1)+1) 
+                for prize, student, host in product(range(1,4),
+                                                    range(1,4),
+                                                    range(1,4))
+                if host not in [prize, student]]
+
+    @property
+    def mass_function(self):
+        def prob(prize, student, host):
+            if prize == student:
+                return 1/18.
+            else:
+                return 1/9.
+
+        ss = self.sample_space
+        probs = np.array([prob(*v[:3]) for v in ss])
+        probs /= probs.sum()
+        return dict([(v, p) for v, p in zip(ss, probs)])
+
     def draw_sample(self):
         self.car, self.student = np.random.random_integers(0,2,size=(2,))
         if self.car == self.student:
@@ -119,11 +142,21 @@ class conditional_nomatch(monty_hall_example):
     We draw samples until initial student guess does not match the car.
     """
 
+    @property
+    def sample_space(self):
+        return [(prize, student, host, 
+                 self.rule(student-1, host-1)+1) 
+                for prize, student, host in product(range(1,4),
+                                                    range(1,4),
+                                                    range(1,4))
+                if host not in [prize, student] and prize != student]
+
     def draw_sample(self):
         while True:
             monty_hall_example.draw_sample(self)
             if self.student != self.car:
                 break
+
 
 class conditional_match(monty_hall_example):
     
@@ -137,6 +170,14 @@ class conditional_match(monty_hall_example):
             if self.student != self.car:
                 break
 
+    @property
+    def sample_space(self):
+        return [(prize, student, host, 
+                 self.rule(student-1, host-1)+1) 
+                for prize, student, host in product(range(1,4),
+                                                    range(1,4),
+                                                    range(1,4))
+                if host not in [prize, student] and prize == student]
 
 no_switch = monty_hall_example()
 
@@ -144,7 +185,7 @@ def switch_rule(student, host):
     return list(set(range(3)).difference([student, host]))[0]
 switch = monty_hall_example(rule=switch_rule)
 
-def conditional_stratgy(do_switch, do_match):
+def conditional_scenario(do_switch, do_match):
     if do_match:
         if do_switch:
             return conditional_match(rule=switch_rule)
@@ -154,3 +195,9 @@ def conditional_stratgy(do_switch, do_match):
             return conditional_nomatch(rule=switch_rule)
         return conditional_nomatch()
         
+examples = {'switch':switch
+            'noswitch':no_switch,
+            'switch_match':conditional_scenario(True, True),
+            'switch_nomatch'conditional_scenario(True, False),
+            'noswitch_nomatch'conditional_scenario(False, False),
+            'noswitch_match'conditional_scenario(False, True)}

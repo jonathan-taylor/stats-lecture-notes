@@ -204,6 +204,15 @@ class dice_example(example):
         self.total = 0
         self.outcome = None
 
+    @property
+    def sample_space(self):
+        return [(i,j) for i, j in itertools.product(range(1,7), range(1,7))]
+
+    @property
+    def mass_function(self):
+        ss = self.sample_space
+        return dict([(v, 1./len(ss)) for v in ss])
+
     def trial(self, numeric=False):
         """
         Run a trial, incrementint success counter and updating
@@ -231,3 +240,7 @@ class dice_example(example):
 
 sum_to_seven = dice_example()
 sum_geq_eight = dice_example(testfn = lambda i, j : i+j >= 8)
+
+examples = {'sum to seven':sum_to_seven,
+            'sum greater than seven':sum_geq_eight}
+
