@@ -212,6 +212,7 @@ class dice_example(example):
         self.outcome = tuple(np.random.random_integers(1,6,size=(2,)))
         self.numeric_outcome = self.testfn(*self.outcome)
         self.total += self.numeric_outcome
+        self.total2 += self.numeric_outcome**2
         self.ntrial += 1
         if not numeric:
             return self.outcome
