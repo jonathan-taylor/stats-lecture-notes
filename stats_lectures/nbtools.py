@@ -71,7 +71,8 @@ def run_cell(kc, cell, collect_outputs=True):
 
 def run_notebook(nb, cell_filter = lambda cell: cell,
                  extra_arguments=['--pylab=inline', '--profile=stats'],
-                 modify_outputs=True):
+                 modify_outputs=True,
+                 run_cells=True):
     """
     Take a notebook and send all its cells to a kernel.
     Takes an optional filter to modify the results of the 
@@ -105,20 +106,19 @@ def run_notebook(nb, cell_filter = lambda cell: cell,
                 new_cells.append(cell)
                 continue
 
-            outs = run_cell(kc, cell, 
-                            collect_outputs=modify_outputs)
-            try:
-                outs = run_cell(kc, cell, 
-                                collect_outputs=modify_outputs)
-            except Exception as e:
-                print "failed to run cell:", repr(e)
-                print cell.input
-                errors += 1
-                continue
+            if run_cells:
+                try:
+                    outs = run_cell(kc, cell, 
+                                    collect_outputs=modify_outputs)
+                except Exception as e:
+                    print "failed to run cell:", repr(e)
+                    print cell.input
+                    errors += 1
+                    continue
 
-            sys.stdout.write('.')
-            if modify_outputs:
-                cell.outputs = outs
+                sys.stdout.write('.')
+                if modify_outputs:
+                    cell.outputs = outs
             new_cell = cell_filter(cell)
             if new_cell is not None:
                 new_cells.append(new_cell)
@@ -135,12 +135,14 @@ def strip_outputs(nb,
     """
     def _strip(cell):
         cell.outputs = []
+        return cell
     return run_notebook(nb, cell_filter=_strip,
                         extra_arguments=extra_arguments,
-                        modify_outputs=False)
+                        modify_outputs=False,
+                        run_cells=False)
 
 def strip_skipped_cells(nb,
-                  extra_arguments=['--pylab=inline', '--profile=stats']): 
+                        extra_arguments=['--pylab=inline', '--profile=stats']): 
     """
     Take a notebook, run each cell and strip all of its outputs
     """
@@ -155,7 +157,7 @@ def strip_skipped_cells(nb,
 
     return run_notebook(nb, cell_filter=_strip_skip,
                         extra_arguments=extra_arguments,
-                        modify_outputs=False)
+                        modify_outputs=True)
 
 def load(ipynb, format='json'):
     """
