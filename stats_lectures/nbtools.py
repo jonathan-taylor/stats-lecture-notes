@@ -3,6 +3,7 @@ Some functions used in publishing notebooks
 '''
 
 import os, sys
+from glob import glob
 
 from Queue import Empty
 
@@ -123,13 +124,15 @@ def run_notebook(nb, cell_filter = lambda cell: cell,
             if new_cell is not None:
                 new_cells.append(new_cell)
             prompt_number += 1
+        sys.stdout.write('\n')
         ws.cells = new_cells
     km.shutdown_kernel()
     del km
     return nb
 
 def strip_outputs(nb,
-                  extra_arguments=['--pylab=inline', '--profile=stats']): 
+                  extra_arguments=['--pylab=inline', '--profile=stats'],
+                  run_cells=False): 
     """
     Take a notebook, run each cell and strip all of its outputs
     """
@@ -139,7 +142,7 @@ def strip_outputs(nb,
     return run_notebook(nb, cell_filter=_strip,
                         extra_arguments=extra_arguments,
                         modify_outputs=False,
-                        run_cells=False)
+                        run_cells=run_cells)
 
 def strip_skipped_cells(nb,
                         extra_arguments=['--pylab=inline', '--profile=stats']): 
@@ -166,3 +169,19 @@ def load(ipynb, format='json'):
     with open(ipynb, 'r') as f:
         nb = reads(f.read(), 'json')
     return nb
+
+def make_links(dirname, label=None):
+    """
+    Find all notebooks in a directory, return a list
+    of their names and a markdown string to create relative links to them
+    """
+    notebooks = glob(os.path.join(dirname, '*ipynb'))
+    label = label or dirname
+
+    markdown = ['', '### %s ' % label, '']
+    for ipynb in notebooks:
+        markdown.append('- %s [html](%s),[slides](%s)' %
+                        (os.path.splitext(os.path.split(ipynb)[1])[0], 
+                         ipynb.replace('.ipynb', '.html'),
+                         ipynb.replace('.ipynb', '.slides.html')))
+    return notebooks, '\n'.join(markdown)
