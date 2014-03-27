@@ -1,18 +1,12 @@
 import os, glob, shutil, filecmp
+from stats_lectures.nbtools import strip_skipped_cells, reads, writes
 
-def build_nbook(nbook, strip=True):
+def build_nbook(nbook):
     nbook_dir = os.path.abspath(os.path.split(nbook)[0])
     shutil.copy2('stats60_article.tplx', nbook_dir)
     shutil.copy2('stats60_slides.tplx', nbook_dir)
     shutil.copy2('stats60_html.tplx', nbook_dir)
-    if strip:
-        cmd = '''
-    python ../../tools/strip_skip.py "%s"
-        ''' % os.path.abspath(nbook)
-    else:
-        cmd = ''
-    nbook = nbook.replace(".ipynb", "_stripped.ipynb")
-    cmd += '''
+    cmd = '''
     cd %s; 
     ipython nbconvert --to=slides "%s" --template=./stats60_slides.tplx;
     ipython nbconvert --to=html "%s" --template=./stats60_html.tplx;
@@ -23,7 +17,7 @@ def build_nbook(nbook, strip=True):
             os.path.abspath(nbook))
     os.system(cmd)
 
-def make_web(clean=True, force=False, strip=True):
+def make_web(clean=True, force=False):
 
     if clean:
         os.system('make clean;')
@@ -44,7 +38,12 @@ def make_web(clean=True, force=False, strip=True):
             diff = True
         if diff:
             shutil.copy(obook, nbook) 
-            build_nbook(nbook, strip=strip)
+            with open(nbook, 'r') as f:
+                nb = reads(f.read(), 'json')
+            stripped_nb = strip_skipped_cells(nb)
+            with open(nbook.replace('.ipynb', '_stripped.ipynb'), 'w') as f:
+                f.write(writes(nb, 'json'))
+            build_nbook(nbook.replace('.ipynb', '_stripped.ipynb'))
 
     os.system('''
     cp -r notebooks/*stripped* www/notebooks; 
@@ -54,6 +53,8 @@ def make_web(clean=True, force=False, strip=True):
 
     for f in glob.glob('www/notebooks/*stripped.*'):
         os.rename(f, f.replace('_stripped', ''))
+    for f in glob.glob('notebooks/*ipynb'):
+        shutil.copy(f, 'www/' + f)
 
 def deploy():
     os.system("""
