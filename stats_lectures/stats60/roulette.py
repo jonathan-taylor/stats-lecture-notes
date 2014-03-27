@@ -6,6 +6,8 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML, display
 
+from .examples import example
+
 _colors = {}
 for i in range(1,37):
     if i % 2 == 0:
@@ -167,7 +169,7 @@ def roulette_trial(testfn = lambda i : i % 2 == 1, # odd by default
 
     return roulette_table(places)
 
-class roulette_example(object):
+class roulette_example(example):
 
     def __init__(self, testfn = lambda i : i % 2 == 1,
                  betcolor="#0000aa", alpha=0.25):
@@ -176,14 +178,11 @@ class roulette_example(object):
         self.testfn = testfn
 
         self.ntrial = 0
-        self.nsuccess = 0
+        self.total = 0
         self.outcome = None
+        self.numeric_outcome = None
 
-    def reset(self):
-        self.outcome = None
-        self.ntrial = 0
-
-    def trial(self):
+    def trial(self, numeric=False):
         """
         Run a trial, incrementint success counter and updating
         html output
@@ -195,9 +194,14 @@ class roulette_example(object):
             self.outcome = '00'
                              
         if self.outcome not in ['0', '00']:
-            self.nsuccess += self.testfn(self.outcome)
+            self.numeric_outcome = self.testfn(self.outcome)
+        else:
+            self.numeric_outcome = 0
+        self.total += self.numeric_outcome
         self.ntrial += 1
-        return self
+        if not numeric:
+            return self.outcome
+        return self.numeric_outcome
 
     def _repr_html_(self):
         base = roulette_trial(testfn=self.testfn,
@@ -212,7 +216,7 @@ odd_numbers = roulette_example()
 middle_third = roulette_example(testfn = lambda i : (i >= 13) * (i <= 24))
 special_bet = roulette_example(testfn = lambda i: i in [2,24,29])
 
-class roulette_geometric(object):
+class roulette_geometric(example):
 
     def __init__(self, testfn = lambda i : i % 2 == 1,
                  betcolor="#0000aa", alpha=0.25):
@@ -223,7 +227,7 @@ class roulette_geometric(object):
         self.ntrial = 0
         self.outcome = None
 
-    def trial(self):
+    def trial(self, numeric=True):
         """
         Run a trial, incrementint success counter and updating
         html output
@@ -242,7 +246,7 @@ class roulette_geometric(object):
             self.ntrial += 1
             if nsuccess >= 1:
                 break
-        return self
+        return self.outcome
 
     def _repr_html_(self):
         base = roulette_trial(testfn=self.testfn,
