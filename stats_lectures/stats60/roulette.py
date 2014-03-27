@@ -182,6 +182,15 @@ class roulette_example(example):
         self.outcome = None
         self.numeric_outcome = None
 
+    @property
+    def sample_space(self):
+        return range(1,37) + ['0', '00']
+
+    @property
+    def mass_function(self):
+        ss = self.sample_space
+        return dict([(v, 1./len(ss)) for v in ss])
+
     def trial(self, numeric=False):
         """
         Run a trial, incrementint success counter and updating
@@ -218,6 +227,8 @@ middle_third = roulette_example(testfn = lambda i : (i >= 13) * (i <= 24))
 special_bet = roulette_example(testfn = lambda i: i in [2,24,29])
 
 class roulette_geometric(example):
+
+    ##TODO make this fit the API
 
     def __init__(self, testfn = lambda i : i % 2 == 1,
                  betcolor="#0000aa", alpha=0.25):
@@ -260,3 +271,9 @@ class roulette_geometric(example):
 
 odd_waiting = roulette_geometric()
 special_bet_waiting = roulette_geometric(testfn=special_bet.testfn)
+
+examples = {'odd numbers':odd_numbers, 
+            'special_bet':special_bet,
+            'middle third':middle_third,
+            'time until odd':odd_waiting,
+            'time until special':special_bet_waiting}

@@ -3,6 +3,7 @@ import numpy as np
 
 class example(object):
 
+
     def __init__(self):
         raise NotImplementedError
 
@@ -47,6 +48,18 @@ class example(object):
     @property
     def mean(self):
         return self.total / self.ntrial
+
+    @property
+    def sample_space(self):
+        return []
+
+    @property
+    def numeric_sample_space(self):
+        return []
+
+    @property
+    def mass_function(self):
+        return {}
 
     @property
     def SD(self):
