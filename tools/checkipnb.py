@@ -59,7 +59,6 @@ def run_notebook(nb):
                 print '\n'.join(reply['traceback'])
             cells += 1
             sys.stdout.write('.')
-            stop
 
     print "ran notebook %s" % nb.metadata.name
     print "    ran %3i cells" % cells
