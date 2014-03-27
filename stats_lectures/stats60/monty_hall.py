@@ -56,7 +56,7 @@ def monty_hall_table(car_pos, student_pos, host_pos, final_pos=None):
         final_row = ''
     table = '\n'.join(['<table>',
                        make_row('Prize', car_html, car_pos),
-                       make_row('Student', student_html, student_pos),
+                       make_row('Contestant', student_html, student_pos),
                        make_row('Host', host_html, host_pos),
                        final_row,
                        '</table>'])
