@@ -88,11 +88,11 @@ def PL_density(mass, binpoints, facecolor='red',
 
    return ax
 
-def flat_density(data_sample, bins=10, facecolor='#820000',
-                 alpha=0.8, edgecolor='black', 
-                 ax=None,
-                 regions=(),
-                 **opts):
+def sample_density(data_sample, bins=10, facecolor='#820000',
+            alpha=0.8, edgecolor='black', 
+            ax=None,
+            regions=(),
+            **opts):
    """
    Form a density from observing masss in
    specific bins. This is different from 
@@ -132,6 +132,19 @@ def flat_density(data_sample, bins=10, facecolor='#820000',
        `pyplot.fill_between`. The space is filled between
        0 and the density estimate.
 
+   Returns
+   -------
+
+   ax : `matplotlib.axes.Axes`
+
+   density : callable
+      A function to evaluate the piecewise constant density.
+      Takes a single float argument
+
+   area : callable
+      A function to evaluate the area under piecewise constant density
+      over an interval [a, b]. Takes two float arguments.
+
    """
 
    if ax is None:
@@ -153,11 +166,21 @@ def flat_density(data_sample, bins=10, facecolor='#820000',
                                         bounds_error=False,
                                         fill_value=0)
 
+   diff = density.x[1:] - density.x[:-1]
+   diff = diff[1:]
+   P = diff * density.y[1:-1]
+   X = [-10**6] + list(density.x[1:]) + [10**6]
+   Y = [0,0] + list(np.cumsum(P)) + [1.]
+   CDF = scipy.interpolate.interp1d(X, Y, kind='linear',
+                                     bounds_error=False)
+
+   def area_function(a, b):
+      return CDF(b) - CDF(a)
 
    for args, opts in regions:
       interval = np.linspace(*args)
       ax.fill_between(interval, 0*interval, density(interval), **opts)
-   return ax, density
+   return ax, density, area_function
 
 def stylized_density(sample, ax=None, regions=[],
                      alpha=0.7, mult=None):
