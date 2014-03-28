@@ -73,7 +73,8 @@ class monty_hall_example(example):
         self.draw_sample()
         self.rule = rule
         self.reset()
-        self.true_mean = np.sum([v for k, v in self.mass_function if k[0] == k[3]])
+        self.true_mean = np.sum([v for k, v in self.mass_function.items()
+                                 if k[0] == k[3]])
 
     @property
     def sample_space(self):
@@ -134,8 +135,12 @@ class monty_hall_example(example):
                                     self.final)
 
         if self.ntrial > 0:
-            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.total, self.ntrial, 100*self.mean)
+            base += self.html_summary
         return base
+
+    @property
+    def html_summary(self):
+        return '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.total, self.ntrial, 100*self.mean)
 
 class conditional_nomatch(monty_hall_example):
     
@@ -196,9 +201,9 @@ def conditional_scenario(do_switch, do_match):
             return conditional_nomatch(rule=switch_rule)
         return conditional_nomatch()
         
-examples = {'switch':switch
+examples = {'switch':switch,
             'noswitch':no_switch,
             'switch_match':conditional_scenario(True, True),
-            'switch_nomatch'conditional_scenario(True, False),
-            'noswitch_nomatch'conditional_scenario(False, False),
-            'noswitch_match'conditional_scenario(False, True)}
+            'switch_nomatch':conditional_scenario(True, False),
+            'noswitch_nomatch':conditional_scenario(False, False),
+            'noswitch_match':conditional_scenario(False, True)}

@@ -8,6 +8,8 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML
 
+from .examples import bernoulli
+
 _dice_arrays = {}
 
 def die(digit, size=(150,150)):
@@ -144,19 +146,27 @@ def dice_table(colors={}, alpha=0.5):
         for j in range(1,7):
             color = colors.get((i,j), None)
             if color:
-                if (j, i, color, alpha) not in _dice_cache:
-                    _dice_cache[(j,i,color,alpha)] = dice_html((j,i),
+                if (i, j, color, alpha) not in _dice_cache:
+                    _dice_cache[(i,j,color,alpha)] = dice_html((i,j),
                                                               color_alpha=(color, 0.5))
-                dice_row += '<td>' + _dice_cache[(j,i,color,alpha)] + '</td>'
+                dice_row += '<td>' + _dice_cache[(i,j,color,alpha)] + '</td>'
             else:
-                if (j, i) not in _dice_cache:
-                    _dice_cache[(j,i)] = dice_html((j,i))
-                dice_row += '<td>' + _dice_cache[(j,i)] + '</td>'
+                if (i, j) not in _dice_cache:
+                    _dice_cache[(i,j)] = dice_html((i,j))
+                dice_row += '<td>' + _dice_cache[(i,j)] + '</td>'
         dice_row += '</tr>'
         dice_str += dice_row + '\n'
     return dice_str + '</table>\n'
 
-def dice_trial(testfn = lambda i,j : (i+j)==7,
+def sum_to_seven_test(outcome):
+    i, j = outcome
+    return i + j == 7
+
+def sum_geq_eight_test(outcome):
+    i, j = outcome
+    return i + j >= 8
+
+def dice_trial(testfn = sum_to_seven_test,
                outcome=None, color="#0000aa", alpha=0.5,
                success='#00aa00',
                failure='#aa0000'):
@@ -175,7 +185,7 @@ def dice_trial(testfn = lambda i,j : (i+j)==7,
     """
     colors = {}
     for i, j in itertools.product(range(1,7), range(1,7)):
-        if testfn(i,j):
+        if testfn((i,j)):
             colors[(i,j)] = color
 
     if outcome is not None:
@@ -186,35 +196,27 @@ def dice_trial(testfn = lambda i,j : (i+j)==7,
             colors[(iout,jout)] = failure
 
     return dice_table(colors, alpha=alpha)
-from .examples import example
 
-class dice_example(example):
+class dice_example(bernoulli):
 
     desc = 'An example consisting of rolling two dice.'
 
-    def __init__(self, testfn = lambda i,j : (i+j)==7,
+    def __init__(self, testfn = sum_to_seven_test,
                  color="#0000aa", alpha=0.5,
                  success='#00aa00',
                  failure='#aa0000'):
+
+        bernoulli.__init__(self, testfn)
+
+        # all related to _repr_html_ output
         self.success = success
         self.failure = failure
         self.color = color
         self.alpha = alpha
-        self.testfn = testfn
-
-        self.ntrial = 0
-        self.total = 0
-        self.outcome = None
-        self.true_mean = np.mean([testfn(i,j) for i, j in self.sample_space])
 
     @property
     def sample_space(self):
         return [(i,j) for i, j in itertools.product(range(1,7), range(1,7))]
-
-    @property
-    def mass_function(self):
-        ss = self.sample_space
-        return dict([(v, 1./len(ss)) for v in ss])
 
     def trial(self, numeric=False):
         """
@@ -222,7 +224,7 @@ class dice_example(example):
         html output
         """
         self.outcome = tuple(np.random.random_integers(1,6,size=(2,)))
-        self.numeric_outcome = self.testfn(*self.outcome)
+        self.numeric_outcome = self.testfn(self.outcome)
         self.total += self.numeric_outcome
         self.total2 += self.numeric_outcome**2
         self.ntrial += 1
@@ -238,11 +240,11 @@ class dice_example(example):
                           success=self.success,
                           alpha=self.alpha)
         if self.ntrial > 0:
-            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.total, self.ntrial, 100*self.mean)
+            base += self.html_summary
         return base
 
 sum_to_seven = dice_example()
-sum_geq_eight = dice_example(testfn = lambda i, j : i+j >= 8)
+sum_geq_eight = dice_example(testfn = sum_geq_eight_test)
 
 examples = {'sum to seven':sum_to_seven,
             'sum greater than seven':sum_geq_eight}
