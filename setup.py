@@ -115,7 +115,7 @@ def main(**extra_args):
                           'stats_lectures.stats60',
                           ],
           ext_modules = EXTS,
-          package_data = {'stats_lectures':['data/*']},
+          package_data = {'stats_lectures':['data/*', 'cards/*']},
           data_files=[],
           scripts= [],
           cmdclass = cmdclass,

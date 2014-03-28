@@ -6,7 +6,7 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML, display, Latex
 
-from .examples import example
+from .examples import bernoulli, geometric
 
 _colors = {}
 for i in range(1,37):
@@ -128,7 +128,10 @@ def roulette_table(places=empty_table):
         roulette_str += roulette_row + '\n'
     return roulette_str + '</table>\n'
 
-def roulette_trial(testfn = lambda i : i % 2 == 1, # odd by default
+def odd_test(outcome):
+    return outcome in range(1, 36, 2)
+
+def roulette_trial(testfn = odd_test,
                    outcome=None, betcolor="#0000aa", alpha=0.25):
     """
     roulette_table with all outcomes who evaluate to true by `testfn`
@@ -171,20 +174,14 @@ def roulette_trial(testfn = lambda i : i % 2 == 1, # odd by default
 
     return roulette_table(places)
 
-class roulette_example(example):
+class roulette_example(bernoulli):
 
-    def __init__(self, testfn = lambda i : i % 2 == 1,
+    def __init__(self, testfn = odd_test,
                  betcolor="#0000aa", alpha=0.25):
         self.betcolor = betcolor
         self.alpha = alpha
-        self.testfn = testfn
 
-        self.ntrial = 0
-        self.total = 0
-        self.total2 = 0
-        self.outcome = None
-        self.numeric_outcome = None
-        self.true_mean = np.sum([testfn(i) for i in range(1,37)]) / 38.
+        bernoulli.__init__(self, testfn)
 
     @property
     def sample_space(self):
@@ -223,75 +220,34 @@ class roulette_example(example):
                               betcolor=self.betcolor,
                               alpha=self.alpha)
         if self.ntrial > 0:
-            base += '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.nsuccess, self.ntrial, self.nsuccess*100./self.ntrial)
+            base += self.html_summary
         return base
 
 odd_numbers = roulette_example()
 odd_numbers.desc = 'A roulette bet on only odd numbers.'
 
-middle_third = roulette_example(testfn = lambda i : (i >= 13) * (i <= 24))
+def middle_test(outcome):
+    return outcome in range(13, 25)
+
+middle_third = roulette_example(testfn = middle_test)
 middle_third.desc = 'A roulette bet on only the middle third of the possible numbers.'
 
-special_bet = roulette_example(testfn = lambda i: i in [2,24,29])
+def special_bet_test(outcome):
+    return outcome in [2,24,29]
+
+special_bet = roulette_example(testfn = special_bet_test)
 special_bet.desc = 'A roulette bet on [2,24,29].'
 
-class roulette_geometric(example):
+class roulette_geometric(geometric):
 
-    def __init__(self, testfn = lambda i : i % 2 == 1,
+    def __init__(self, testfn = odd_test,
                  betcolor="#0000aa", alpha=0.25):
-        self.betcolor = betcolor
-        self.alpha = alpha
-        self.testfn = testfn
 
-        self.outcome = None
-        self.prob = np.sum([testfn(i) for i in range(1,37)]) / 38.
-        self.true_mean = 1. / self.prob
-        self.reset()
+        bernoulli = roulette_example(testfn, 
+                                     betcolor=betcolor,
+                                     alpha=alpha)
+        geometric.__init__(self, bernoulli)
 
-    @property
-    def sample_space(self):
-        return Latex('$\mathbb{N} = \{1,2,\dots\}$')
-     
-    @property
-    def mass_function(self):
-        def mass_fn(j, prob=self.prob):
-            return prob * (1.-prob)**(j-1)
-        return mass_fn
-
-    def trial(self, numeric=True):
-        """
-        Run a trial, incrementint success counter and updating
-        html output
-        """
-        nwait = 0
-        nsuccess = 0
-        while True:
-            nwait += 1
-            outcome = np.random.random_integers(1,38)
-            if outcome == 37:
-                outcome = '0'
-            elif outcome == 38:
-                outcome = '00'
-
-            if outcome not in ['0', '00']:
-                nsuccess += self.testfn(outcome)
-            if nsuccess >= 1:
-                break
-            
-        self.ntrial += 1
-        self.total += nwait
-        self.total2 += nwait**2
-        self.outcome = nwait
-        return self.outcome
-
-    def _repr_html_(self):
-        base = roulette_trial(testfn=self.testfn,
-                              outcome=self.outcome,
-                              betcolor=self.betcolor,
-                              alpha=self.alpha)
-        if self.ntrial > 0:
-            base += '<h3>It took %d trials until the first success.</h3>' % (self.ntrial, )
-        return base
 
 odd_waiting = roulette_geometric()
 odd_waiting.desc = 'Waiting time until an odd number is rolled.'
