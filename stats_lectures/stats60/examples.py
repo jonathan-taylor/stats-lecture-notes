@@ -3,6 +3,8 @@ import numpy as np
 
 class example(object):
 
+    desc = 'A probability example.'
+    true_mean = None
 
     def __init__(self):
         raise NotImplementedError

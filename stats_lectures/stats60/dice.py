@@ -190,6 +190,8 @@ from .examples import example
 
 class dice_example(example):
 
+    desc = 'An example consisting of rolling two dice.'
+
     def __init__(self, testfn = lambda i,j : (i+j)==7,
                  color="#0000aa", alpha=0.5,
                  success='#00aa00',
@@ -203,6 +205,7 @@ class dice_example(example):
         self.ntrial = 0
         self.total = 0
         self.outcome = None
+        self.true_mean = np.mean([testfn(i,j) for i, j in self.sample_space])
 
     @property
     def sample_space(self):

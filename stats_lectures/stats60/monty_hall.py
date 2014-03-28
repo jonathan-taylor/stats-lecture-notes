@@ -73,6 +73,7 @@ class monty_hall_example(example):
         self.draw_sample()
         self.rule = rule
         self.reset()
+        self.true_mean = np.sum([v for k, v in self.mass_function if k[0] == k[3]])
 
     @property
     def sample_space(self):

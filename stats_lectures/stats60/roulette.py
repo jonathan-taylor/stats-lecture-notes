@@ -4,7 +4,7 @@ import numpy as np
 from base64 import encodestring
 import PIL.Image
 from IPython.core.pylabtools import print_figure
-from IPython.core.display import HTML, display
+from IPython.core.display import HTML, display, Latex
 
 from .examples import example
 
@@ -67,6 +67,8 @@ def _html_place(s, radius=1, fontsize=120,
     return '<img src="data:image/png;base64,%s" height="150" width="150">' % place_png64
 
 class roulette_position(object):
+
+    desc = 'An example of spinning a roulette wheel.'
 
     def __init__(self, place, facecolor="red",
                  bg_alpha=None,
@@ -179,8 +181,10 @@ class roulette_example(example):
 
         self.ntrial = 0
         self.total = 0
+        self.total2 = 0
         self.outcome = None
         self.numeric_outcome = None
+        self.true_mean = np.sum([testfn(i) for i in range(1,37)]) / 38.
 
     @property
     def sample_space(self):
@@ -223,12 +227,15 @@ class roulette_example(example):
         return base
 
 odd_numbers = roulette_example()
+odd_numbers.desc = 'A roulette bet on only odd numbers.'
+
 middle_third = roulette_example(testfn = lambda i : (i >= 13) * (i <= 24))
+middle_third.desc = 'A roulette bet on only the middle third of the possible numbers.'
+
 special_bet = roulette_example(testfn = lambda i: i in [2,24,29])
+special_bet.desc = 'A roulette bet on [2,24,29].'
 
 class roulette_geometric(example):
-
-    ##TODO make this fit the API
 
     def __init__(self, testfn = lambda i : i % 2 == 1,
                  betcolor="#0000aa", alpha=0.25):
@@ -236,28 +243,45 @@ class roulette_geometric(example):
         self.alpha = alpha
         self.testfn = testfn
 
-        self.ntrial = 0
         self.outcome = None
+        self.prob = np.sum([testfn(i) for i in range(1,37)]) / 38.
+        self.true_mean = 1. / self.prob
+        self.reset()
+
+    @property
+    def sample_space(self):
+        return Latex('$\mathbb{N} = \{1,2,\dots\}$')
+     
+    @property
+    def mass_function(self):
+        def mass_fn(j, prob=self.prob):
+            return prob * (1.-prob)**(j-1)
+        return mass_fn
 
     def trial(self, numeric=True):
         """
         Run a trial, incrementint success counter and updating
         html output
         """
+        nwait = 0
         nsuccess = 0
-        self.ntrial = 0
         while True:
-            self.outcome = np.random.random_integers(1,38)
-            if self.outcome == 37:
-                self.outcome = '0'
-            elif self.outcome == 38:
-                self.outcome = '00'
+            nwait += 1
+            outcome = np.random.random_integers(1,38)
+            if outcome == 37:
+                outcome = '0'
+            elif outcome == 38:
+                outcome = '00'
 
-            if self.outcome not in ['0', '00']:
-                nsuccess += self.testfn(self.outcome)
-            self.ntrial += 1
+            if outcome not in ['0', '00']:
+                nsuccess += self.testfn(outcome)
             if nsuccess >= 1:
                 break
+            
+        self.ntrial += 1
+        self.total += nwait
+        self.total2 += nwait**2
+        self.outcome = nwait
         return self.outcome
 
     def _repr_html_(self):
@@ -270,7 +294,10 @@ class roulette_geometric(example):
         return base
 
 odd_waiting = roulette_geometric()
+odd_waiting.desc = 'Waiting time until an odd number is rolled.'
+
 special_bet_waiting = roulette_geometric(testfn=special_bet.testfn)
+special_bet.desc = 'Waiting time until one of [2,4,29] is rolled.'
 
 examples = {'odd numbers':odd_numbers, 
             'special_bet':special_bet,
