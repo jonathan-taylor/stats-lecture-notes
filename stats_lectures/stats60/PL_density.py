@@ -6,6 +6,12 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.path as path
 
+try:
+   import rpy2.robjects as rpy
+   import rpy2.robjects.numpy2ri
+except ImportError:
+   rpy = None
+
 # histogram our data with numpy
 
 patchopt = {'facecolor':'blue',
@@ -154,6 +160,11 @@ def sample_density(data_sample, bins=10, facecolor='#820000',
    opts['facecolor'] = facecolor
    opts['alpha'] = alpha
    opts['edgecolor'] = edgecolor
+
+   # try using R's binpoints
+   if type(bins) == type(3) and rpy is not None: # is an integer
+      rpy.r.assign('DS', data_sample)
+      bins = np.array(rpy.r('pretty(range(DS), n=nclass.Sturges(DS))'))
 
    heights, binpts = ax.hist(data_sample, bins=bins, 
                              normed=True, **opts)[:2]

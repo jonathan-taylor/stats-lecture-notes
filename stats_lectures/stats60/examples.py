@@ -2,117 +2,142 @@ from __future__ import division
 import itertools
 import numpy as np
 
-class example(object):
+class ProbabilitySpace(object):
 
-    desc = 'A probability example.'
-    true_mean = None
+    desc = 'A probability space.'
 
-    def __init__(self):
-        raise NotImplementedError
-
-    # API
-
-    def reset(self):
+    def __init__(self, rng):
         """
-        Reset example.
-        """
-        self.outcome = None
-        self.numeric_outcome = None
-        self.ntrial = 0
-        self.total = 0
-        self.total2 = 0
+        Default constructor takes a callable that draws samples
+        from __some__ distribution.
 
-    def trial(self, numeric=False):
-        """
-        Run a trial, incrementing success counter and updating
-        html output.
+        Parameters
+        ----------
 
-        If numeric is True, it should return a numeric value
-        that can be averaged.
-        
-        It should store an outcome in `self.outcome` and
-        a numeric version in `self.numeric_outcome`.
-
-        To compute the mean, the numeric outcome should be
-        incremented in `self.total`.
-
-        To compute the SD, the squared numeric outcome should
-        also increment `self.total2`.
+        rng : callable
+            Generate points in some sample space.
 
         """
-        raise NotImplementedError
+        self.rng = rng
 
-    def sample(self, ntrial, numeric=False):
+    def trial(self):
+        """
+        Run a trial, returning an
+        outcome from the sample space.
+        """
+        self.outcome = self.rng()
+        return self.outcome
+
+    def sample(self, ntrial):
         """
         Form a sample of the example.
         """
-        return [self.trial(numeric=numeric) for _ in range(ntrial)]
-
-    @property
-    def mean(self):
-        return self.total / self.ntrial
+        return [self.trial() for _ in range(ntrial)]
 
     @property
     def sample_space(self):
-        return []
-
-    @property
-    def numeric_sample_space(self):
-        return []
+        if hasattr(self, "_sample_space"):
+            return self._sample_space
 
     @property
     def mass_function(self):
-        return {}
-
-    @property
-    def SD(self):
-        return np.sqrt((self.total2 / self.ntrial - self.mean**2))
-
-    @property
-    def confidence_interval(self):
-        return [self.mean - 2*self.SD / np.sqrt(self.ntrial), 
-                self.mean + 2*self.SD / np.sqrt(self.ntrial)]
+        if hasattr(self, "_mass_function"):
+            return self._mass_function
 
     def _repr_html_(self):
         raise NotImplementedError
 
     @property
-    def html_summary(self):
-        # description of the results of repeated trials
+    def summary(self):
         raise NotImplementedError
 
-class bernoulli(example):
+class RandomVariable(ProbabilitySpace):
 
-    '''
-    Bernoulli based on a uniform draw from
-    sample space.
-    '''
+    def __init__(self, probability_space, random_variable):
+        self.random_variable = random_variable
+        self.probability_space = probability_space
+        if probability_space.sample_space is not None:
+            self._sample_space = np.unique([random_variable(point) for point
+                                            in probability_space.sample_space])
+            if probability_space.mass_function is not None:
+                self._mass_function = {}
+                for point in self.probability_space.sample_space:
+                    image = random_variable(point)
+                    p = self._mass_function.setdefault(image, 0)
+                    self._mass_function[image] += probability_space.mass_function[point]
 
-    def __init__(self, testfn):
-        self.true_mean = np.mean([testfn(item) for item in self.sample_space])
-        self.testfn = testfn
-        self.reset()
+    def trial(self):
+        self.outcome = self.random_variable(self.probability_space.trial())
+        return self.outcome
+
+class SampleMean(ProbabilitySpace):
+
+    def __init__(self, random_variable, nsample):
+        self.random_variable = random_variable
+        self.nsample = nsample
+
+    def trial(self):
+        sample = self.random_variable.sample(self.nsample)
+        self.outcome = [np.mean(sample), np.std(sample)]
+        return self.outcome
+
+    def confidence_interval(self):
+        """
+        Simulate a confidence interval for the population mean
+        """
+        mean, SD = self.trial()
+        return [mean - 2*SD / np.sqrt(self.nsample), 
+                mean + 2*SD / np.sqrt(self.nsample)]
+
+class BoxModel(ProbabilitySpace):
+
+    """
+    A discrete uniform sample space: samples are drawn
+    with replacement from a list of items.
+    """
+
+    def __init__(self, values):
+        self.values = list(values)
+        self._nvalues = len(self.values)
+        self._sample_space = self.values
+        self._mass_function = dict([(v, 1./len(self._sample_space)) for v in self._sample_space])
+
+    def trial(self):
+        I = np.random.random_integers(0, self._nvalues-1)
+        self.outcome = self.values[I]
+        return self.outcome
+
+    def event(self, event_spec):
+        if callable(event_spec):
+            return RandomVariable(self, event_spec)
+        else: # assuming it is a sequence
+            _event_spec = lambda point: point in event_spec
+            return RandomVariable(self, _event_spec)
     
-    @property
-    def html_summary(self):
-        return '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.total, self.ntrial, 100*self.mean)
+class WeightedBox(BoxModel):
 
-    @property
-    def mass_function(self):
-        ss = self.sample_space
-        return dict([(v, 1./len(ss)) for v in ss])
+    def __init__(self, mass_function):
+        """
+        Specified by a dict: {item:probability}
+        """
+        self._mass_function = mass_function
+        self._sample_space = self._mass_function.keys()
+        self._sample_space = sorted(self._sample_space)
+        self._P = np.array([mass_function[k] for k in self._sample_space])
+        self._P /= self._P.sum()
 
+    def trial(self):
+        self.outcome = self._sample_space[np.nonzero(np.random.multinomial(1, self._P))[0]]
+        return self.outcome
 
-class geometric(example):
+class Geometric(ProbabilitySpace):
 
     '''
     Geometric distribution derived from a bernoulli example
     '''
 
-    def __init__(self, bernoulli):
-        self.bernoulli = bernoulli
-        self.true_mean = 1. / bernoulli.true_mean
-        self.reset()
+    def __init__(self, box_model, event_spec):
+        self.bernoulli = box_model.event(event_spec)
 
     @property
     def sample_space(self):
@@ -122,7 +147,7 @@ class geometric(example):
     def mass_function(self):
         def mass_fn(j, prob=self.prob):
             return prob * (1.-prob)**(j-1)
-        return mass_fn
+        mass_fn._repr_latex_ = lambda s: Latex('$f(j) = p(1-p)^{j-1}$')
 
     def trial(self, numeric=True):
         """
@@ -132,101 +157,31 @@ class geometric(example):
         nwait = 0
         while True:
             nwait += 1
-            if self.bernoulli.trial(numeric=True):
+            if self.bernoulli.trial():
                 break
-
-        self.ntrial += 1
-        self.total += nwait
-        self.total2 += nwait**2
         self.outcome = nwait
         return self.outcome
 
-    @property
-    def html_summary(self):
-        return '<h3>It took %d trials until the first success.</h3>' % (self.outcome, )
-
     def _repr_html_(self):
-        base = self.bernoulli._repr_html()
-        if self.ntrial > 0:
-            base += self.html_summary
-        return base
+        base = self.bernoulli._repr_html_()
 
-class multinomial(object):
+class Multinomial(WeightedBox):
 
-    desc = 'A probability example.'
-    true_mean = None
+    desc = 'A multinomial specified by a table.'
 
-    def __init__(self, counts, rows=None, columns=None):
+    def __init__(self, counts, labels=None):
         counts = np.array(counts)
-        if counts.ndim > 2:
-            raise ValueError('only up to 2d tables')
-        self.rows = rows or range(1, counts.shape[0]+1)
-        self.columns = columns or range(1, counts.shape[1]+1)
-        self.P = counts / (1. * counts.sum())
-        self.total = 0
-        self.ntrial = 0
-    # API
-
-    @property
-    def sample_space(self):
-        if not hasattr(self, "_sample_space"):
-            self._sample_space = [(r,c) for r, c in itertools.product(self.rows, self.columns)]
-        return self._sample_space
-
-    @property
-    def mass_function(self):
-        # Mass function for a draw of size 1
-        return self.P
-
-    def reset(self):
-        """
-        Reset example.
-        """
-        self.outcome = None
-        self.ntrial = 0
-        self.total = np.zeros(self.P.shape)
-        self.total2 = 0
+        self.labels = labels or [i for i in itertools.product([range(j) for j in counts.shape])]
+        self._P = counts / (1. * counts.sum())
+        self._sample_space = labels
+        self._sample_space = self._P
 
     def trial(self, numeric=False):
-        """
-        Run a trial, incrementing success counter and updating
-        html output.
-
-        If numeric is True, it should return a numeric value
-        that can be averaged.
-        
-        It should store an outcome in `self.outcome` and
-        a numeric version in `self.numeric_outcome`.
-
-        To compute the mean, the numeric outcome should be
-        incremented in `self.total`.
-
-        To compute the SD, the squared numeric outcome should
-        also increment `self.total2`.
-
-        """
         V = np.random.multinomial(1, self.P.reshape(-1))
         I = np.nonzero(V)[0]
         self.outcome = self.sample_space[I]
-        self.total += V
-        self.ntrial += 1
         return self.outcome
 
-    def sample(self, ntrial, numeric=False):
-        """
-        Form a sample of the example.
-        """
-        return [self.trial(numeric=numeric) for _ in range(ntrial)]
-
-    @property
-    def mean(self):
-        return (self.total / self.ntrial).reshape(self.P.shape)
-
-    def _repr_html_(self):
-        #TODO: an html table
-        raise NotImplementedError
-
-    @property
-    def html_summary(self):
-        # description of the results of repeated trials
-        raise NotImplementedError
+def Normal(mean, SD):
+    rng = lambda : np.random.standard_normal() * SD + mean
+    return ProbabilitySpace(rng)
