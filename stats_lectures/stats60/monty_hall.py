@@ -39,64 +39,68 @@ car_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' %
                           'data/310px-Car_with_Driver-Silhouette.svg.png' \
                                          ).read()).decode('ascii')))
 
-def monty_hall_table(car_pos, student_pos, host_pos, final_pos=None):
+def monty_hall_table(car_pos, student_pos, host_pos, final_pos=None,
+                     ndoors=3):
 
-    def make_row(label, img, pos):
-        row = (('<tr><td width="%d"><h2 align="center">%s</h2></td>' % (width, label)) + 
-               ('<td height="%d" width="%d"></td>' % (height, width)) * pos
-               + ('<td height="%d" width="%d">%s</td>' % (height, width, img))
-               + ('<td height="%d" width="%d"></td>' % (height, width)) * (2-pos) + '</tr>')
+    def make_row(label, img, pos, ndoors):
+        row = '<tr><td width="%d"><h2 align="center">%s</h2></td>' % (width, label) 
+        if pos >= ndoors:
+            raise ValueError('invalid position')
+
+        for i in range(pos):
+            row += '<td height="%d" width="%d"></td>' % (height, width)
+        row += '<td height="%d" width="%d">%s</td>' % (height, width, img)
+        for i in range(ndoors-1-pos):
+            row += '<td height="%d" width="%d"></td>' % (height, width)
+        row += '</tr>\n'
         return row
 
     if final_pos is not None:
         if car_pos == final_pos:
-            final_row = make_row('Final', student_win_html, final_pos)
+            final_row = make_row('Final', student_win_html, final_pos, ndoors)
         else:
-            final_row = make_row('Final', student_lose_html, final_pos)
+            final_row = make_row('Final', student_lose_html, final_pos, ndoors)
     else:
         final_row = ''
     table = '\n'.join(['<table>',
-                       make_row('Prize', car_html, car_pos),
-                       make_row('Contestant', student_html, student_pos),
-                       make_row('Host', host_html, host_pos),
+                       make_row('Prize', car_html, car_pos, ndoors),
+                       make_row('Contestant', student_html, student_pos, ndoors),
+                       make_row('Host', host_html, host_pos, ndoors),
                        final_row,
                        '</table>'])
     return table
 
-class monty_hall_example(WeightedBox):
+class monty_hall_noswitch(WeightedBox):
 
     """
     The no-switching strategy as default
     """
 
-    def __init__(self, rule = lambda student, host: student):
-        self.rule = rule
-
-        def prob(prize, student, host):
+    def __init__(self, ndoors=3):
+        self.ndoors = ndoors
+        def prob(prize, student, host, final):
             if prize == student:
-                return 1/18.
+                return 1./(self.ndoors**2) * 1. / (self.ndoors - 1)
             else:
-                return 1/9.
+                return 1./(self.ndoors**2) * 1. / (self.ndoors - 2)
 
-        self._sample_space =  \
-            [(prize, student, host, 
-              self.rule(student-1, host-1)+1) 
-             for prize, student, host in product(range(1,4),
-                                                 range(1,4),
-                                                 range(1,4))
-             if host not in [prize, student]]        
-
-        probs = np.array([prob(*v[:3]) for v in self._sample_space])
-        probs /= probs.sum()
-        WeightedBox.__init__(self, dict([(v, p) for v, p in zip(self._sample_space, probs)]))
+        _sample_space = []
+        for (prize, student, host) in product(range(1,self.ndoors+1),
+                                              range(1,self.ndoors+1),
+                                              range(1,self.ndoors+1)): 
+            if host not in [prize, student]:
+                _sample_space.append((prize, student, host, student))
+        WeightedBox.__init__(self, dict([(v, prob(*v)) for v in
+                                         _sample_space]))
 
     def trial(self):
         WeightedBox.trial(self)
         self.car, self.student, self.host, self.final = np.array(self.outcome)-1
+        return self.outcome
 
     def conditional(self, event_spec):
         mass_fn = WeightedBox.conditional(self, event_spec).mass_function
-        return conditional_monty_hall(mass_fn)
+        return conditional_noswitch(mass_fn)
 
     @property
     def event(self):
@@ -109,15 +113,50 @@ class monty_hall_example(WeightedBox):
             base = monty_hall_table(1, 
                                     1,
                                     2,
-                                    None)
+                                    None,
+                                    ndoors=self.ndoors)
         else:
             base = monty_hall_table(self.car, 
                                     self.student,
                                     self.host,
-                                    self.final)
+                                    self.final,
+                                    ndoors=self.ndoors)
         return base
 
-class conditional_monty_hall(monty_hall_example):
+
+class monty_hall_switch(monty_hall_noswitch):
+
+    """
+    The no-switching strategy as default
+    """
+
+
+    def __init__(self, ndoors=3):
+        self.ndoors = ndoors
+        def prob(prize, student, host, final):
+            if prize == student:
+                return 1./(self.ndoors**2) * 1. / ((self.ndoors - 1) * (self.ndoors - 2))
+            else:
+                return 1./(self.ndoors**2) * 1. / ((self.ndoors - 2) * (self.ndoors - 2))
+
+        _sample_space = []
+        for (prize, student, host) in product(range(1,self.ndoors+1),
+                                              range(1,self.ndoors+1),
+                                              range(1,self.ndoors+1)): 
+            if host not in [prize, student]:
+                possible_values = set(range(1, self.ndoors+1)).difference( \
+                    [host, student])
+                for final in possible_values:
+                    _sample_space.append((prize, student, host, final))
+        WeightedBox.__init__(self, dict([(v, prob(*v)) for v in
+                                         _sample_space]))
+
+    def conditional(self, event_spec):
+        mass_fn = WeightedBox.conditional(self, event_spec).mass_function
+        return conditional_switch(mass_fn)
+
+
+class conditional_switch(monty_hall_switch):
     
     """
     We draw samples until initial student guess does not match the car.
@@ -126,17 +165,21 @@ class conditional_monty_hall(monty_hall_example):
     def __init__(self, mass_function):
         WeightedBox.__init__(self, mass_function)
 
-no_switch = monty_hall_example()
+class conditional_noswitch(monty_hall_noswitch):
+    
+    """
+    We draw samples until initial student guess does not match the car.
+    """
 
-def switch_rule(student, host):
-    return list(set(range(3)).difference([student, host]))[0]
-switch = monty_hall_example(rule=switch_rule)
+    def __init__(self, mass_function):
+        WeightedBox.__init__(self, mass_function)
 
+no_switch = monty_hall_noswitch()
+switch = monty_hall_switch()
         
 examples = {'switch':switch,
-            'noswitch':no_switch}
-# ,
-#             'switch_match':conditional_scenario(True, True),
-#             'switch_nomatch':conditional_scenario(True, False),
-#             'noswitch_nomatch':conditional_scenario(False, False),
-#             'noswitch_match':conditional_scenario(False, True)}
+            'noswitch':no_switch} # ,
+#             'switch_match':switch.conditional(lambda o: o[0] == o[1]),
+#             'switch_nomatch':switch.conditional(lambda o: o[0] != o[1]),
+#             'no_switch_match':no_switch.conditional(lambda o: o[0] == o[1]),
+#             'no_switch_nomatch':no_switch.conditional(lambda o: o[0] != o[1])}
