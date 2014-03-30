@@ -164,7 +164,7 @@ def sample_density(data_sample, bins=10, facecolor='#820000',
    # try using R's binpoints
    if type(bins) == type(3) and rpy is not None: # is an integer
       rpy.r.assign('DS', data_sample)
-      bins = np.array(rpy.r('pretty(range(DS), n=nclass.Sturges(DS))'))
+      bins = np.array(rpy.r('pretty(range(DS), n=%d)' % bins))
 
    heights, binpts = ax.hist(data_sample, bins=bins, 
                              normed=True, **opts)[:2]
@@ -185,13 +185,10 @@ def sample_density(data_sample, bins=10, facecolor='#820000',
    CDF = scipy.interpolate.interp1d(X, Y, kind='linear',
                                      bounds_error=False)
 
-   def area_function(a, b):
-      return CDF(b) - CDF(a)
-
    for args, opts in regions:
       interval = np.linspace(*args)
       ax.fill_between(interval, 0*interval, density(interval), **opts)
-   return ax, density, area_function
+   return ax, density, CDF
 
 def stylized_density(sample, ax=None, regions=[],
                      alpha=0.7, mult=None):
