@@ -19,6 +19,7 @@ class ProbabilitySpace(object):
 
         """
         self.rng = rng
+        self.outcome = None
 
     def trial(self):
         """
@@ -65,6 +66,7 @@ class RandomVariable(ProbabilitySpace):
                     image = random_variable(point)
                     p = self._mass_function.setdefault(image, 0)
                     self._mass_function[image] += probability_space.mass_function[point]
+        self.outcome = None
 
     def trial(self):
         self.outcome = self.random_variable(self.probability_space.trial())
@@ -75,6 +77,7 @@ class SampleMean(ProbabilitySpace):
     def __init__(self, random_variable, nsample):
         self.random_variable = random_variable
         self.nsample = nsample
+        self.outcome = None
 
     def trial(self):
         sample = self.random_variable.sample(self.nsample)
@@ -101,6 +104,7 @@ class BoxModel(ProbabilitySpace):
         self._nvalues = len(self.values)
         self._sample_space = self.values
         self._mass_function = dict([(v, 1./len(self._sample_space)) for v in self._sample_space])
+        self.outcome = None
 
     def trial(self):
         I = np.random.random_integers(0, self._nvalues-1)
@@ -114,6 +118,20 @@ class BoxModel(ProbabilitySpace):
             _event_spec = lambda point: point in event_spec
             return RandomVariable(self, _event_spec)
     
+    def conditional(self, event_spec):
+        if not callable(event_spec):
+            E = list(event_spec)
+            event_spec = lambda i: i in E
+        mass_fn = {}
+        total = 0
+        for k in self.mass_function:
+            if event_spec(k):
+                mass_fn[k] = self.mass_function[k]
+                total += self.mass_function[k]
+        for k in mass_fn:
+            mass_fn[k] /= total
+        return WeightedBox(mass_fn)
+
 class WeightedBox(BoxModel):
 
     def __init__(self, mass_function):
@@ -125,6 +143,7 @@ class WeightedBox(BoxModel):
         self._sample_space = sorted(self._sample_space)
         self._P = np.array([mass_function[k] for k in self._sample_space])
         self._P /= self._P.sum()
+        self.outcome = None
 
     def trial(self):
         self.outcome = self._sample_space[np.nonzero(np.random.multinomial(1, self._P))[0]]
@@ -175,6 +194,7 @@ class Multinomial(WeightedBox):
         self._P = counts / (1. * counts.sum())
         self._sample_space = labels
         self._sample_space = self._P
+        self.outcome = None
 
     def trial(self, numeric=False):
         V = np.random.multinomial(1, self.P.reshape(-1))

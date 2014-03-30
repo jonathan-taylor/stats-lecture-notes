@@ -90,6 +90,14 @@ class monty_hall_example(WeightedBox):
         probs /= probs.sum()
         WeightedBox.__init__(self, dict([(v, p) for v, p in zip(self._sample_space, probs)]))
 
+    def trial(self):
+        WeightedBox.trial(self)
+        self.car, self.student, self.host, self.final = np.array(self.outcome)-1
+
+    def conditional(self, event_spec):
+        mass_fn = WeightedBox.conditional(self, event_spec).mass_function
+        return conditional_monty_hall(mass_fn)
+
     @property
     def event(self):
         if not hasattr(self, "_event"):
@@ -98,58 +106,25 @@ class monty_hall_example(WeightedBox):
 
     def _repr_html_(self):
         if self.outcome is None:
-            base = monty_hall_table(self.car, 
-                                    self.student,
-                                    self.host,
+            base = monty_hall_table(1, 
+                                    1,
+                                    2,
                                     None)
         else:
             base = monty_hall_table(self.car, 
                                     self.student,
                                     self.host,
                                     self.final)
+        return base
 
-class conditional_nomatch(monty_hall_example):
+class conditional_monty_hall(monty_hall_example):
     
     """
     We draw samples until initial student guess does not match the car.
     """
 
-    @property
-    def sample_space(self):
-        return [(prize, student, host, 
-                 self.rule(student-1, host-1)+1) 
-                for prize, student, host in product(range(1,4),
-                                                    range(1,4),
-                                                    range(1,4))
-                if host not in [prize, student] and prize != student]
-
-    def draw_sample(self):
-        while True:
-            monty_hall_example.draw_sample(self)
-            if self.student != self.car:
-                break
-
-
-class conditional_match(monty_hall_example):
-    
-    """
-    We draw samples until initial student matches the car.
-    """
-
-    def draw_sample(self):
-        while True:
-            monty_hall_example.draw_sample(self)
-            if self.student != self.car:
-                break
-
-    @property
-    def sample_space(self):
-        return [(prize, student, host, 
-                 self.rule(student-1, host-1)+1) 
-                for prize, student, host in product(range(1,4),
-                                                    range(1,4),
-                                                    range(1,4))
-                if host not in [prize, student] and prize == student]
+    def __init__(self, mass_function):
+        WeightedBox.__init__(self, mass_function)
 
 no_switch = monty_hall_example()
 
@@ -157,19 +132,11 @@ def switch_rule(student, host):
     return list(set(range(3)).difference([student, host]))[0]
 switch = monty_hall_example(rule=switch_rule)
 
-def conditional_scenario(do_switch, do_match):
-    if do_match:
-        if do_switch:
-            return conditional_match(rule=switch_rule)
-        return conditional_match()
-    else:
-        if do_switch:
-            return conditional_nomatch(rule=switch_rule)
-        return conditional_nomatch()
         
 examples = {'switch':switch,
-            'noswitch':no_switch,
-            'switch_match':conditional_scenario(True, True),
-            'switch_nomatch':conditional_scenario(True, False),
-            'noswitch_nomatch':conditional_scenario(False, False),
-            'noswitch_match':conditional_scenario(False, True)}
+            'noswitch':no_switch}
+# ,
+#             'switch_match':conditional_scenario(True, True),
+#             'switch_nomatch':conditional_scenario(True, False),
+#             'noswitch_nomatch':conditional_scenario(False, False),
+#             'noswitch_match':conditional_scenario(False, True)}

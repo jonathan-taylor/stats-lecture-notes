@@ -166,12 +166,12 @@ def sum_geq_eight_test(outcome):
     i, j = outcome
     return i + j >= 8
 
-def dice_trial(random_variable = sum_to_seven_test,
+def dice_trial(event = sum_to_seven_test,
                outcome=None, color="#0000aa", alpha=0.5,
                success='#00aa00',
                failure='#aa0000'):
     """
-    dice_table with all outcomes who evaluate to true by `random_variable`
+    dice_table with all outcomes who evaluate to true by `event`
     colored `color`
 
     Parameters
@@ -185,7 +185,7 @@ def dice_trial(random_variable = sum_to_seven_test,
     """
     colors = {}
     for i, j in itertools.product(range(1,7), range(1,7)):
-        if random_variable((i,j)):
+        if event((i,j)):
             colors[(i,j)] = color
 
     if outcome is not None:
@@ -197,7 +197,7 @@ def dice_trial(random_variable = sum_to_seven_test,
 
     return dice_table(colors, alpha=alpha)
 
-class dice(ProbabilitySpace):
+class dice_example(ProbabilitySpace):
 
     desc = 'An example consisting of rolling two dice.'
 
@@ -227,6 +227,8 @@ class dice(ProbabilitySpace):
         self.failure = failure
         self.color = color
         self.alpha = alpha
+
+        self.outcome = None
 
     @property
     def mass_function(self):
@@ -263,11 +265,11 @@ class dice(ProbabilitySpace):
                               success=self.success,
                               alpha=self.alpha)
             base += '<h3>Outcome is: %s</h3>' % `self.outcome`
+        return base
 
-
-sum_to_seven = dice(event_spec=[(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)])
-sum_geq_eight = dice(event_spec= lambda outcome: outcome[0] + outcome[1] >= 8)
-sum_of_values = dice(random_variable = lambda outcome: outcome[0] + outcome[1])
+sum_to_seven = dice_example(event_spec=[(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)])
+sum_geq_eight = dice_example(event_spec= lambda outcome: outcome[0] + outcome[1] >= 8)
+sum_of_values = dice_example(random_variable = lambda outcome: outcome[0] + outcome[1])
 
 examples = {'sum to seven':sum_to_seven,
             'sum greater than seven':sum_geq_eight,
