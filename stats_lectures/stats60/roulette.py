@@ -6,14 +6,18 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML, display, Latex
 
-from .examples import bernoulli, geometric
+from examples import BoxModel, ProbabilitySpace, Geometric
 
 _colors = {}
-for i in range(1,37):
-    if i % 2 == 0:
-        _colors[i] = 'black'
-    else:
-        _colors[i] = 'red'
+_red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
+_black = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
+
+for i in _red:
+    _colors[i] = 'red'
+for i in _black:
+    _colors[i] = 'black'
+print len(_red), len(_black)
+
 _colors['0'] = 'green'
 _colors['00'] = 'green'
 
@@ -131,10 +135,16 @@ def roulette_table(places=empty_table):
 def odd_test(outcome):
     return outcome in range(1, 36, 2)
 
-def roulette_trial(testfn = odd_test,
+def red_test(outcome):
+    return outcome in _red
+
+def black_test(outcome):
+    return outcome in _black
+
+def roulette_trial(event_spec = odd_test,
                    outcome=None, betcolor="#0000aa", alpha=0.25):
     """
-    roulette_table with all outcomes who evaluate to true by `testfn`
+    roulette_table with all outcomes who evaluate to true by `event_spec`
     colored `color`
 
     Parameters
@@ -144,12 +154,12 @@ def roulette_trial(testfn = odd_test,
         Outcome of rolling the roulette.
     
     betcolor : color 
-        Color to label those that pass testfn
+        Color to label those that pass event_spec
     """
     places = {}
     pass_test = []
     for place in range(1,37):
-        if testfn(place):
+        if event_spec(place):
             pass_test.append(place)
             places[place] = roulette_position(place,
                                            facecolor=_colors[place],
@@ -174,89 +184,86 @@ def roulette_trial(testfn = odd_test,
 
     return roulette_table(places)
 
-class roulette_example(bernoulli):
+class roulette_example(ProbabilitySpace):
 
-    def __init__(self, testfn = odd_test,
+    def __init__(self, event_spec=None,
                  betcolor="#0000aa", alpha=0.25):
         self.betcolor = betcolor
         self.alpha = alpha
 
-        bernoulli.__init__(self, testfn)
+        sample_space = range(1,37) + ['0', '00']
+        self.event_spec = event_spec
+        self.position = None
 
-    @property
-    def sample_space(self):
-        return range(1,37) + ['0', '00']
+        if event_spec is not None:
+            self.model = BoxModel(sample_space).event(event_spec)
+            self.model_type = 'event'
+        elif event_spec is None:
+            self.model = BoxModel(sample_space)
+            self.model_type = 'spin of wheel'
 
     @property
     def mass_function(self):
-        ss = self.sample_space
-        return dict([(v, 1./len(ss)) for v in ss])
+        return self.model.mass_function
 
-    def trial(self, numeric=False):
-        """
-        Run a trial, incrementint success counter and updating
-        html output
-        """
-        self.outcome = np.random.random_integers(1,38)
-        if self.outcome == 37:
-            self.outcome = '0'
-        elif self.outcome == 38:
-            self.outcome = '00'
-                             
-        if self.outcome not in ['0', '00']:
-            self.numeric_outcome = self.testfn(self.outcome)
+    @property
+    def sample_space(self):
+        return self.model.sample_space
+
+    def trial(self):
+        self.outcome = self.model.trial()
+        if self.model_type == 'event':
+            self.position = self.model.probability_space.outcome
         else:
-            self.numeric_outcome = 0
-        self.total += self.numeric_outcome
-        self.total2 += self.numeric_outcome**2
-        self.ntrial += 1
-        if not numeric:
-            return self.outcome
-        return self.numeric_outcome
+            self.position = self.outcome
+        return self.outcome
 
     def _repr_html_(self):
-        base = roulette_trial(testfn=self.testfn,
-                              outcome=self.outcome,
+        return roulette_trial(event_spec=self.event_spec,
+                              outcome=self.position,
                               betcolor=self.betcolor,
                               alpha=self.alpha)
-        if self.ntrial > 0:
-            base += self.html_summary
-        return base
 
-odd_numbers = roulette_example()
+odd_numbers = roulette_example(event_spec=odd_test)
 odd_numbers.desc = 'A roulette bet on only odd numbers.'
+
+red = roulette_example(event_spec=red_test)
+red.desc = 'A roulette bet on red numbers.'
+
+black = roulette_example(event_spec=black_test)
+black.desc = 'A roulette bet on black  numbers.'
 
 def middle_test(outcome):
     return outcome in range(13, 25)
 
-middle_third = roulette_example(testfn = middle_test)
+middle_third = roulette_example(event_spec=range(13,25))
 middle_third.desc = 'A roulette bet on only the middle third of the possible numbers.'
 
-def special_bet_test(outcome):
-    return outcome in [2,24,29]
-
-special_bet = roulette_example(testfn = special_bet_test)
+special_bet = roulette_example(event_spec=[2,24,29])
 special_bet.desc = 'A roulette bet on [2,24,29].'
 
-class roulette_geometric(geometric):
+class roulette_geometric(roulette_example):
 
-    def __init__(self, testfn = odd_test,
+    def __init__(self, event_spec = odd_test,
                  betcolor="#0000aa", alpha=0.25):
 
-        bernoulli = roulette_example(testfn, 
-                                     betcolor=betcolor,
-                                     alpha=alpha)
-        geometric.__init__(self, bernoulli)
+        roulette_example.__init__(self, event_spec,
+                                  betcolor, alpha)
+
+        # overwrite the model
+        self.model = Geometric(BoxModel(range(1,37)+['0','00']), event_spec)
 
 
-odd_waiting = roulette_geometric()
+odd_waiting = roulette_geometric(odd_test)
 odd_waiting.desc = 'Waiting time until an odd number is rolled.'
 
-special_bet_waiting = roulette_geometric(testfn=special_bet.testfn)
-special_bet.desc = 'Waiting time until one of [2,4,29] is rolled.'
+special_bet_waiting = roulette_geometric([2,24,29])
+special_bet.desc = 'Waiting time until one of [2,24,29] is rolled.'
 
 examples = {'odd numbers':odd_numbers, 
             'special_bet':special_bet,
             'middle third':middle_third,
             'time until odd':odd_waiting,
-            'time until special':special_bet_waiting}
+            'time until special':special_bet_waiting,
+            'red':red,
+            'black':black}

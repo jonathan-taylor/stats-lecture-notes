@@ -8,7 +8,7 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML
 
-from .examples import bernoulli
+from examples import BoxModel, ProbabilitySpace, RandomVariable
 
 _dice_arrays = {}
 
@@ -166,12 +166,12 @@ def sum_geq_eight_test(outcome):
     i, j = outcome
     return i + j >= 8
 
-def dice_trial(testfn = sum_to_seven_test,
+def dice_trial(random_variable = sum_to_seven_test,
                outcome=None, color="#0000aa", alpha=0.5,
                success='#00aa00',
                failure='#aa0000'):
     """
-    dice_table with all outcomes who evaluate to true by `testfn`
+    dice_table with all outcomes who evaluate to true by `random_variable`
     colored `color`
 
     Parameters
@@ -181,11 +181,11 @@ def dice_trial(testfn = sum_to_seven_test,
         Outcome of rolling the dice.
     
     color : color 
-        Color to label those that pass testfn
+        Color to label those that pass random_variable
     """
     colors = {}
     for i, j in itertools.product(range(1,7), range(1,7)):
-        if testfn((i,j)):
+        if random_variable((i,j)):
             colors[(i,j)] = color
 
     if outcome is not None:
@@ -197,16 +197,30 @@ def dice_trial(testfn = sum_to_seven_test,
 
     return dice_table(colors, alpha=alpha)
 
-class dice_example(bernoulli):
+class dice(ProbabilitySpace):
 
     desc = 'An example consisting of rolling two dice.'
 
-    def __init__(self, testfn = sum_to_seven_test,
+    def __init__(self, event_spec=None,
+                 random_variable=None,
                  color="#0000aa", alpha=0.5,
                  success='#00aa00',
                  failure='#aa0000'):
 
-        bernoulli.__init__(self, testfn)
+        if event_spec is not None and random_variable is not None:
+            raise ValueError('can only specify `event_spec` or `random_variable`')
+
+        sample_space = [(i,j) for i, j in itertools.product(range(1,7), range(1,7))]
+
+        if event_spec is not None:
+            self.model = BoxModel(sample_space).event(event_spec)
+            self.model_type = 'event'
+        elif random_variable is None:
+            self.model = BoxModel(sample_space)
+            self.model_type = 'pair of dice'
+        else:
+            self.model = RandomVariable(BoxModel(sample_space), random_variable)
+            self.model_type = 'random variable'
 
         # all related to _repr_html_ output
         self.success = success
@@ -215,37 +229,47 @@ class dice_example(bernoulli):
         self.alpha = alpha
 
     @property
+    def mass_function(self):
+        return self.model.mass_function
+
+    @property
     def sample_space(self):
-        return [(i,j) for i, j in itertools.product(range(1,7), range(1,7))]
+        return self.model.sample_space
 
-    def trial(self, numeric=False):
-        """
-        Run a trial, incrementint success counter and updating
-        html output
-        """
-        self.outcome = tuple(np.random.random_integers(1,6,size=(2,)))
-        self.numeric_outcome = self.testfn(self.outcome)
-        self.total += self.numeric_outcome
-        self.total2 += self.numeric_outcome**2
-        self.ntrial += 1
-        if not numeric:
-            return self.outcome
-        return self.numeric_outcome
-
+    def trial(self):
+        self.outcome = self.model.trial()
+        return self.outcome
+                        
     def _repr_html_(self):
-        base = dice_trial(testfn=self.testfn,
-                          outcome=self.outcome,
-                          color=self.color,
-                          failure=self.failure,
-                          success=self.success,
-                          alpha=self.alpha)
-        if self.ntrial > 0:
-            base += self.html_summary
-        return base
+        if self.model_type == 'event':
+            base = dice_trial(event=self.model.random_variable,
+                              outcome=self.model.probability_space.outcome,
+                              color=self.color,
+                              failure=self.failure,
+                              success=self.success,
+                              alpha=self.alpha)
+        elif self.model_type == 'pair of dice':
+            base = dice_trial(event=lambda : False,
+                              outcome=self.model.outcome,
+                              color=None,
+                              failure=self.failure,
+                              success=self.success,
+                              alpha=self.alpha)
+        elif self.model_type == 'random variable':
+            base = dice_trial(event=lambda : False,
+                              outcome=self.model.probability_space.outcome,
+                              color=None,
+                              failure=self.failure,
+                              success=self.success,
+                              alpha=self.alpha)
+            base += '<h3>Outcome is: %s</h3>' % `self.outcome`
 
-sum_to_seven = dice_example()
-sum_geq_eight = dice_example(testfn = sum_geq_eight_test)
+
+sum_to_seven = dice(event_spec=[(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)])
+sum_geq_eight = dice(event_spec= lambda outcome: outcome[0] + outcome[1] >= 8)
+sum_of_values = dice(random_variable = lambda outcome: outcome[0] + outcome[1])
 
 examples = {'sum to seven':sum_to_seven,
-            'sum greater than seven':sum_geq_eight}
+            'sum greater than seven':sum_geq_eight,
+            'sum_of_values':sum_of_values}
 

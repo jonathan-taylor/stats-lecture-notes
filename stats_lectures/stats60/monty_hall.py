@@ -5,7 +5,7 @@ from itertools import product
 import numpy as np
 from IPython.core.display import HTML
 
-from .examples import example
+from examples import WeightedBox, RandomVariable
 
 height, width = 120, 120
 host_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
@@ -63,64 +63,38 @@ def monty_hall_table(car_pos, student_pos, host_pos, final_pos=None):
                        '</table>'])
     return table
 
-class monty_hall_example(example):
+class monty_hall_example(WeightedBox):
 
     """
     The no-switching strategy as default
     """
 
     def __init__(self, rule = lambda student, host: student):
-        self.draw_sample()
         self.rule = rule
-        self.reset()
-        self.true_mean = np.sum([v for k, v in self.mass_function.items()
-                                 if k[0] == k[3]])
 
-    @property
-    def sample_space(self):
-        return [(prize, student, host, 
-                 self.rule(student-1, host-1)+1) 
-                for prize, student, host in product(range(1,4),
-                                                    range(1,4),
-                                                    range(1,4))
-                if host not in [prize, student]]
-
-    @property
-    def mass_function(self):
         def prob(prize, student, host):
             if prize == student:
                 return 1/18.
             else:
                 return 1/9.
 
-        ss = self.sample_space
-        probs = np.array([prob(*v[:3]) for v in ss])
+        self._sample_space =  \
+            [(prize, student, host, 
+              self.rule(student-1, host-1)+1) 
+             for prize, student, host in product(range(1,4),
+                                                 range(1,4),
+                                                 range(1,4))
+             if host not in [prize, student]]        
+
+        probs = np.array([prob(*v[:3]) for v in self._sample_space])
         probs /= probs.sum()
-        return dict([(v, p) for v, p in zip(ss, probs)])
+        WeightedBox.__init__(self, dict([(v, p) for v, p in zip(self._sample_space, probs)]))
 
-    def draw_sample(self):
-        self.car, self.student = np.random.random_integers(0,2,size=(2,))
-        if self.car == self.student:
-            host_sample_space = list(set(range(3)).difference([self.car]))
-            self.host = host_sample_space[np.random.random_integers(0,1)]
-        else:
-            self.host = list(set(range(3)).difference([self.car, self.student]))[0]
-
-    def trial(self, numeric=False):
-        self.draw_sample()
-
-        self.final = self.rule(self.student, self.host)
-
-        self.outcome = (self.car, self.student)
-        self.numeric_outcome = self.final == self.car
-
-        self.total += self.numeric_outcome
-        self.total2 += self.numeric_outcome**2
-        self.ntrial += 1
-
-        if numeric:
-            return self.numeric_outcome
-        return self.outcome
+    @property
+    def event(self):
+        if not hasattr(self, "_event"):
+            self._event = RandomVariable(self, lambda outcome: outcome[0] == outcome[3])
+        return self._event
 
     def _repr_html_(self):
         if self.outcome is None:
@@ -133,14 +107,6 @@ class monty_hall_example(example):
                                     self.student,
                                     self.host,
                                     self.final)
-
-        if self.ntrial > 0:
-            base += self.html_summary
-        return base
-
-    @property
-    def html_summary(self):
-        return '<h3>Success rate: %d out of %d: %d%%</h3>' % (self.total, self.ntrial, 100*self.mean)
 
 class conditional_nomatch(monty_hall_example):
     
