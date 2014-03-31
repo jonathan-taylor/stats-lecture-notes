@@ -128,12 +128,10 @@ Notes
 Week 1
 ~~~~~~
 
--  Graphical Summaries
-   `html <Week%201/Graphical%20Summaries.html>`__,\ `slides <Week%201/Graphical%20Summaries.slides.html>`__
--  Normal distribution
-   `html <Week%201/Normal%20distribution.html>`__,\ `slides <Week%201/Normal%20distribution.slides.html>`__
--  Numeric Summaries
-   `html <Week%201/Numeric%20Summaries.html>`__,\ `slides <Week%201/Numeric%20Summaries.slides.html>`__
+-  Graphical Summaries `html <Week%201/Graphical%20Summaries.html>`__.
+-  Numeric Summaries `html <Week%201/Numeric%20Summaries.html>`__.
+-  Normal distribution `html <Week%201/Normal%20distribution.html>`__.
+-  Exercises `html <Week%201/Exercises.html>`__.
 
 .. code:: python
 

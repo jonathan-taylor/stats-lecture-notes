@@ -26,15 +26,23 @@ def run_cell(kc, cell, collect_outputs=True):
     shell.execute(cell.input)
     # wait for finish, maximum 20s
     try:
-        shell.get_msg(timeout=10)
+        msg = shell.get_msg(timeout=10)
     except Empty:
         return []
+
+    reply = msg['content']
+    if reply['status'] == 'error':
+        print "\nFAILURE:"
+        print cell.input
+        print '-----'
+        print "raised:"
+        print '\n'.join(reply['traceback'])
 
     if collect_outputs:
         outputs = []
         while True:
             try:
-                reply = iopub.get_msg(timeout=0.2)
+                reply = iopub.get_msg(timeout=0.5)
             except Empty:
                 break
             content = reply['content']
@@ -112,8 +120,7 @@ def run_notebook(nb, cell_filter = lambda cell: cell,
                     outs = run_cell(kc, cell, 
                                     collect_outputs=modify_outputs)
                 except Exception as e:
-                    print "failed to run cell:", repr(e)
-                    print cell.input
+                    sys.stdout.write("failed to run cell:" + repr(e))
                     errors += 1
                     continue
 

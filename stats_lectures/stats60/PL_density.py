@@ -5,6 +5,7 @@ import scipy.interpolate
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.path as path
+from pylab import poly_between
 
 try:
    import rpy2.robjects as rpy
@@ -237,7 +238,7 @@ def SD_rule_of_thumb_normal(mult, ax=None, bins=30, regions=(), **opts):
       fig = plt.gcf()
       ax = fig.add_subplot(111)
       
-   ax, density = flat_density(sample, bins=bins, **opts)
+   ax, density, CDF = sample_density(sample, bins=bins, **opts)
    SD = np.std(sample)
    ax.annotate('Average', xy=(np.mean(sample), 0),
               arrowprops=dict(facecolor='black'), xytext=(np.mean(sample),-0.2),
@@ -266,7 +267,7 @@ def SD_rule_of_thumb_skewed(mult, ax=None, bins=30, regions=(), **opts):
       fig = plt.gcf()
       ax = fig.add_subplot(111)
       
-   ax, density = flat_density(sample, bins=bins, **opts)
+   ax, density, CDF = sample_density(sample, bins=bins, **opts)
    SD = np.std(sample)
    ax.annotate('Average', xy=(np.mean(sample), 0),
               arrowprops=dict(facecolor='black'), xytext=(np.mean(sample),-0.1),
@@ -317,7 +318,7 @@ def standardize_interval(lower, upper, mean, SD, ax=None,
       fig = plt.gcf()
       ax = fig.add_subplot(111)
 
-   xf, yf = pylab.poly_between([lower,mean,upper],[-0.05,-0.05,-0.05],[0.05,0.05,0.05])
+   xf, yf = poly_between([lower,mean,upper],[-0.05,-0.05,-0.05],[0.05,0.05,0.05])
    ax.fill(xf, yf, hatch='/', alpha=0.5, **fill_opts)
    ax.set_ylim([-0.4,0.3])
    ax.set_xlim([lower-0.55*SD,upper+0.3*SD])
@@ -359,7 +360,7 @@ def standardize_right(point, mean, SD, ax=None,
    lower = min(point, mean - 2*SD)
    upper = max(point, mean + 2*SD)
 
-   xf, yf = pylab.poly_between([point,mean+1000*SD],[-0.05,-0.05],[0.05,0.05])
+   xf, yf = poly_between([point,mean+1000*SD],[-0.05,-0.05],[0.05,0.05])
    ax.fill(xf, yf, hatch='/', alpha=0.5, **fill_opts)
    ax.set_ylim([-0.4,0.3])
    ax.set_xlim([lower-0.55*SD,upper+1.5*SD])
@@ -397,7 +398,7 @@ def standardize_left(point, mean, SD, ax=None,
    lower = min(point, mean - 2*SD)
    upper = max(point, mean + 2*SD)
 
-   xf, yf = pylab.poly_between([mean-1000*SD,point],[-0.05,-0.05],[0.05,0.05])
+   xf, yf = poly_between([mean-1000*SD,point],[-0.05,-0.05],[0.05,0.05])
    ax.fill(xf, yf, hatch='/', alpha=0.5, **fill_opts)
    ax.set_ylim([-0.4,0.3])
    ax.set_xlim([lower-0.55*SD,upper+1.5*SD])
