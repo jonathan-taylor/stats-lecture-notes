@@ -13,7 +13,7 @@ Instructor
 -  Office: Sequoia Hall #137
 -  Phone: 723-9230,
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Jonathan%20Taylor>`__
--  Office hours: M 2:00-3:00, Th 2:00-3:00
+-  Office hours: Mon Tues 2:00-3:00
 
 Teaching Assistants
 ^^^^^^^^^^^^^^^^^^^
@@ -22,7 +22,7 @@ Rakesh Achanta
 
 -  Office: Sequoia Hall TBA
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Rakesh%20Achanta>`__
--  Office hours : TBA
+-  Office hours : Thur 2:00-4:00
 
 Nan Bi
 
@@ -40,7 +40,7 @@ Snigdha Panigrahi
 
 -  Office: Sequoia Hall TBA
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Snigdha%20Panigrahi>`__
--  Office hours : TBA
+-  Office hours : Mon Wed 2:00-3:00
 
 Email list
 ----------
@@ -54,8 +54,9 @@ list.**
 Office hours
 ------------
 
-Although students are assigned to a section with a particular TA by last
-name, students can attend any TA's office hour.
+**As a general rule, we ask students NOT to complete the assignments
+during TAs' in office hours. This will be easier if students do not use
+laptops while in TAs' office hours.**
 
 Schedule & Location
 -------------------
@@ -77,11 +78,11 @@ level is assumed, but there is no calculus prerequisite.
 Course organization
 -------------------
 
--  There will be four lectures per week (M-Th 9:00-9:50).
+-  There will be four lectures per week (M-Th 10:00-10:50).
 
--  There will be quizzes every two weeks held on Tuesdays.
+-  There will be quizzes every two weeks held on Wednesdays.
 
--  Friday's session (F 9:00-9:50) will be devoted to problem sessions
+-  Friday's session (F 10:00-10:50) will be devoted to problem sessions
    held by the TAs.
 
 -  All relevant class information, such as homework assignments,
@@ -101,7 +102,20 @@ Online homework and peer review
 
 Part of your assessment will be based on peer review, done through the
 `online homework
-system <http://stats60.stanford.edu/cgi-bin/index.cgi>`__.
+system <http://stats60.stanford.edu/cgi-bin/index.cgi/>`__.
+
+Peer review breakdown
+^^^^^^^^^^^^^^^^^^^^^
+
+-  4% for completing the peer reviews;
+-  2% for completing the rating;
+-  4% for quality of the reviews.
+
+This last 4% is subjective, but we will glance at the comments you
+provided, and take into account students' ratings of your comments and
+the accuracy of your scores. Don't worry too much about this; if you are
+reasonably diligent about your peer reviews, you should earn at least 3%
+and probably 4%.
 
 Homework
 --------
@@ -128,11 +142,17 @@ Notes
 Week 1
 ~~~~~~
 
--  Graphical Summaries `html <Week%201/Graphical%20Summaries.html>`__.
--  Numeric Summaries `html <Week%201/Numeric%20Summaries.html>`__.
--  Normal distribution `html <Week%201/Normal%20distribution.html>`__.
+-  Chapter 3: Graphical Summaries & Histogram
+   `html <Week%201/Graphical%20Summaries.html>`__.
+-  Chapter 4: Average, SD and Numeric Summaries
+   `html <Week%201/Numeric%20Summaries.html>`__.
+-  Chapter 5: Normal distribution for data
+   `html <Week%201/Normal%20distribution.html>`__.
 -  Exercises `html <Week%201/Exercises.html>`__.
 
-.. code:: python
+Week 2
+~~~~~~
 
-    
+-  Chapters 1 and 2: Experiments `html <Week%202/Experiments.html>`__.
+-  Chapter 6: Measurement `html <Week%202/Measurement.html>`__.
+-  Chapters 8 and 9: Correlation `html <Week%202/Correlation.html>`__.
