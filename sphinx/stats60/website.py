@@ -65,8 +65,9 @@ def make_web(clean=True, force=False):
 
 
 def deploy():
-    os.system("""
+    os.system('''
     rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats60/WWW/ ;
+    ssh jtaylo@corn.stanford.edu "cd stats-lecture-notes; git fetch ; git pull";
     rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes-working/sphinx/stats60/www ;
-    """)
+    ''')
 
