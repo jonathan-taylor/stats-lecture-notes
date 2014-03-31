@@ -251,14 +251,14 @@ class dice_example(ProbabilitySpace):
                               success=self.success,
                               alpha=self.alpha)
         elif self.model_type == 'pair of dice':
-            base = dice_trial(event=lambda : False,
+            base = dice_trial(event=lambda outcome: False,
                               outcome=self.model.outcome,
                               color=None,
                               failure=self.failure,
                               success=self.success,
                               alpha=self.alpha)
         elif self.model_type == 'random variable':
-            base = dice_trial(event=lambda : False,
+            base = dice_trial(event=lambda outcome: False,
                               outcome=self.model.probability_space.outcome,
                               color=None,
                               failure=self.failure,
@@ -270,8 +270,10 @@ class dice_example(ProbabilitySpace):
 sum_to_seven = dice_example(event_spec=[(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)])
 sum_geq_eight = dice_example(event_spec= lambda outcome: outcome[0] + outcome[1] >= 8)
 sum_of_values = dice_example(random_variable = lambda outcome: outcome[0] + outcome[1])
+pair_of_dice = dice_example()
 
 examples = {'sum to seven':sum_to_seven,
             'sum greater than seven':sum_geq_eight,
-            'sum_of_values':sum_of_values}
+            'sum_of_values':sum_of_values,
+            'pair of dice':pair_of_dice}
 

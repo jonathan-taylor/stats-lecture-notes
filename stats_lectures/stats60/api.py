@@ -1,6 +1,8 @@
-from dice import *
-from roulette import *
 from PL_density import *
 from conv import *
 
-flat_density = sample_density
+stats60_examples = {}
+import dice, roulette, monty_hall
+for E in [dice.examples, roulette.examples, monty_hall.examples]:
+    for k in E:
+        stats60_examples[k] = E[k]
