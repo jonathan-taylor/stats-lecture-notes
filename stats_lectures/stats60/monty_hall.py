@@ -103,7 +103,7 @@ class monty_hall_noswitch(WeightedBox):
         return conditional_noswitch(mass_fn)
 
     @property
-    def event(self):
+    def success(self):
         if not hasattr(self, "_event"):
             self._event = RandomVariable(self, lambda outcome: outcome[0] == outcome[3])
         return self._event
@@ -178,8 +178,8 @@ no_switch = monty_hall_noswitch()
 switch = monty_hall_switch()
         
 examples = {'switch':switch,
-            'noswitch':no_switch} # ,
-#             'switch_match':switch.conditional(lambda o: o[0] == o[1]),
-#             'switch_nomatch':switch.conditional(lambda o: o[0] != o[1]),
-#             'no_switch_match':no_switch.conditional(lambda o: o[0] == o[1]),
-#             'no_switch_nomatch':no_switch.conditional(lambda o: o[0] != o[1])}
+            'noswitch':no_switch,
+            'switch_match':switch.conditional(lambda o: o[0] == o[1]),
+            'switch_nomatch':switch.conditional(lambda o: o[0] != o[1]),
+            'no_switch_match':no_switch.conditional(lambda o: o[0] == o[1]),
+            'no_switch_nomatch':no_switch.conditional(lambda o: o[0] != o[1])}
