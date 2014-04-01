@@ -1,5 +1,5 @@
 import numpy as np
-from .examples import Multinomial as multinomial
+from examples import Multinomial
 
 table = np.zeros((6,2,2))
 table[0,0] = [825*.62,825*.38]
@@ -16,13 +16,11 @@ table[5,0] = [373*.06,373*.94]
 table[5,1] = [341*.07,341*.93]
 
 
-UCB = multinomial(table,
+UCB = Multinomial(table,
                   labels=[['A','B','C','D','E','F'], 
                           ['Male','Female'], 
                           ['Accept', 'Deny']])
 
-#UCB_female = UCB.conditional(lambda outcome: outcome[1] == 'Female',
-#                             shape=(6,2))
+UCB_female = UCB.condition_margin(1, 'Female')
 
-#UCB_male = UCB.conditional(lambda outcome: outcome[1] == 'Male',
-#                           shape=(6,2))
+UCB_male = UCB.condition_margin(1, 'Male')

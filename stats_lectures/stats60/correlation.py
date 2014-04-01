@@ -31,7 +31,7 @@ class pearson_lee(object):
     @property
     def figure(self):
         if not hasattr(self, "_figure"):
-            self._figure = plt.figure(figsize=(8,8))
+            self._figure = plt.figure()
         self._axes = self._figure.gca()
         return self._figure
     
