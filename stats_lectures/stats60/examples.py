@@ -1,6 +1,7 @@
 from __future__ import division
 import itertools
 import numpy as np
+from copy import copy
 
 class ProbabilitySpace(object):
 
@@ -190,17 +191,35 @@ class Multinomial(WeightedBox):
 
     def __init__(self, counts, labels=None):
         counts = np.array(counts)
-        self.labels = labels or [i for i in itertools.product([range(j) for j in counts.shape])]
-        self._P = counts / (1. * counts.sum())
-        self._sample_space = labels
-        self._sample_space = self._P
+        self.labels = labels or [range(j) for j in counts.shape]
+        self.labels = labels or [range(j) for j in counts.shape]
+        self.prob = counts / (1. * counts.sum())
+        self._P = self.prob
+        self.shape = counts.shape
+        self._sample_space = [l for l in itertools.product(*self.labels)]
+        self._mass_function = dict([(l, p) for l, p in zip( \
+                    itertools.product(*self.labels),
+                    self.prob.reshape(-1))])
+
         self.outcome = None
 
     def trial(self, numeric=False):
-        V = np.random.multinomial(1, self.P.reshape(-1))
+        V = np.random.multinomial(1, self.prob.reshape(-1))
         I = np.nonzero(V)[0]
         self.outcome = self.sample_space[I]
         return self.outcome
+
+    def condition_margin(self, margin, value):
+        vars = range(len(self.shape))
+        vars.pop(margin)
+        idx = list(self.labels[margin]).index(value)
+        _slice = [slice(None)] * margin + [slice(idx,idx+1)]
+        print _slice
+        labels = copy(list(self.labels))
+        labels.pop(margin)
+        P = self.prob[_slice]
+        print labels, P.shape
+        return Multinomial(P, labels=labels)
 
 def Normal(mean, SD):
     rng = lambda : np.random.standard_normal() * SD + mean
