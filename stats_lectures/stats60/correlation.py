@@ -55,8 +55,9 @@ class pearson_lee(object):
             V = (self.M >= s - 0.5) * (self.M <= s + 0.5)
             return self.D[V].mean()
 
-    def SDline(self):
-        self.draw()
+    def SDline(self, draw=True):
+        if draw:
+            self.draw()
         xlim, ylim = self.axes.get_xlim(), self.axes.get_ylim()
         Dbar = self.D.mean()
         Dsd = self.D.std()
@@ -68,15 +69,39 @@ class pearson_lee(object):
         self.axes.set_xlim(xlim)
         self.axes.set_ylim(ylim)
 
-    def regression_line(self):
-        self.draw()
+    def regline(self, draw=True, label='Regression line'):
+        '''
+        Regression line
+        '''
+        if draw:
+            self.draw()
         xlim, ylim = self.axes.get_xlim(), self.axes.get_ylim()
         Dbar = self.D.mean()
         Dsd = self.D.std()
         Mbar = self.M.mean()
         Msd = self.M.std()
+        r = np.corrcoef([self.M, self.D])[0,1]
         self.axes.plot([Mbar-3.5*Msd,Mbar,Mbar+3.5*Msd],
-                       [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'y--', linewidth=5, label='regression line')
+                       [Dbar-r*3.5*Dsd,Dbar,Dbar+r*3.5*Dsd], 'k--', linewidth=5, label=label)
         self.axes.legend()
         self.axes.set_xlim(xlim)
         self.axes.set_ylim(ylim)
+
+    def invregline(self, draw=True, label='Regression line'):
+        '''
+        Regression line
+        '''
+        if draw:
+            self.draw()
+        xlim, ylim = self.axes.get_xlim(), self.axes.get_ylim()
+        Dbar = self.D.mean()
+        Dsd = self.D.std()
+        Mbar = self.M.mean()
+        Msd = self.M.std()
+        r = np.corrcoef([self.M, self.D])[0,1]
+        self.axes.plot([Mbar-r*3.5*Msd,Mbar,Mbar+r*3.5*Msd],
+                       [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'g--', linewidth=5, label=label)
+        self.axes.legend()
+        self.axes.set_xlim(xlim)
+        self.axes.set_ylim(ylim)
+
