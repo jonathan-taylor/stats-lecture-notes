@@ -101,13 +101,13 @@ Online homework and peer review
 
 Part of your assessment will be based on peer review, done through the
 `online homework
-system <http://stats60.stanford.edu/cgi-bin/index.cgi>`__.
+system <http://stats60.stanford.edu/cgi-bin/index.cgi/>`__.
 
 Homework
 --------
 
 -  There will be weekly homework assignments, run through our `online
-   system <http://stats60.stanford.edu/cgi-bin/index.cgi>`__.
+   system <http://stats60.stanford.edu/cgi-bin/index.cgi/>`__.
 
 -  You may discuss homework problems with other students and with TAs in
    office hours, but you have to prepare the solutions yourself.
@@ -117,7 +117,7 @@ Homework
    use laptops while in TAs' office hours.**
 
 -  Short answer questions on the homework will be graded by `peer
-   review <http://stats60.stanford.edu/cgi-bin/index.cgi>`__.
+   review <http://stats60.stanford.edu/cgi-bin/index.cgi/>`__.
 
 -  You must show your work (where necessary) for full credit (on quizzes
    as well).
