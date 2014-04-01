@@ -214,11 +214,9 @@ class Multinomial(WeightedBox):
         vars.pop(margin)
         idx = list(self.labels[margin]).index(value)
         _slice = [slice(None)] * margin + [slice(idx,idx+1)]
-        print _slice
         labels = copy(list(self.labels))
         labels.pop(margin)
         P = self.prob[_slice]
-        print labels, P.shape
         return Multinomial(P, labels=labels)
 
 def Normal(mean, SD):
