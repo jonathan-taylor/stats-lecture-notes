@@ -14,25 +14,25 @@ host_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' %
               encodestring(resource_stream('stats_lectures', \
                            'data/host.png').read()).decode('ascii')))
 
-student_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
+student_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s"/>' % 
                 (height,
                  width,
                  encodestring(resource_stream('stats_lectures', \
                               'data/user-student.png').read()).decode('ascii')))
 
-student_win_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
+student_win_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s"/>' % 
                     (height,
                      width,
                      encodestring(resource_stream('stats_lectures', \
                                   'data/student_win.png').read()).decode('ascii')))
 
-student_lose_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
+student_lose_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s"/>' % 
                      (height,
                       width,
                       encodestring(resource_stream('stats_lectures', \
                                   'data/student_lose.png').read()).decode('ascii')))
 
-car_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
+car_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s"/>' % 
             (height,
              width,
              encodestring(resource_stream('stats_lectures', \

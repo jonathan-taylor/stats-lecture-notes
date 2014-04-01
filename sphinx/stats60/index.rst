@@ -13,14 +13,14 @@ Instructor
 -  Office: Sequoia Hall #137
 -  Phone: 723-9230,
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Jonathan%20Taylor>`__
--  Office hours: Mon Tues 2:00-3:00
+-  Office hours: Mon Tues 1:00-2:00
 
 Teaching Assistants
 ^^^^^^^^^^^^^^^^^^^
 
 Rakesh Achanta
 
--  Office: Sequoia Hall TBA
+-  Office: Sequoia Hall 207
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Rakesh%20Achanta>`__
 -  Office hours : Thur 2:00-4:00
 
@@ -121,7 +121,7 @@ Homework
 --------
 
 -  There will be weekly homework assignments, run through our `online
-   system <http://stats60.stanford.edu/cgi-bin/index.cgi>`__.
+   system <http://stats60.stanford.edu/cgi-bin/index.cgi/>`__.
 
 -  You may discuss homework problems with other students and with TAs in
    office hours, but you have to prepare the solutions yourself.
@@ -131,7 +131,7 @@ Homework
    use laptops while in TAs' office hours.**
 
 -  Short answer questions on the homework will be graded by `peer
-   review <http://stats60.stanford.edu/cgi-bin/index.cgi>`__.
+   review <http://stats60.stanford.edu/cgi-bin/index.cgi/>`__.
 
 -  You must show your work (where necessary) for full credit (on quizzes
    as well).
@@ -142,17 +142,21 @@ Notes
 Week 1
 ~~~~~~
 
--  Chapter 3: Graphical Summaries & Histogram
-   `html <Week%201/Graphical%20Summaries.html>`__.
--  Chapter 4: Average, SD and Numeric Summaries
-   `html <Week%201/Numeric%20Summaries.html>`__.
--  Chapter 5: Normal distribution for data
-   `html <Week%201/Normal%20distribution.html>`__.
--  Exercises `html <Week%201/Exercises.html>`__.
+-  `Chapter 3: Graphical Summaries &
+   Histogram <Week%201/Graphical%20Summaries.html>`__.
+-  `Chapter 4: Average, SD and Numeric
+   Summaries <Week%201/Numeric%20Summaries.html>`__.
+-  `Chapter 5: Normal distribution for
+   data <Week%201/Normal%20distribution.html>`__.
+-  `Exercises <Week%201/Exercises.html>`__.
 
 Week 2
 ~~~~~~
 
--  Chapters 1 and 2: Experiments `html <Week%202/Experiments.html>`__.
--  Chapter 6: Measurement `html <Week%202/Measurement.html>`__.
--  Chapters 8 and 9: Correlation `html <Week%202/Correlation.html>`__.
+-  `Chapters 1 and 2: Experiments <Week%202/Experiments.html>`__.
+-  `Chapter 6: Measurement <Week%202/Measurement.html>`__.
+-  `Chapters 8 and 9: Correlation <Week%202/Correlation.html>`__.
+
+.. code:: python
+
+    
