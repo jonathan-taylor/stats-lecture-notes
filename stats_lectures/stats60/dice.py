@@ -112,7 +112,7 @@ def dice_html(digits, color_alpha=None):
     dice_png = print_figure(f, 'png')
     plt.close()
     dice_png64 = encodestring(dice_png).decode('ascii')
-    return '<img src="data:image/png;base64,%s" height="150" width="150">' % dice_png64
+    return '<img src="data:image/png;base64,%s" height="150" width="150"/>' % dice_png64
 
 _dice_cache = {}
 def dice_table(colors={}, alpha=0.5):
