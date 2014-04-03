@@ -136,6 +136,13 @@ Homework
 -  You must show your work (where necessary) for full credit (on quizzes
    as well).
 
+Final Exam
+----------
+
+According to the `exam
+schedule <http://studentaffairs.stanford.edu/registrar/students/spring-exams>`__
+our exam is to be held on June 10, at 8:30 AM.
+
 Notes
 -----
 
@@ -156,6 +163,11 @@ Week 2
 -  `Chapters 1 and 2: Experiments <Week%202/Experiments.html>`__.
 -  `Chapter 6: Measurement <Week%202/Measurement.html>`__.
 -  `Chapters 8 and 9: Correlation <Week%202/Correlation.html>`__.
+
+Tables
+------
+
+-  `Normal table <Tables/Normal%20table.html>`__
 
 .. code:: python
 
