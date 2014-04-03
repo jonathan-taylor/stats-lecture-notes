@@ -29,7 +29,8 @@ def make_web(clean=True, force=False):
     ipython nbconvert --to rst index.ipynb; rm index.ipynb ;
     ''')
 
-    for obook in glob.glob('../../notebooks/stats60/Week*/*ipynb'):
+    for obook in (glob.glob('../../notebooks/stats60/Week*/*ipynb') + 
+                  glob.glob('../../notebooks/stats60/Tables/*ipynb')):
         nbook = obook.replace('../../', './').replace('stats60/', '')
         if not os.path.exists(os.path.dirname(nbook)):
             os.makedirs(os.path.dirname(nbook))
@@ -41,20 +42,22 @@ def make_web(clean=True, force=False):
             shutil.copy(obook, nbook) 
             with open(nbook, 'r') as f:
                 nb = reads(f.read(), 'json')
+            print 'converting notebook %s' % nbook
             stripped_nb = strip_skipped_cells(nb)
             with open(nbook.replace('.ipynb', '_stripped.ipynb'), 'w') as f:
                 f.write(writes(nb, 'json'))
             build_nbook(nbook.replace('.ipynb', '_stripped.ipynb'))
 
-    for week in glob.glob('notebooks/Week*'):
-        wwwdir = week.replace('notebooks', 'www')
+    for dirname in glob.glob('notebooks/Week*') + ['notebooks/Tables']:
+        wwwdir = dirname.replace('notebooks', 'www')
         if not os.path.exists(wwwdir):
-            shutil.copytree(week, wwwdir)
+            shutil.copytree(dirname, wwwdir)
         else:
-            for f in glob.glob('%s/*' % week):
+            for f in glob.glob('%s/*' % dirname):
                 shutil.copy2(f, wwwdir)
 
-    for f in glob.glob('www/Week*/*stripped.*'):
+    for f in (glob.glob('www/Week*/*stripped.*') + 
+              glob.glob('www/Tables/*stripped.*')):
         os.rename(f, f.replace('_stripped', ''))
 
     cmd = '''
