@@ -16,7 +16,6 @@ for i in _red:
     _colors[i] = 'red'
 for i in _black:
     _colors[i] = 'black'
-print len(_red), len(_black)
 
 _colors['0'] = 'green'
 _colors['00'] = 'green'
