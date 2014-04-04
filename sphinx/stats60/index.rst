@@ -26,21 +26,21 @@ Rakesh Achanta
 
 Nan Bi
 
--  Office: Sequoia Hall TBA
+-  Office: Sequoia Hall 105
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Nan%20Bi>`__
--  Office hours : TBA
+-  Office hours : Fri 2:00-4:00
 
 Naftali Harris
 
--  Office: Sequoia Hall TBA
--  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Naftali%20Harris>`__
--  Office hours : TBA
+-  Office: Sequoia Hall 220
+-  Email(https://stanfordwho.stanford.edu/auth/lookup?search=Naftali%20Harris)
+-  Office hours : Tues 2:15-4:15
 
 Snigdha Panigrahi
 
--  Office: Sequoia Hall TBA
--  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Snigdha%20Panigrahi>`__
--  Office hours : Mon Wed 2:00-3:00
+-  Office: Sequoia Hall 105
+-  Email(https://stanfordwho.stanford.edu/auth/lookup?search=Snigdha%20Panigrahi)
+-  Office hours : Wed 12:00-2:00
 
 Email list
 ----------
