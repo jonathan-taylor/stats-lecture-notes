@@ -167,7 +167,8 @@ Week 2
 Tables
 ------
 
--  `Normal table <Tables/Normal%20table.html>`__
+-  `Symmetric normal table <Tables/Symmetric%20normal%20table.html>`__
+-  `Tail normal table <Tables/Tail%20normal%20table.html>`__
 
 .. code:: python
 
