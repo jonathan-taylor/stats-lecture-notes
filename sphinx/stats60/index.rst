@@ -181,6 +181,7 @@ Week 2
 -  `Chapters 8 and 9: Correlation <Week%202/Correlation.html>`__
    (`slides <Week%202/Correlation.slides.html>`__,
    `pdf <Week%202/Correlation.pdf>`__).
+-  `Exercises <Week%202/Exercises.html>`__.
 
 Tables
 ------
