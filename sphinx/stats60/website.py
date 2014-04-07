@@ -8,9 +8,11 @@ def build_nbook(nbook):
     shutil.copy2('stats60_html.tplx', nbook_dir)
     cmd = '''
     cd "%s"; 
-    ipython nbconvert --to=slides "%s" --template=./stats60_slides.tplx;
+    ipython nbconvert --to=slides "%s" --template=./stats60_slides.tplx --reveal-prefix=http://stats60.stanford.edu/reveal.js;
+    ipython nbconvert --to=latex --post=pdf "%s" --template=./stats60_article.tplx;
     ipython nbconvert --to=html "%s" --template=./stats60_html.tplx;
     ''' % (nbook_dir, 
+            os.path.abspath(nbook),
             os.path.abspath(nbook),
             os.path.abspath(nbook))
     print cmd
@@ -42,19 +44,24 @@ def make_web(clean=True, force=False):
             shutil.copy(obook, nbook) 
             with open(nbook, 'r') as f:
                 nb = reads(f.read(), 'json')
-            print 'converting notebook %s' % nbook
+            print 'running and stripping skipped cells from notebook %s' % nbook
             stripped_nb = strip_skipped_cells(nb)
-            with open(nbook.replace('.ipynb', '_stripped.ipynb'), 'w') as f:
-                f.write(writes(nb, 'json'))
-            build_nbook(nbook.replace('.ipynb', '_stripped.ipynb'))
 
-    for dirname in glob.glob('notebooks/Week*') + ['notebooks/Tables']:
+            new_nbook = nbook.replace('notebooks', 'built_notebooks')
+            if not os.path.exists(os.path.dirname(new_nbook)):
+                os.makedirs(os.path.dirname(new_nbook))
+            with open(new_nbook, 'w') as f:
+                f.write(writes(nb, 'json'))
+            build_nbook(new_nbook)
+
+    for dirname in glob.glob('built_notebooks/Week*') + ['built_notebooks/Tables']:
         wwwdir = dirname.replace('notebooks', 'www')
         if not os.path.exists(wwwdir):
             shutil.copytree(dirname, wwwdir)
         else:
             for f in glob.glob('%s/*' % dirname):
-                shutil.copy2(f, wwwdir)
+                if not os.path.isdir(f):
+                    shutil.copy2(f, wwwdir)
 
     for f in (glob.glob('www/Week*/*stripped.*') + 
               glob.glob('www/Tables/*stripped.*')):

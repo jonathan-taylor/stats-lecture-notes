@@ -7,6 +7,7 @@ from base64 import encodestring
 import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML
+from ipy_table import make_table
 
 from examples import BoxModel, ProbabilitySpace, RandomVariable
 
@@ -65,7 +66,6 @@ def dice(digits,size=(150,150)):
     output[0.1*size[0]:1.1*size[0],0.1*size[1]:1.1*size[1]] = img1[:(1.1*size[0]-0.1*size[0]),:(1.1*size[1]-0.1*size[1])]
     output[0.1*size[0]:1.1*size[0]:,1.3*size[1]:2.3*size[1]] = img2[:(1.1*size[0]-0.1*size[0]),:(2.3*size[1]-1.3*size[1])]
     return output
-
 
 def dice_html(digits, color_alpha=None):
     """
@@ -266,6 +266,29 @@ class dice_example(ProbabilitySpace):
                               alpha=self.alpha)
             base += '<h3>Outcome is: %s</h3>' % `self.outcome`
         return base
+
+class Single(BoxModel):
+
+    desc = 'An example consisting of rolling one die.'
+
+    def _repr_html_(self):
+        return _single_dice[self.outcome]
+
+roll_one_die = Single(range(1,7))
+
+_single_dice = {}
+for i in range(1,7):
+    f = plt.figure(figsize=(4,4))
+    ax = f.gca()
+    ax.imshow(die(i))
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_frame_on(False)
+    die_png = print_figure(f, 'png')
+    plt.close()
+    die_png64 = encodestring(die_png).decode('ascii')
+    _single_dice[i] = '<img src="data:image/png;base64,%s" height="150" width="150"/>' % die_png64
+
 
 sum_to_seven = dice_example(event_spec=[(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)])
 sum_geq_eight = dice_example(event_spec= lambda outcome: outcome[0] + outcome[1] >= 8)
