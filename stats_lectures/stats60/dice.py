@@ -9,7 +9,7 @@ from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML
 from ipy_table import make_table
 
-from examples import BoxModel, ProbabilitySpace, RandomVariable
+from .probability import BoxModel, ProbabilitySpace, RandomVariable
 
 _dice_arrays = {}
 
