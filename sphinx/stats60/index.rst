@@ -143,6 +143,12 @@ According to the `exam
 schedule <http://studentaffairs.stanford.edu/registrar/students/spring-exams>`__
 our exam is to be held on June 10, at 8:30 AM.
 
+Practice Quizzes
+----------------
+
+-  `Practice Quiz 1 <practice_quizzes/practice_quiz1.pdf>`__,
+   (`solution <practice_quizzes/practice_quiz1_solution.pdf>`__).
+
 Notes
 -----
 
@@ -150,19 +156,31 @@ Week 1
 ~~~~~~
 
 -  `Chapter 3: Graphical Summaries &
-   Histogram <Week%201/Graphical%20Summaries.html>`__.
+   Histogram <Week%201/Graphical%20Summaries.html>`__
+   (`slides <Week%201/Graphical%20Summaries.slides.html>`__,
+   `pdf <Week%201/Graphical%20Summaries.pdf>`__).
 -  `Chapter 4: Average, SD and Numeric
-   Summaries <Week%201/Numeric%20Summaries.html>`__.
+   Summaries <Week%201/Numeric%20Summaries.html>`__
+   (`slides <Week%201/Numeric%20Summaries.slides.html>`__,
+   `pdf <Week%201/Numeric%20Summaries.pdf>`__).
 -  `Chapter 5: Normal distribution for
-   data <Week%201/Normal%20distribution.html>`__.
+   data <Week%201/Normal%20distribution.html>`__
+   (`slides <Week%201/Normal%20distribution.slides.html>`__,
+   `pdf <Week%201/Normal%20distribution.pdf>`__).
 -  `Exercises <Week%201/Exercises.html>`__.
 
 Week 2
 ~~~~~~
 
--  `Chapters 1 and 2: Experiments <Week%202/Experiments.html>`__.
--  `Chapter 6: Measurement <Week%202/Measurement.html>`__.
--  `Chapters 8 and 9: Correlation <Week%202/Correlation.html>`__.
+-  `Chapters 1 and 2: Experiments <Week%202/Experiments.html>`__
+   (`slides <Week%202/Experiments.slides.html>`__,
+   `pdf <Week%202/Experiments.pdf>`__).
+-  `Chapter 6: Measurement <Week%202/Measurement.html>`__
+   (`slides <Week%202/Measurement.slides.html>`__,
+   `pdf <Week%202/Measurement.pdf>`__).
+-  `Chapters 8 and 9: Correlation <Week%202/Correlation.html>`__
+   (`slides <Week%202/Correlation.slides.html>`__,
+   `pdf <Week%202/Correlation.pdf>`__).
 
 Tables
 ------

@@ -28,6 +28,7 @@ class pearson_lee(object):
             s = self.strip
             xf, yf = poly_between([s-.5,s+.5], [50,50], [75, 75])
             self.axes.fill(xf, yf, facecolor=self.strip_color, alpha=0.4, hatch='/')
+
     @property
     def figure(self):
         if not hasattr(self, "_figure"):
@@ -87,7 +88,9 @@ class pearson_lee(object):
         self.axes.set_xlim(xlim)
         self.axes.set_ylim(ylim)
 
-    def invregline(self, draw=True, label='Regression line'):
+    def invregline(self, draw=True, label='Regression line',
+                   linestyle='--',
+                   color='yellow'):
         '''
         Regression line
         '''
@@ -99,8 +102,10 @@ class pearson_lee(object):
         Mbar = self.M.mean()
         Msd = self.M.std()
         r = np.corrcoef([self.M, self.D])[0,1]
-        self.axes.plot([Mbar-r*3.5*Msd,Mbar,Mbar+r*3.5*Msd],
-                       [Dbar-3.5*Dsd,Dbar,Dbar+3.5*Dsd], 'g--', linewidth=5, label=label)
+        self.axes.plot([Mbar-r*5*Msd,Mbar,Mbar+r*5*Msd],
+                       [Dbar-5*Dsd,Dbar,Dbar+5*Dsd], 
+                       linestyle=linestyle,
+                       color=color, linewidth=5, label=label)
         self.axes.legend()
         self.axes.set_xlim(xlim)
         self.axes.set_ylim(ylim)
