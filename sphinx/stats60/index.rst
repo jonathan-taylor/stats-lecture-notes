@@ -183,6 +183,17 @@ Week 2
    `pdf <Week%202/Correlation.pdf>`__).
 -  `Exercises <Week%202/Exercises.html>`__.
 
+Week 3
+~~~~~~
+
+-  `Chapters 10-12: Regression <Week%203/Regression.html>`__
+   (`slides <Week%203/Regression.slides.html>`__,
+   `pdf <Week%203/Regression.pdf>`__).
+-  `Chapter 13: Probability <Week%203/Probability.html>`__
+   (`slides <Week%203/Probability.slides.html>`__,
+   `pdf <Week%202/Probability.pdf>`__).
+-  `Exercises <Week%203/Exercises.html>`__.
+
 Tables
 ------
 
