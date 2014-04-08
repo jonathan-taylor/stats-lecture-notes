@@ -191,7 +191,7 @@ Week 3
    `pdf <Week%203/Regression.pdf>`__).
 -  `Chapter 13: Probability <Week%203/Probability.html>`__
    (`slides <Week%203/Probability.slides.html>`__,
-   `pdf <Week%202/Probability.pdf>`__).
+   `pdf <Week%203/Probability.pdf>`__).
 -  `Exercises <Week%203/Exercises.html>`__.
 
 Tables
