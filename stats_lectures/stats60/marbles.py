@@ -1,6 +1,6 @@
 from copy import copy
 import numpy as np
-from examples import BoxModel
+from .probability import BoxModel
 from matplotlib.patches import Circle, Rectangle
 from base64 import encodestring
 import matplotlib.pyplot as plt
@@ -42,13 +42,15 @@ class Marbles(BoxModel):
 
     replace = True
 
-    def __init__(self, values, grid=(2,3)):
+    def __init__(self, values, grid=(-1,5)):
         values = copy(values)
         self.grid = grid
         np.random.shuffle(values)
         BoxModel.__init__(self, values)
         self._cached_html_ = _html_box(self.values, grid=self.grid)
         self._drawn = []
+
+
 
     def trial(self):
         '''
@@ -104,7 +106,7 @@ def _html_box(values, outcome=None, grid=(2,3)):
                 stop = True
             idx += 1
         if ''.join(row):
-            _table += '<tr>' + '\n'.join(['<td>%s</td>' % r for r in row]) + '</tr>'
+            _table += '<tr>' + '\n'.join(['<td>%s</td>' % r for r in row if r]) + '</tr>'
         if stop:
             break
 

@@ -6,7 +6,7 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML, display, Latex
 
-from examples import BoxModel, ProbabilitySpace, Geometric
+from .probability import BoxModel, ProbabilitySpace, Geometric
 
 _colors = {}
 _red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]

@@ -103,8 +103,12 @@ class BoxModel(ProbabilitySpace):
     def __init__(self, values):
         self.values = list(values)
         self._nvalues = len(self.values)
-        self._sample_space = self.values
-        self._mass_function = dict([(v, 1./len(self._sample_space)) for v in self._sample_space])
+        self._sample_space = list(set(self.values))
+        self._mass_function = {}
+        n = len(self.values)
+        for item in self.values:
+            self._mass_function.setdefault(item, 0)
+            self._mass_function[item] += 1. / n
         self.outcome = None
 
     def trial(self):
