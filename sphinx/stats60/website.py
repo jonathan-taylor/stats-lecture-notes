@@ -55,7 +55,7 @@ def make_web(clean=True, force=False):
             build_nbook(new_nbook)
 
     for dirname in glob.glob('built_notebooks/Week*') + ['built_notebooks/Tables']:
-        wwwdir = dirname.replace('notebooks', 'www')
+        wwwdir = dirname.replace('built_notebooks', 'www')
         if not os.path.exists(wwwdir):
             shutil.copytree(dirname, wwwdir)
         else:
