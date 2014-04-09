@@ -136,6 +136,17 @@ Homework
 -  You must show your work (where necessary) for full credit (on quizzes
    as well).
 
+Homework schedule
+~~~~~~~~~~~~~~~~~
+
+The homeworks will all follow the same schedule every week:
+
+-  Part A: Assigned Tuesday at 9:00AM. Due Friday at 9:00AM.
+
+-  Part B: Assigned Tuesday at 9:00AM. Due Monday at 9:00AM.
+
+-  Peer review: Assigned Monday at 11:00AM. Due Tuesday at 6:00PM.
+
 Final Exam
 ----------
 
