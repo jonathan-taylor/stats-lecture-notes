@@ -5,7 +5,7 @@ from itertools import product
 import numpy as np
 from IPython.core.display import HTML
 
-from examples import WeightedBox, RandomVariable
+from probability import WeightedBox, RandomVariable
 
 height, width = 120, 120
 host_html = ('<img height="%d" width="%d" src="data:image/png;base64,%s">' % 
