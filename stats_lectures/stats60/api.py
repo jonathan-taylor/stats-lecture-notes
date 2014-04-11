@@ -13,7 +13,6 @@ from gender_bias import UCB, UCB_female, UCB_male
 stats60_figsize = (5.5,5.5)
 
 import matplotlib
-matplotlib.rcParams['legend.scatterpoints'] = 1
 matplotlib.rcParams['figure.figsize'] = stats60_figsize
 
 from tables import *
