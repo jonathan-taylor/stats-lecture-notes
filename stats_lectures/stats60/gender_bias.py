@@ -1,5 +1,5 @@
 import numpy as np
-from examples import Multinomial
+from probability import Multinomial
 
 table = np.zeros((6,2,2))
 table[0,0] = [825*.62,825*.38]
