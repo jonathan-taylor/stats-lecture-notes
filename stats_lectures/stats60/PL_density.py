@@ -10,7 +10,7 @@ from pylab import poly_between
 try:
    import rpy2.robjects as rpy
    import rpy2.robjects.numpy2ri
-except ImportError:
+except (ImportError, LookupError):
    rpy = None
 
 # histogram our data with numpy
