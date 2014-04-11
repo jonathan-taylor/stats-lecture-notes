@@ -20,27 +20,38 @@ Teaching Assistants
 
 Rakesh Achanta
 
--  Office: Sequoia Hall 207
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Rakesh%20Achanta>`__
--  Office hours : Thur 2:00-4:00
+-  Office hours : Thur 2:00-4:00, Sequoia Hall 207
 
 Nan Bi
 
--  Office: Sequoia Hall 105
 -  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Nan%20Bi>`__
--  Office hours : Fri 2:00-4:00
+-  Office hours : Fri 2:00-4:00, Sequoia Hall 105.
 
 Naftali Harris
 
--  Office: Sequoia Hall 220
--  Email(https://stanfordwho.stanford.edu/auth/lookup?search=Naftali%20Harris)
--  Office hours : Tues 2:15-4:15
+-  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Naftali%20Harris>`__
+-  Office hours : Tues 2:15-4:15, Sequoia Hall 220
 
 Snigdha Panigrahi
 
--  Office: Sequoia Hall 105
--  Email(https://stanfordwho.stanford.edu/auth/lookup?search=Snigdha%20Panigrahi)
--  Office hours : Wed 12:00-2:00
+-  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=Snigdha%20Panigrahi>`__
+-  Office hours : Wed 12:00-2:00, Sequoia Hall 105.
+
+Nate Randall
+
+-  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=nrandall>`__
+-  Office hours : 8:00PM-10:00PM Sunday, Meyer 146
+
+Julia Hafer
+
+-  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=jhafer>`__
+-  Office hours : Tuesday 7:00PM-9:00PM, Meyer 146
+
+Nick Sullivan
+
+-  `Email <https://stanfordwho.stanford.edu/auth/lookup?search=nsull13>`__
+-  Office hours : Saturday, 3:00PM-5:00PM, Meyer 2nd Floor.
 
 Email list
 ----------
