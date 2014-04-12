@@ -6,7 +6,8 @@ import PIL.Image
 from IPython.core.pylabtools import print_figure
 from IPython.core.display import HTML, display, Latex
 
-from .probability import BoxModel, ProbabilitySpace, Geometric
+from .probability import (BoxModel, ProbabilitySpace, 
+                          Geometric, Binomial)
 
 _colors = {}
 _red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
@@ -228,6 +229,12 @@ odd_numbers.desc = 'A roulette bet on only odd numbers.'
 
 red = roulette_example(event_spec=red_test)
 red.desc = 'A roulette bet on red numbers.'
+
+five = roulette_example(event_spec=lambda outcome: outcome == 5)
+five.desc = 'A roulette bet on red numbers.'
+
+sixplays_five = Binomial(6, BoxModel(range(38)), [0])
+eightplays_red = Binomial(8, BoxModel(range(38)), range(18))
 
 black = roulette_example(event_spec=black_test)
 black.desc = 'A roulette bet on black  numbers.'

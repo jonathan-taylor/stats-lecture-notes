@@ -67,6 +67,46 @@ def dice(digits,size=(150,150)):
     output[0.1*size[0]:1.1*size[0]:,1.3*size[1]:2.3*size[1]] = img2[:(1.1*size[0]-0.1*size[0]),:(2.3*size[1]-1.3*size[1])]
     return output
 
+def die_html(digit, height=100, width=100):
+    """
+    Return pair of dice, side by side as HTML img.
+    If color_alpha is not None, then the black and white
+    pair of dice will be blended as if they were labelled
+    with a particular color.
+
+    Parameters
+    ----------
+
+    digit : int
+        Which die (from 1 to 6)
+
+    color_alpha : (color_hex, float)
+        The first argument should be a color as
+        in hex string format, (i.e. "#820000")
+        while the second is an alpha value between 0 and 1.
+
+    Returns
+    -------
+
+    img_html : str
+        HTML version of dice as an <img>.
+
+    """
+
+    die_arr = die(digit)
+        
+    f = plt.figure()
+    ax = f.gca()
+    ax.imshow(die_arr)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_frame_on(False)
+    die_png = print_figure(f, 'png')
+    plt.close()
+    die_png64 = encodestring(die_png).decode('ascii')
+    return '<img src="data:image/png;base64,%s" height="%d" width="%d"/>' % (die_png64, height, width)
+
+
 def dice_html(digits, color_alpha=None):
     """
     Return pair of dice, side by side as HTML img.

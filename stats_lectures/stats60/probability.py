@@ -2,6 +2,7 @@ from __future__ import division
 import itertools
 import numpy as np
 from copy import copy
+from scipy.stats import binom
 
 class ProbabilitySpace(object):
 
@@ -172,6 +173,36 @@ class Geometric(ProbabilitySpace):
         def mass_fn(j, prob=self.prob):
             return prob * (1.-prob)**(j-1)
         mass_fn._repr_latex_ = lambda s: Latex('$f(j) = p(1-p)^{j-1}$')
+
+    def trial(self, numeric=True):
+        """
+        Run a trial, incrementint success counter and updating
+        html output
+        """
+        nwait = 0
+        while True:
+            nwait += 1
+            if self.bernoulli.trial():
+                break
+        self.outcome = nwait
+        return self.outcome
+
+    def _repr_html_(self):
+        base = self.bernoulli._repr_html_()
+
+class Binomial(ProbabilitySpace):
+
+    '''
+    Binomial distribution derived from a bernoulli example
+    '''
+
+    def __init__(self, ndraws, box_model, event_spec):
+        self.bernoulli = box_model.event(event_spec)
+        P = self.bernoulli.mass_function[True]
+        self.ndraws = ndraws
+        self._sample_space = range(self.ndraws+1)
+        self._mass_function = dict([(i, binom.pmf(i, self.ndraws, P))
+                                    for i in self._sample_space])
 
     def trial(self, numeric=True):
         """
