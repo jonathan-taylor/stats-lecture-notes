@@ -1,6 +1,6 @@
 from copy import copy
 import numpy as np
-from probability import BoxModel
+from .probability import BoxModel
 from matplotlib.patches import Circle, Rectangle
 from base64 import encodestring
 import matplotlib.pyplot as plt
