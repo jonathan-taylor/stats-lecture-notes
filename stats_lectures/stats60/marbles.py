@@ -38,6 +38,32 @@ for symb, col in zip(['B', 'R'], ['blue', 'red']):
     _marble_cache[(symb,True)] = '<img src="data:image/png;base64,%s" height="40" width="40">' % marble_png64
     plt.close()
 
+def numbered_marble(col, number):
+    if (col, number) not in _marble_cache:
+        fig = plt.figure(figsize=(4,4))
+        ax = fig.gca()
+        ax.set_xlim([-1.2,1.2])
+        ax.set_ylim([-1.2,1.2])
+
+        circle = Circle((0,0), 1., facecolor=col,
+                        edgecolor='k', alpha=0.7)
+        ax.add_patch(circle)
+        ax.set_frame_on(False)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.text(0, 0, str(number), fontsize=100,
+                verticalalignment='center',
+                horizontalalignment='center')
+        plt.draw()
+        ax.set_xlim([-1.2,1.2])
+        ax.set_ylim([-1.2,1.2])
+
+        marble_png = print_figure(fig, 'png')
+        marble_png64 = encodestring(marble_png).decode('ascii')
+        _marble_cache[(col, number)] = '<img src="data:image/png;base64,%s" height="40" width="40">' % marble_png64
+        plt.close()
+    return (col, number)
+
 class Marbles(BoxModel):
 
     replace = True
