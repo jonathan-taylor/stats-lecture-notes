@@ -222,3 +222,6 @@ Tables
 -  `Symmetric normal table <Tables/Symmetric%20normal%20table.html>`__
 -  `Tail normal table <Tables/Tail%20normal%20table.html>`__
 
+.. code:: python
+
+    
