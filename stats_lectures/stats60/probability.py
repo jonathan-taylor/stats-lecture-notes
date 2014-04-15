@@ -198,7 +198,7 @@ class Binomial(ProbabilitySpace):
 
     def __init__(self, ndraws, box_model, event_spec):
         self.bernoulli = box_model.event(event_spec)
-        P = self.bernoulli.mass_function[True]
+        self._P = P = self.bernoulli.mass_function[True]
         self.ndraws = ndraws
         self._sample_space = range(self.ndraws+1)
         self._mass_function = dict([(i, binom.pmf(i, self.ndraws, P))
@@ -209,12 +209,7 @@ class Binomial(ProbabilitySpace):
         Run a trial, incrementint success counter and updating
         html output
         """
-        nwait = 0
-        while True:
-            nwait += 1
-            if self.bernoulli.trial():
-                break
-        self.outcome = nwait
+        self.outcome = binom.rvs(self.ndraws, self._P)
         return self.outcome
 
     def _repr_html_(self):
