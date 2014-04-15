@@ -171,6 +171,9 @@ Practice Quizzes
 -  `Practice Quiz 1 <practice_quizzes/practice_quiz1.pdf>`__,
    (`solution <practice_quizzes/practice_quiz1_solution.pdf>`__).
 
+-  `Practice Quiz 2 <practice_quizzes/practice_quiz2.pdf>`__,
+   (`solution <practice_quizzes/practice_quiz2_solution.pdf>`__).
+
 Notes
 -----
 
@@ -215,6 +218,18 @@ Week 3
    (`slides <Week%203/Probability.slides.html>`__,
    `pdf <Week%203/Probability.pdf>`__).
 -  `Exercises <Week%203/Exercises.html>`__.
+
+Week 4
+~~~~~~
+
+-  `Chapter 15: Binomial formula <Week%204/Binomial.html>`__
+   (`slides <Week%204/Binomial.slides.html>`__,
+   `pdf <Week%204/Binomial.pdf>`__).
+-  `Chapters 16-17: Chance
+   variability <Week%204/Chance%20variability.html>`__
+   (`slides <Week%204/Chance%20variability.slides.html>`__,
+   `pdf <Week%204/Chance%20variability.pdf>`__).
+-  `Exercises <Week%204/Exercises.html>`__.
 
 Tables
 ------
