@@ -10,12 +10,12 @@ from .probability import (BoxModel, ProbabilitySpace,
                           Geometric, Binomial, RandomVariable)
 
 _colors = {}
-_red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
-_black = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
+red_numbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
+black_numbers = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
 
-for i in _red:
+for i in red_numbers:
     _colors[i] = 'red'
-for i in _black:
+for i in black_numbers:
     _colors[i] = 'black'
 
 _colors['0'] = 'green'
@@ -76,19 +76,22 @@ class roulette_position(object):
 
     def __init__(self, place, facecolor="red",
                  bg_alpha=None,
-                 correct=None):
+                 correct=None,
+                 fontsize=120):
         self.place = place
         self.facecolor = facecolor
         self.bg_alpha = bg_alpha
         self.correct = correct
-    
+        self.fontsize = fontsize
+
     def _repr_html_(self):
         key = (self.place, self.facecolor, self.bg_alpha, self.correct)
         if (key not in _places_cache):
             _places_cache[key] = _html_place(self.place,
                                              facecolor=self.facecolor,
                                              bg_alpha=self.bg_alpha,
-                                             correct=self.correct)
+                                             correct=self.correct,
+                                             fontsize=self.fontsize)
         return _places_cache[key]
 
 empty_table = {}
@@ -136,10 +139,10 @@ def odd_test(outcome):
     return outcome in range(1, 36, 2)
 
 def red_test(outcome):
-    return outcome in _red
+    return outcome in red_numbers
 
 def black_test(outcome):
-    return outcome in _black
+    return outcome in black_numbers
 
 def roulette_trial(event_spec = odd_test,
                    outcome=None, betcolor="#0000aa", alpha=0.25):
@@ -232,11 +235,18 @@ red.desc = 'A roulette bet on red numbers.'
 
 red_bet10 = RandomVariable(red, lambda outcome: 10 * (2 * outcome - 1))
 
+def bet(event, amount, ntimes, initial_amount=0):
+    odds = (len(range(1,37)) - len(event)) / len(event)
+    binom = Binomial(ntimes, BoxModel(sample_space), event)
+    rv = RandomVariable(binom, lambda outcome : amount * (odds * outcome - (ntimes - outcome)) + initial_amount)
+    return rv
+
 five = roulette_example(event_spec=lambda outcome: outcome == 5)
 five.desc = 'A roulette bet on red numbers.'
 
-sixplays_five = Binomial(6, BoxModel(range(38)), [0])
-eightplays_red = Binomial(8, BoxModel(range(38)), range(18))
+sample_space = range(1,37) + ['0', '00']
+sixplays_five = Binomial(6, BoxModel(sample_space), [5])
+eightplays_red = Binomial(8, BoxModel(sample_space), red_numbers)
 
 black = roulette_example(event_spec=black_test)
 black.desc = 'A roulette bet on black  numbers.'
@@ -275,3 +285,4 @@ examples = {'odd numbers':odd_numbers,
             'time until special':special_bet_waiting,
             'red':red,
             'black':black}
+
