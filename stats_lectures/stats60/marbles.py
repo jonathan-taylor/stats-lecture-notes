@@ -66,17 +66,14 @@ def numbered_marble(col, number):
 
 class Marbles(BoxModel):
 
-    replace = True
-
-    def __init__(self, values, grid=(-1,5)):
+    def __init__(self, values, grid=(-1,5), replace=True):
         values = copy(values)
+        self.replace = replace
         self.grid = grid
         np.random.shuffle(values)
         BoxModel.__init__(self, values)
         self._cached_html_ = _html_box(self.values, grid=self.grid)
         self._drawn = []
-
-
 
     def trial(self):
         '''
