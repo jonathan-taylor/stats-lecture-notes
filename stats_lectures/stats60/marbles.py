@@ -88,7 +88,7 @@ class Marbles(BoxModel):
             V = self.values.pop(outcome)
             drawn = self._drawn + [V]
             Marbles.__init__(self, self.values,
-                             grid=self.grid)
+                             grid=self.grid, replace=self.replace)
             self._drawn = drawn
             return V
         else:
