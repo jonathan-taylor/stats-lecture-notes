@@ -69,6 +69,8 @@ def make_web(clean=True, force=False):
 
     cmd = '''
     make html; 
+    rm -fr _build/html/quizzes;
+    rm -fr _build/html/_sources;
     cp -r _build/html/* www; 
     '''
     os.system(cmd)
