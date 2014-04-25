@@ -127,7 +127,7 @@ class monty_hall_noswitch(WeightedBox):
 class monty_hall_switch(monty_hall_noswitch):
 
     """
-    The no-switching strategy as default
+    The switching strategy as default
     """
 
 
@@ -162,11 +162,15 @@ class conditional_switch(monty_hall_switch):
     We draw samples until initial student guess does not match the car.
     """
 
+    ndoors = 3
+
     def __init__(self, mass_function):
         WeightedBox.__init__(self, mass_function)
 
 class conditional_noswitch(monty_hall_noswitch):
     
+    ndoors = 3
+
     """
     We draw samples until initial student guess does not match the car.
     """
