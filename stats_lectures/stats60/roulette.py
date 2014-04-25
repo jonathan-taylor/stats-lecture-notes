@@ -251,13 +251,10 @@ eightplays_red = Binomial(8, BoxModel(sample_space), red_numbers)
 black = roulette_example(event_spec=black_test)
 black.desc = 'A roulette bet on black  numbers.'
 
-def middle_test(outcome):
-    return outcome in range(13, 25)
-
-middle_third = roulette_example(event_spec=range(13,25))
+middle_third = roulette_example(event_spec=lambda outcome: outcome in range(13,25))
 middle_third.desc = 'A roulette bet on only the middle third of the possible numbers.'
 
-special_bet = roulette_example(event_spec=[2,24,29])
+special_bet = roulette_example(event_spec=lambda outcome: outcome in [2,24,29])
 special_bet.desc = 'A roulette bet on [2,24,29].'
 
 class roulette_geometric(roulette_example):
@@ -279,7 +276,7 @@ special_bet_waiting = roulette_geometric([2,24,29])
 special_bet.desc = 'Waiting time until one of [2,24,29] is rolled.'
 
 examples = {'odd numbers':odd_numbers, 
-            'special_bet':special_bet,
+            'lucky numbers':special_bet,
             'middle third':middle_third,
             'time until odd':odd_waiting,
             'time until special':special_bet_waiting,
