@@ -3,6 +3,7 @@ import itertools
 import numpy as np
 from copy import copy
 from scipy.stats import binom
+from .conv import conv_integer_rv
 
 class ProbabilitySpace(object):
 
@@ -174,7 +175,7 @@ class Geometric(ProbabilitySpace):
             return prob * (1.-prob)**(j-1)
         mass_fn._repr_latex_ = lambda s: Latex('$f(j) = p(1-p)^{j-1}$')
 
-    def trial(self, numeric=True):
+    def trial(self):
         """
         Run a trial, incrementint success counter and updating
         html output
@@ -196,15 +197,21 @@ class Binomial(ProbabilitySpace):
     Binomial distribution derived from a bernoulli example
     '''
 
-    def __init__(self, ndraws, box_model, event_spec):
-        self.bernoulli = box_model.event(event_spec)
+    def __init__(self, ndraws, box_model, event_spec=None):
+        if event_spec is not None:
+            self.bernoulli = box_model.event(event_spec)
+        else:
+            self.bernoulli = box_model
+            if sorted(np.array(box_model.sample_space, np.int)) != [0,1]:
+                raise ValueError('expecting a bernoulli random variable')
+
         self._P = P = self.bernoulli.mass_function[True]
         self.ndraws = ndraws
         self._sample_space = range(self.ndraws+1)
         self._mass_function = dict([(i, binom.pmf(i, self.ndraws, P))
                                     for i in self._sample_space])
 
-    def trial(self, numeric=True):
+    def trial(self):
         """
         Run a trial, incrementint success counter and updating
         html output
@@ -233,7 +240,7 @@ class Multinomial(WeightedBox):
 
         self.outcome = None
 
-    def trial(self, numeric=False):
+    def trial(self):
         V = np.random.multinomial(1, self.prob.reshape(-1))
         I = np.nonzero(V)[0]
         self.outcome = self.sample_space[I]
@@ -252,3 +259,26 @@ class Multinomial(WeightedBox):
 def Normal(mean, SD):
     rng = lambda : np.random.standard_normal() * SD + mean
     return ProbabilitySpace(rng)
+
+class SumIntegerRV(RandomVariable):
+
+    """
+    Given a mass function on non-negative integers,
+    form the random variable that is the convolution
+    of this mass function `ndraw` times
+
+    The mass function specifies a random variable that 
+    is i with probability proportional to mass_function[i] is specifi
+    """
+
+    def __init__(self, mass_function, ndraw):
+        mass_function = np.array(mass_function)
+        mass_function /= mass_function.sum()
+        self._rv = Multinomial(mass_function)
+        self._mass_fn = mass_function
+        self._mass_function = dict(zip(*conv_integer_rv(self._mass_fn, ndraw)))
+        self._sample_space = self._mass_function.keys()
+        self._ndraw = ndraw
+
+    def trial(self):
+        return np.sum(self._rv.sample(self._ndraw))

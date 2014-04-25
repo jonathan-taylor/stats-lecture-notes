@@ -16,3 +16,5 @@ import matplotlib
 matplotlib.rcParams['figure.figsize'] = stats60_figsize
 
 from tables import *
+
+from probability import *

@@ -7,6 +7,8 @@ import matplotlib.patches as patches
 import matplotlib.path as path
 from pylab import poly_between
 
+np.set_printoptions(precision=3, suppress=True)
+
 try:
    import rpy2.robjects as rpy
    import rpy2.robjects.numpy2ri
@@ -289,7 +291,12 @@ def SD_rule_of_thumb_skewed(mult, ax=None, bins=30, regions=(), **opts):
    ax.set_ylim([0,ax.get_ylim()[1]])
    return ax
 
-def normal_curve(ax=None, linewidth=4, color='k', **plot_opts):
+def normal_curve(ax=None, linewidth=4, color='k', mean=0, SD=1, 
+                 facecolor='gray',
+                 xlabel='standardized units',
+                 ylabel='% per standardized unit', 
+                 alpha=0.5,
+                 **plot_opts):
 
    if ax is None:
       fig = plt.gcf()
@@ -298,14 +305,17 @@ def normal_curve(ax=None, linewidth=4, color='k', **plot_opts):
    plot_opts['linewidth'] = linewidth
    plot_opts['color'] = color
 
-   X = np.linspace(-4,4,101)
-   Y = ndist.pdf(X)
+   Z = np.linspace(-4,4,101)
+   X = mean+SD*Z
+   Y = ndist.pdf(Z) / SD
    ax.plot(X, Y, **plot_opts)
-   ax.fill_between(X, 0*X, Y, alpha=0.5, facecolor='gray')
-   ax.set_xlabel('standardized units', fontsize=20)
-   ax.set_ylabel('% per standardized unit', fontsize=20)
-   ax.set_ylim([0,0.45])
-   ax.set_xlim([-4,4])
+   ax.fill_between(X, 0*X, Y, alpha=alpha, facecolor=facecolor)
+   if xlabel:
+      ax.set_xlabel(xlabel, fontsize=20)
+   if ylabel:
+      ax.set_ylabel(ylabel, fontsize=20)
+   ax.set_ylim([0,0.45/SD])
+   ax.set_xlim([X.min(),X.max()])
    return ax
 
 def standardize_interval(lower, upper, mean, SD, ax=None,
@@ -341,7 +351,7 @@ def standardize_interval(lower, upper, mean, SD, ax=None,
                                                           (lower-mean)/SD), fontsize=fontsize, horizontalalignment='left', color='red')
       ax.text(upper, -0.5, '(%0.1f-%0.1f)/%0.1f=%0.2f' % (upper, mean, SD,
                                                           (upper-mean)/SD), fontsize=fontsize, horizontalalignment='right', color='red')
-   ax.set_title('Mean=%s, SD=%s' % (mean, SD), fontsize=20)
+   ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
    return ax
 
 def standardize_right(point, mean, SD, ax=None,
@@ -379,7 +389,7 @@ def standardize_right(point, mean, SD, ax=None,
       ax.text(lower-0.5*SD, -0.4, 'Standardized:', color='red', fontsize=fontsize)
       ax.text(point, -0.5, '(%0.1f-%0.1f)/%0.1f=%0.2f' % (point, mean, SD,
                                                           (point*1.-mean)/SD), fontsize=fontsize, horizontalalignment='right', color='red')
-   ax.set_title('Mean=%s, SD=%s' % (mean, SD), fontsize=20)
+   ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
    return ax
 
 def standardize_left(point, mean, SD, ax=None,
@@ -417,7 +427,7 @@ def standardize_left(point, mean, SD, ax=None,
       ax.text(lower-0.5*SD, -0.4, 'Standardized:', color='red', fontsize=fontsize)
       ax.text(point, -0.5, '(%0.1f-%0.1f)/%0.1f=%0.2f' % (point, mean, SD,
                                                           (point*1.-mean)/SD), fontsize=fontsize, horizontalalignment='left', color='red')
-   ax.set_title('Mean=%s, SD=%s' % (mean, SD), fontsize=20)
+   ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
    return ax
 
 
@@ -469,3 +479,43 @@ def percentile_figure(q, mean, SD, ax=None,
                             horizontalalignment='center')
 
 
+def probability_histogram(sampler, facecolor='#820000',
+                          alpha=0.8, edgecolor='black', 
+                          ax=None,
+                          ndraws=None,
+                          bins=None,
+                          xlabel='',
+                          ylabel='',
+                          draw_color='orange',
+                          width=1,
+                          **opts):
+   vals = np.array(sorted(sampler.mass_function.keys()))
+   mass = np.array([sampler.mass_function[z] for z in vals])
+   k = (mass >= 1e-3*mass.max())
+
+   if ax is None:
+      fig = plt.gcf()
+      ax = fig.add_subplot(111)
+
+   ax.bar(vals[k],mass[k]/width, width=width, align='center', alpha=alpha,
+          facecolor=facecolor, label='Probability histogram')
+   ax.set_yticklabels(100*ax.get_yticks())
+   ax.set_ylim([0, 1.2 * mass.max()/width])
+   dx = vals.max() - vals.min()
+
+   avg = np.sum([k*p for k, p in sampler.mass_function.items()])
+   second_moment = np.sum([k**2*p for k, p in sampler.mass_function.items()])
+   sd = np.sqrt(second_moment - avg**2)
+
+   ax.set_xlim([avg-3*sd,avg+3*sd])
+   if xlabel:
+      ax.set_xlabel(xlabel, fontsize=15)
+   if ylabel:
+      ax.set_ylabel(ylabel, fontsize=15)
+
+   if ndraws is not None:
+      draws = sampler.sample(ndraws)
+      sample_density(draws, alpha=0.5, bins=bins, ax=ax,
+                     label='Sample (n=%d)' % ndraws, facecolor=draw_color)
+      
+   return ax, avg, sd
