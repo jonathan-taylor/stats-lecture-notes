@@ -95,6 +95,17 @@ class SampleMean(ProbabilitySpace):
         return [mean - 2*SD / np.sqrt(self.nsample), 
                 mean + 2*SD / np.sqrt(self.nsample)]
 
+class SumOfDraws(ProbabilitySpace):
+
+    def __init__(self, random_variable, ndraws):
+        self.random_variable = random_variable
+        self.ndraws = ndraws
+
+    def trial(self):
+        sample = self.random_variable.sample(self.ndraws)
+        self.outcome = np.sum(sample)
+        return self.outcome
+
 class BoxModel(ProbabilitySpace):
 
     """
