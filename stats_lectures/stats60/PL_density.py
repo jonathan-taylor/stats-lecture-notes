@@ -164,6 +164,8 @@ def sample_density(data_sample, bins=10, facecolor='#820000',
    opts['alpha'] = alpha
    opts['edgecolor'] = edgecolor
 
+   data_sample = np.asarray(data_sample)
+
    # try using R's binpoints
    if type(bins) == type(3) and rpy is not None: # is an integer
       rpy.r.assign('DS', data_sample)
@@ -319,6 +321,7 @@ def normal_curve(ax=None, linewidth=4, color='k', mean=0, SD=1,
    return ax
 
 def standardize_interval(lower, upper, mean, SD, ax=None,
+                         data=True,
                          units='Units', 
                          standardized=False,
                          include_mean=False,
@@ -351,10 +354,14 @@ def standardize_interval(lower, upper, mean, SD, ax=None,
                                                           (lower-mean)/SD), fontsize=fontsize, horizontalalignment='left', color='red')
       ax.text(upper, -0.5, '(%0.1f-%0.1f)/%0.1f=%0.2f' % (upper, mean, SD,
                                                           (upper-mean)/SD), fontsize=fontsize, horizontalalignment='right', color='red')
-   ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
+   if data:
+      ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
+   else:
+      ax.set_title('Mean=%0.1f, SE=%0.1f' % (mean, SD), fontsize=20)
    return ax
 
 def standardize_right(point, mean, SD, ax=None,
+                      data=True,
                       units='Units', 
                       standardized=False,
                       include_mean=False,
@@ -389,10 +396,14 @@ def standardize_right(point, mean, SD, ax=None,
       ax.text(lower-0.5*SD, -0.4, 'Standardized:', color='red', fontsize=fontsize)
       ax.text(point, -0.5, '(%0.1f-%0.1f)/%0.1f=%0.2f' % (point, mean, SD,
                                                           (point*1.-mean)/SD), fontsize=fontsize, horizontalalignment='right', color='red')
-   ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
+   if data:
+      ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
+   else:
+      ax.set_title('Mean=%0.1f, SE=%0.1f' % (mean, SD), fontsize=20)
    return ax
 
 def standardize_left(point, mean, SD, ax=None,
+                     data=True,
                      units='Units', 
                      standardized=False,
                      include_mean=False,
@@ -427,7 +438,10 @@ def standardize_left(point, mean, SD, ax=None,
       ax.text(lower-0.5*SD, -0.4, 'Standardized:', color='red', fontsize=fontsize)
       ax.text(point, -0.5, '(%0.1f-%0.1f)/%0.1f=%0.2f' % (point, mean, SD,
                                                           (point*1.-mean)/SD), fontsize=fontsize, horizontalalignment='left', color='red')
-   ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
+   if data:
+      ax.set_title('Mean=%0.1f, SD=%0.1f' % (mean, SD), fontsize=20)
+   else:
+      ax.set_title('Mean=%0.1f, SE=%0.1f' % (mean, SD), fontsize=20)
    return ax
 
 

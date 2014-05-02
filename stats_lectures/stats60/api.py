@@ -9,6 +9,7 @@ for E in [dice.examples, roulette.examples, monty_hall.examples]:
 
 from correlation import pearson_lee
 from gender_bias import UCB, UCB_female, UCB_male
+from sample import Sample
 
 stats60_figsize = (5.5,5.5)
 
