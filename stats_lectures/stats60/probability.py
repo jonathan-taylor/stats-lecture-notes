@@ -110,10 +110,11 @@ class BoxModel(ProbabilitySpace):
 
     """
     A discrete uniform sample space: samples are drawn
-    with replacement from a list of items.
+    with or without replacement from a list of items.
     """
 
-    def __init__(self, values):
+    def __init__(self, values, replace=True):
+        self.replace = replace
         self.values = list(values)
         self._nvalues = len(self.values)
         self._sample_space = list(set(self.values))
@@ -124,9 +125,11 @@ class BoxModel(ProbabilitySpace):
             self._mass_function[item] += 1. / n
         self.outcome = None
 
+    def sample(self, ntrial):
+        return list(np.random.choice(self.values, ntrial, replace=self.replace))
+
     def trial(self):
-        I = np.random.random_integers(0, self._nvalues-1)
-        self.outcome = self.values[I]
+        self.outcome = np.random.choice(self.values, 1, replace=self.replace)
         return self.outcome
 
     def event(self, event_spec):
@@ -152,10 +155,11 @@ class BoxModel(ProbabilitySpace):
 
 class WeightedBox(BoxModel):
 
-    def __init__(self, mass_function):
+    def __init__(self, mass_function, replace=True):
         """
         Specified by a dict: {item:probability}
         """
+        self.replace = replace
         self._mass_function = mass_function
         self._sample_space = self._mass_function.keys()
         self._sample_space = sorted(self._sample_space)
@@ -164,8 +168,14 @@ class WeightedBox(BoxModel):
         self.outcome = None
 
     def trial(self):
-        self.outcome = self._sample_space[np.nonzero(np.random.multinomial(1, self._P))[0]]
+        choice = np.random.choice(len(self._sample_space), 1, replace=self.replace, p=self._P)
+        self.outcome = self._sample_space[choice]
         return self.outcome
+
+    def sample(self, ntrial):
+        choice = np.random.choice(len(self._sample_space), ntrial, replace=self.replace, p=self._P)
+        return [self._sample_space[c] for c in choice]
+
 
 class Geometric(ProbabilitySpace):
 
