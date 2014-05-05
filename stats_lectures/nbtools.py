@@ -14,7 +14,7 @@ except ImportError:
 
 from IPython.nbformat.current import reads, NotebookNode, writes
 
-def run_cell(kc, cell, collect_outputs=True):
+def run_cell(kc, cell, collect_outputs=True, timeout=10):
     """
     Run contents of a cell in a kernel client.
     If collect_outputs is True, return the outputs as a list.
@@ -26,7 +26,7 @@ def run_cell(kc, cell, collect_outputs=True):
     shell.execute(cell.input)
     # wait for finish, maximum 20s
     try:
-        msg = shell.get_msg(timeout=10)
+        msg = shell.get_msg(timeout=timeout)
     except Empty:
         return []
 
@@ -42,7 +42,7 @@ def run_cell(kc, cell, collect_outputs=True):
         outputs = []
         while True:
             try:
-                reply = iopub.get_msg(timeout=0.5)
+                reply = iopub.get_msg(timeout=timeout)
             except Empty:
                 break
             content = reply['content']
@@ -81,7 +81,8 @@ def run_cell(kc, cell, collect_outputs=True):
 def run_notebook(nb, cell_filter = lambda cell: cell,
                  extra_arguments=['--pylab=inline', '--profile=stats'],
                  modify_outputs=True,
-                 run_cells=True):
+                 run_cells=True,
+                 timeout=10):
     """
     Take a notebook and send all its cells to a kernel.
     Takes an optional filter to modify the results of the 
@@ -118,7 +119,8 @@ def run_notebook(nb, cell_filter = lambda cell: cell,
             if run_cells:
                 try:
                     outs = run_cell(kc, cell, 
-                                    collect_outputs=modify_outputs)
+                                    collect_outputs=modify_outputs,
+                                    timeout=timeout)
                 except Exception as e:
                     sys.stdout.write("failed to run cell:" + repr(e))
                     errors += 1
@@ -139,7 +141,8 @@ def run_notebook(nb, cell_filter = lambda cell: cell,
 
 def strip_outputs(nb,
                   extra_arguments=['--pylab=inline', '--profile=stats'],
-                  run_cells=False): 
+                  run_cells=False,
+                  timeout=10): 
     """
     Take a notebook, run each cell and strip all of its outputs
     """
@@ -149,10 +152,12 @@ def strip_outputs(nb,
     return run_notebook(nb, cell_filter=_strip,
                         extra_arguments=extra_arguments,
                         modify_outputs=False,
-                        run_cells=run_cells)
+                        run_cells=run_cells,
+                        timeout=timeout)
 
 def strip_skipped_cells(nb,
-                        extra_arguments=['--pylab=inline', '--profile=stats']): 
+                        extra_arguments=['--pylab=inline', '--profile=stats'],
+                        timeout=10): 
     """
     Take a notebook, run each cell and strip all of its outputs
     """
@@ -167,7 +172,8 @@ def strip_skipped_cells(nb,
 
     return run_notebook(nb, cell_filter=_strip_skip,
                         extra_arguments=extra_arguments,
-                        modify_outputs=True)
+                        modify_outputs=True,
+                        timeout=timeout)
 
 def load(ipynb, format='json'):
     """

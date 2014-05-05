@@ -45,7 +45,7 @@ def make_web(clean=True, force=False):
             with open(nbook, 'r') as f:
                 nb = reads(f.read(), 'json')
             print 'running and stripping skipped cells from notebook %s' % nbook
-            stripped_nb = strip_skipped_cells(nb)
+            stripped_nb = strip_skipped_cells(nb, timeout=60)
 
             new_nbook = nbook.replace('notebooks', 'built_notebooks')
             if not os.path.exists(os.path.dirname(new_nbook)):
