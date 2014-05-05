@@ -126,10 +126,12 @@ class BoxModel(ProbabilitySpace):
         self.outcome = None
 
     def sample(self, ntrial):
-        return list(np.random.choice(self.values, ntrial, replace=self.replace))
+        idx = np.random.choice(len(self.values), ntrial, replace=self.replace)
+        return [self.values[i] for i in idx]
 
     def trial(self):
-        self.outcome = np.random.choice(self.values, 1, replace=self.replace)
+        idx = np.random.choice(len(self.values), 1, replace=self.replace)
+        self.outcome = self.values[idx]
         return self.outcome
 
     def event(self, event_spec):
@@ -168,7 +170,7 @@ class WeightedBox(BoxModel):
         self.outcome = None
 
     def trial(self):
-        choice = np.random.choice(len(self._sample_space), 1, replace=self.replace, p=self._P)
+        choice = np.random.choice(len(self._sample_space), 1, replace=self.replace)
         self.outcome = self._sample_space[choice]
         return self.outcome
 
@@ -246,6 +248,7 @@ class Binomial(ProbabilitySpace):
 class Multinomial(WeightedBox):
 
     desc = 'A multinomial specified by a table.'
+    replace = True
 
     def __init__(self, counts, labels=None):
         counts = np.array(counts)
@@ -266,6 +269,13 @@ class Multinomial(WeightedBox):
         I = np.nonzero(V)[0]
         self.outcome = self.sample_space[I]
         return self.outcome
+
+    def sample(self, ntrial):
+        V = np.random.multinomial(ntrial, self.prob.reshape(-1))
+        I = np.nonzero(V)[0]
+        outcome = [self.sample_space[c] for c in I]
+        np.random.shuffle(outcome)
+        return outcome
 
     def condition_margin(self, margin, value):
         vars = range(len(self.shape))
