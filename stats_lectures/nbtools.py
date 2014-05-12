@@ -42,7 +42,7 @@ def run_cell(kc, cell, collect_outputs=True, timeout=10):
         outputs = []
         while True:
             try:
-                reply = iopub.get_msg(timeout=timeout)
+                reply = iopub.get_msg(timeout=3)
             except Empty:
                 break
             content = reply['content']
