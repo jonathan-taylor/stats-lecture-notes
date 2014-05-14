@@ -84,7 +84,27 @@ class SampleMean(ProbabilitySpace):
 
     def trial(self):
         sample = self.random_variable.sample(self.nsample)
-        self.outcome = [np.mean(sample), np.std(sample)]
+        self.outcome = np.mean(sample)
+        return self.outcome
+
+    def confidence_interval(self):
+        """
+        Simulate a confidence interval for the population mean
+        """
+        mean, SD = self.trial()
+        return [mean - 2*SD / np.sqrt(self.nsample), 
+                mean + 2*SD / np.sqrt(self.nsample)]
+
+class SampleSD(ProbabilitySpace):
+
+    def __init__(self, random_variable, nsample):
+        self.random_variable = random_variable
+        self.nsample = nsample
+        self.outcome = None
+
+    def trial(self):
+        sample = self.random_variable.sample(self.nsample)
+        self.outcome = np.std(sample)
         return self.outcome
 
     def confidence_interval(self):
@@ -289,6 +309,10 @@ class Multinomial(WeightedBox):
 
 def Normal(mean, SD):
     rng = lambda : np.random.standard_normal() * SD + mean
+    return ProbabilitySpace(rng)
+
+def Uniform(mean, SD):
+    rng = lambda : (np.random.sample() - 0.5) * np.sqrt(12) * SD + mean
     return ProbabilitySpace(rng)
 
 class SumIntegerRV(RandomVariable):
