@@ -1,0 +1,74 @@
+
+% Default to the notebook output style
+((* if not cell_style is defined *))
+    ((* set cell_style = 'style_ipython.tplx' *))
+((* endif *))
+
+% Inherit from the specified cell style.
+((* extends cell_style *))
+
+
+%===============================================================================
+% Latex Article
+%===============================================================================
+
+((* block docclass *))
+\nonstopmode
+\documentclass{article}
+
+
+\newcommand{\unsupervised}[1]{{\color{red} #1}}
+\newcommand{\supervised}[1]{{\color{green} #1}}
+\newcommand{\argmax}{\mathop{\mathrm{argmax}}}
+\newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+\newcommand{\minimize}{\mathop{\mathrm{minimize}}}
+\newcommand{\maximize}{\mathop{\mathrm{maximize}}}
+
+\newcommand{\B}[1]{\beta_{#1}}
+\newcommand{\Bh}[1]{\widehat{\beta}_{#1}}
+\newcommand{\V}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Vh}{\widehat{\V}}
+\newcommand{\s}{\sigma}
+\newcommand{\sh}{\widehat{\sigma}}
+
+\newcommand{\argmax}[1]{\mathop{\text{argmax}}_{#1}}
+\newcommand{\argmin}[1]{\mathop{\text{argmin}}_{#1}}
+\newcommand{\Ee}{\mathbb{E}}
+\newcommand{\Pp}{\mathbb{P}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\Ybar}{\overline{Y}}
+\newcommand{\Yh}{\widehat{Y}}
+\newcommand{\Xbar}{\overline{X}}
+\newcommand{\Tr}{\text{Tr}}
+
+
+\newcommand{\model}{{\cal M}}
+
+\newcommand{\figvskip}{-0.7in}
+\newcommand{\fighskip}{-0.3in}
+\newcommand{\figheight}{3.5in}
+
+\newcommand{\Rcode}[1]{{\bf \tt #1 }}
+\newcommand{\Rtcode}[1]{{\tiny \bf \tt #1 }}
+\newcommand{\Rscode}[1]{{\small \bf \tt #1 }}
+
+\newcommand{\RR}{{\tt R} \;}
+\newcommand{\basename}[1]{http://stats60.stanford.edu/#1}
+\newcommand{\dataname}[1]{\basename{data/#1}}
+\newcommand{\Rname}[1]{\basename{R/#1}}
+
+\newcommand{\mycolor}[1]{{\color{blue} #1}}
+\newcommand{\basehref}[2]{\href{\basename{#1}}{\mycolor{#2}}}
+\newcommand{\Rhref}[2]{\href{\basename{R/#1}}{\mycolor{#2}}}
+\newcommand{\datahref}[2]{\href{\dataname{#1}}{\mycolor{#2}}}
+\newcommand{\X}{\pmb{X}}
+\newcommand{\Y}{\pmb{Y}}
+\newcommand{\be}{\pmb{varepsilon}}
+\newcommand{\logit}{\text{logit}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+((* endblock docclass *))
