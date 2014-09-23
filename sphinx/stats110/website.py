@@ -32,7 +32,7 @@ def make_web(clean=True, force=False):
     ''')
 
     for obook in (glob.glob('../../notebooks/stats110/Week*/*ipynb') + 
-                  glob.glob('../../notebooks/stats110/Tables/*ipynb')):
+                  glob.glob('../../notebooks/stats110/Examples/*ipynb')):
         nbook = obook.replace('../../', './').replace('stats110/', '')
         if not os.path.exists(os.path.dirname(nbook)):
             os.makedirs(os.path.dirname(nbook))
@@ -54,7 +54,7 @@ def make_web(clean=True, force=False):
                 f.write(writes(nb, 'json'))
             build_nbook(new_nbook)
 
-    for dirname in glob.glob('built_notebooks/Week*') + ['built_notebooks/Tables']:
+    for dirname in glob.glob('built_notebooks/Week*') + ['built_notebooks/Examples']:
         wwwdir = dirname.replace('built_notebooks', 'www')
         if not os.path.exists(wwwdir):
             shutil.copytree(dirname, wwwdir)
@@ -64,7 +64,7 @@ def make_web(clean=True, force=False):
                     shutil.copy2(f, wwwdir)
 
     for f in (glob.glob('www/Week*/*stripped.*') + 
-              glob.glob('www/Tables/*stripped.*')):
+              glob.glob('www/Examples/*stripped.*')):
         os.rename(f, f.replace('_stripped', ''))
 
     cmd = '''
@@ -72,6 +72,7 @@ def make_web(clean=True, force=False):
     rm -fr _build/html/quizzes;
     rm -fr _build/html/_sources;
     cp -r _build/html/* www; 
+    cp -r edited_notes/ www/edited_notes;
     '''
     os.system(cmd)
 
