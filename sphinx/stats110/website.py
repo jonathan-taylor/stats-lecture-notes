@@ -29,6 +29,8 @@ def make_web(clean=True, force=False):
     os.system('''
     cp -r ../../notebooks/stats110/index.ipynb .;
     ipython nbconvert --to rst index.ipynb; rm index.ipynb ;
+    cp -r ../../notebooks/stats110/Topics\ for\ review.ipynb .;
+    ipython nbconvert --to rst Topics\ for\ review.ipynb; rm Topics\ for\ review.ipynb ;
     ''')
 
     for obook in (glob.glob('../../notebooks/stats110/Week*/*ipynb') + 
@@ -80,7 +82,7 @@ def make_web(clean=True, force=False):
 def deploy():
     os.system('''
     rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats110/WWW/ ;
-    ssh jtaylo@corn.stanford.edu "cd stats-lecture-notes; git fetch ; git pull";
-    rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes-working/sphinx/stats110/www ;
+    # ssh jtaylo@corn.stanford.edu "cd stats-lecture-notes; git fetch ; git pull";
+    # rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes-working/sphinx/stats110/www ;
     ''')
 
