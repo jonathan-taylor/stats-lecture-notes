@@ -1,9 +1,0 @@
-import numpy as np
-from pkg_resources import resource_stream
-
-from stats_lectures.api import *
-
-%pylab inline
-
-# this may fail silently if rpy2 not install
-%load_ext rmagic
