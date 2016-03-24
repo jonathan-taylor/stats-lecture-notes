@@ -1,24 +1,40 @@
 import os, glob, shutil, filecmp
-from stats_lectures.nbtools import strip_skipped_cells, reads, writes
+import sys
+
+# from https://github.com/cfriedline/ipynb_template
+
+from nbformat import v4
+
+def strip_output(nb, delete_if = lambda cell: False):
+    """strip the outputs from a notebook object"""
+    for cell in nb.cells:
+        if 'slideshow' in cell['metadata'] and cell['metadata']['slideshow']['slide_type'] == 'skip':
+            nb.cells.remove(cell)
+        if 'outputs' in cell:
+            cell['outputs'] = []
+        if 'execution_count' in cell:
+            cell['execution_count'] = 0
+    return nb
 
 def build_nbook(nbook):
-    nbook_dir = os.path.abspath(os.path.dirname(nbook))
+    nbook_dir = os.path.abspath(os.path.split(nbook)[0])
     shutil.copy2('stats60_article.tplx', nbook_dir)
     shutil.copy2('stats60_slides.tplx', nbook_dir)
-    shutil.copy2('stats60_html.tplx', nbook_dir)
     cmd = '''
     cd "%s"; 
-    ipython nbconvert --to=slides "%s" --template=./stats60_slides.tplx --reveal-prefix=http://stats60.stanford.edu/reveal.js;
-    ipython nbconvert --to=latex --post=pdf "%s" --template=./stats60_article.tplx;
-    ipython nbconvert --to=html "%s" --template=./stats60_html.tplx;
+    jupyter-nbconvert --to=slides "%s" --template=./stats60_slides.tplx --reveal-prefix=http://statweb.stanford.edu/~jtaylo/reveal.js;
+    jupyter-nbconvert --to=html "%s";
+    jupyter-nbconvert --to=rst "%s";
     ''' % (nbook_dir, 
             os.path.abspath(nbook),
             os.path.abspath(nbook),
             os.path.abspath(nbook))
-    print cmd
+    cmd += '''
+jupyter-nbconvert --to=latex --template=stats60_article.tplx "%s";
+''' % os.path.abspath(nbook)
     os.system(cmd)
 
-def make_web(clean=True, force=False):
+def make_web(clean=True, force=False, assigned=[1,2,3,4], solved=[1,2,3]):
 
     if clean:
         os.system('make clean;')
@@ -26,36 +42,32 @@ def make_web(clean=True, force=False):
     for dir in ['www', 'notebooks']:
         if not os.path.exists(dir):
             os.makedirs(dir)
-    os.system('''
-    cp -r ../../notebooks/stats60/index.ipynb .;
-    ipython nbconvert --to rst index.ipynb; rm index.ipynb ;
-    ''')
 
-    for obook in (glob.glob('../../notebooks/stats60/Week*/*ipynb') + 
-                  glob.glob('../../notebooks/stats60/Tables/*ipynb')):
+    for obook in glob.glob('../../notebooks/stats60/*ipynb'):
         nbook = obook.replace('../../', './').replace('stats60/', '')
+        print nbook
         if not os.path.exists(os.path.dirname(nbook)):
             os.makedirs(os.path.dirname(nbook))
         try:
             diff = not filecmp.cmp(obook, nbook)
         except OSError:
             diff = True
+
         if diff:
             shutil.copy(obook, nbook) 
             with open(nbook, 'r') as f:
-                nb = reads(f.read(), 'json')
-            print 'running and stripping skipped cells from notebook %s' % nbook
-            stripped_nb = strip_skipped_cells(nb, timeout=60)
-
+                nb = v4.reads(f.read())
+            #print 'stripping output from notebook %s' % nbook
+            stripped_nb = nb # strip_output(nb)
             new_nbook = nbook.replace('notebooks', 'built_notebooks')
             if not os.path.exists(os.path.dirname(new_nbook)):
                 os.makedirs(os.path.dirname(new_nbook))
             with open(new_nbook, 'w') as f:
-                f.write(writes(nb, 'json'))
+                f.write(v4.writes(nb).encode('utf-8'))
             build_nbook(new_nbook)
 
-    for dirname in glob.glob('built_notebooks/Week*') + ['built_notebooks/Tables']:
-        wwwdir = dirname.replace('built_notebooks', 'www')
+    for dirname in ['built_notebooks']:
+        wwwdir = dirname.replace('built_notebooks', 'www/notebooks')
         if not os.path.exists(wwwdir):
             shutil.copytree(dirname, wwwdir)
         else:
@@ -63,23 +75,34 @@ def make_web(clean=True, force=False):
                 if not os.path.isdir(f):
                     shutil.copy2(f, wwwdir)
 
-    for f in (glob.glob('www/Week*/*stripped.*') + 
-              glob.glob('www/Tables/*stripped.*')):
-        os.rename(f, f.replace('_stripped', ''))
+    shutil.copy('built_notebooks/index.rst', 'index.rst')
+
+#     for f in (glob.glob('www/notebooks/*stripped.*') + 
+#               glob.glob('www/notebooks/*stripped.*')):
+#         os.rename(f, f.replace('_stripped', ''))
+
+#     del_assign = set(range(1,6)).difference(assigned)
+#     for assign in del_assign:
+#         for f in glob.glob('www/notebooks/Assignment%d*' % assign):
+#             os.remove(f)
+
+#     del_solved = set(range(1,6)).difference(solved)
+#     for solve in del_solved:
+#         for f in glob.glob('www/notebooks/Solution%d*' % solve):
+#             os.remove(f)
 
     cmd = '''
     make html; 
-    rm -fr _build/html/quizzes;
     rm -fr _build/html/_sources;
     cp -r _build/html/* www; 
+    mkdir -p www/R;
+    cp -r R/* www/R;
     '''
     os.system(cmd)
 
 
 def deploy():
-    os.system('''
-    rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats60/WWW/ ;
-    ssh jtaylo@corn.stanford.edu "cd stats-lecture-notes; git fetch ; git pull";
-    rsync -avz www/* jtaylo@miller.stanford.edu:stats-lecture-notes-working/sphinx/stats60/www ;
-    ''')
+    #os.system("cp data/* www/data; rsync -avz www/* jtaylo@corn.stanford.edu:/afs/ir/class/stats60/WWW/")
+    os.system("cp data/* www/data; rsync -avz www/* jtaylo@rgmiller:public_html/stats60/")
+
 

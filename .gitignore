@@ -2,3 +2,10 @@
 .Rhistory
 *.pyc
 *~
+
+notebooks/stats203/*csv
+notebooks/stats60/Tables/*pdf
+notebooks/stats60/Tables/*tex
+
+sphinx/stats*/www
+sphinx/stats*/_build
